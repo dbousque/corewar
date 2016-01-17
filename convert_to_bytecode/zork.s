@@ -1,4 +1,4 @@
-.comment "I'M ALIIIIVE"
+.comment "LOL ALIVE"
 .name "zork"
 
 live:

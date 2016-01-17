@@ -150,8 +150,10 @@ int			write_bytes_to_file(char *filename, t_list *bytes)
 	*res_filename = NULL;
 	if ((fd = create_res_file(filename, res_filename)) == -1)
 		return (cant_create_file(*res_filename));
+	ft_printf("Writing output program to %s\n", *res_filename);
 	while (bytes)
 	{
+		//ft_printf("%d\n", *(unsigned char*)bytes->content);
 		write(fd, (unsigned char*)bytes->content, 1);
 		bytes = bytes->next;
 	}
@@ -164,20 +166,41 @@ int			big_error(void)
 	return (0);
 }
 
-int			add_header_to_bytes(t_instruct *name, t_instruct *comment, t_list **bytes_end)
+int			add_header_to_bytes2(t_instruct *name, t_instruct *comment, t_list **bytes_end)
 {
-	int		i;
-	int		x;
+	int				i;
+	int				x;
+	unsigned char	zero;
 
-	i = 0;
+	zero = 0;
 	if (ft_strlen(name->name) > PROG_NAME_LENGTH
 		|| ft_strlen(comment->name) > COMMENT_LENGTH)
 		return (big_error());
+	x = 0;
+	while (name->name[x])
+	{
+		ft_lstaddend(bytes_end, ft_lstnew(&name->name[x], sizeof(char)));
+		x++;
+	}
+	i = x;
 	while (i < PROG_NAME_LENGTH)
 	{
-		x 
+		ft_lstaddend(bytes_end, ft_lstnew(&zero, sizeof(unsigned char)));
 		i++;
 	}
+	x = 0;
+	while (comment->name[x])
+	{
+		ft_lstaddend(bytes_end, ft_lstnew(&comment->name[x], sizeof(char)));
+		x++;
+	}
+	i = x;
+	while (i < COMMENT_LENGTH)
+	{
+		ft_lstaddend(bytes_end, ft_lstnew(&zero, sizeof(unsigned char)));
+		i++;
+	}
+	return (1);
 }
 
 int			add_header_to_bytes(t_function *functions, t_list **bytes_end)
@@ -190,14 +213,14 @@ int			add_header_to_bytes(t_function *functions, t_list **bytes_end)
 	if (ft_strcmp(functions->lines->content->name, NAME_CMD_STRING) == 0
 		&& ft_strcmp(functions->lines->next->content->name, COMMENT_CMD_STRING) == 0)
 	{
-		name = functions->lines->content;
-		comment = functions->lines->next->content;
+		name = functions->lines->content->next;
+		comment = functions->lines->next->content->next;
 	}
 	else if (ft_strcmp(functions->lines->next->content->name, NAME_CMD_STRING) == 0
 		&& ft_strcmp(functions->lines->content->name, COMMENT_CMD_STRING) == 0)
 	{
-		name = functions->lines->next->content;
-		comment = functions->lines->content;
+		name = functions->lines->next->content->next;
+		comment = functions->lines->content->next;
 	}
 	else
 		return (big_error());
@@ -216,7 +239,7 @@ int			add_exec_magic_to_bytes(t_list **bytes, t_list **bytes_end)
 	if (!(tmp_list = ft_lstnew(&tmp_char, sizeof(unsigned char))))
 		return (0);
 	ft_lstaddend(bytes_end, tmp_list);
-	bytes = bytes_end;
+	*bytes = *bytes_end;
 	tmp_char = tmp / (256 * 256);
 	tmp -= (tmp_char * 256 * 256);
 	if (!(tmp_list = ft_lstnew(&tmp_char, sizeof(unsigned char))))
@@ -236,8 +259,8 @@ int			add_exec_magic_to_bytes(t_list **bytes, t_list **bytes_end)
 
 int			convert_to_binary(t_function *functions, char *filename)
 {
-	t_line		*line;
-	t_instruct	*instruct;
+	//t_line		*line;
+//	t_instruct	*instruct;
 	t_list		*bytes;
 	t_list		*bytes_end;
 
@@ -247,7 +270,7 @@ int			convert_to_binary(t_function *functions, char *filename)
 		return (0);
 	if (!(add_header_to_bytes(functions, &bytes_end)))
 		return (0);
-	functions = functions->next;
+	/*functions = functions->next;
 	while (functions)
 	{
 		line = functions->lines;
@@ -263,7 +286,7 @@ int			convert_to_binary(t_function *functions, char *filename)
 			line = line->next;
 		}
 		functions = functions->next;
-	}
+	}*/
 	return (write_bytes_to_file(filename, bytes));
 }
 
