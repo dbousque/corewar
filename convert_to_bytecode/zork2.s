@@ -3,6 +3,5 @@
 
 live:
 	ld %2, r1
-	ld %2, r1
 	zjmp %:live
 

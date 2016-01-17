@@ -6,6 +6,7 @@ t_function	*get_functions(char *filename)
 {
 	t_function	*functions;
 
+	(void)filename;
 	functions = (t_function*)malloc(sizeof(t_function));
 	functions->next = (t_function*)malloc(sizeof(t_function));
 	functions->next->next = (t_function*)malloc(sizeof(t_function));
@@ -125,7 +126,6 @@ int		get_last_point_index(char *filename)
 
 int		create_res_file(char *filename, char **filename_res)
 {
-	int		fd;
 	int		last_point;
 
 	last_point = get_last_point_index(filename);
