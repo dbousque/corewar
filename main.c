@@ -1,4 +1,5 @@
 
+// lol
 
 #include "corewar.h"
 
