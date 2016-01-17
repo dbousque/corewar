@@ -6,10 +6,16 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 16:36:15 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/17 16:42:50 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
+int		check_line(char *line)
+{
+}
 
+void	add_command(int test, t_function **file)
+{
+}
