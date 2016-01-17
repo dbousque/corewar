@@ -157,11 +157,29 @@ int			write_bytes_to_file(char *filename, t_list *bytes)
 	}
 	return (0);
 }
+
 int			big_error(void)
 {
 	ft_putendl_fd("BIG ERROR", 2);
 	return (0);
 }
+
+int			add_header_to_bytes(t_instruct *name, t_instruct *comment, t_list **bytes_end)
+{
+	int		i;
+	int		x;
+
+	i = 0;
+	if (ft_strlen(name->name) > PROG_NAME_LENGTH
+		|| ft_strlen(comment->name) > COMMENT_LENGTH)
+		return (big_error());
+	while (i < PROG_NAME_LENGTH)
+	{
+		x 
+		i++;
+	}
+}
+
 int			add_header_to_bytes(t_function *functions, t_list **bytes_end)
 {
 	t_instruct	*name;
@@ -183,16 +201,37 @@ int			add_header_to_bytes(t_function *functions, t_list **bytes_end)
 	}
 	else
 		return (big_error());
-	return (1);
+	return (add_header_to_bytes2(name, comment, bytes_end));
 }
 
 int			add_exec_magic_to_bytes(t_list **bytes, t_list **bytes_end)
 {
 	unsigned int	tmp;
+	unsigned char	tmp_char;
+	t_list			*tmp_list;
 
 	tmp = COREWAR_EXEC_MAGIC;
-	ft_lstaddend(bytes_end, ft_lstnew(&tmp, sizeof(unsigned int)));
+	tmp_char = tmp / (256 * 256 * 256);
+	tmp -= (tmp_char * 256 * 256 * 256);
+	if (!(tmp_list = ft_lstnew(&tmp_char, sizeof(unsigned char))))
+		return (0);
+	ft_lstaddend(bytes_end, tmp_list);
 	bytes = bytes_end;
+	tmp_char = tmp / (256 * 256);
+	tmp -= (tmp_char * 256 * 256);
+	if (!(tmp_list = ft_lstnew(&tmp_char, sizeof(unsigned char))))
+		return (0);
+	ft_lstaddend(bytes_end, tmp_list);
+	tmp_char = tmp / 256;
+	tmp -= (tmp_char * 256);
+	if (!(tmp_list = ft_lstnew(&tmp_char, sizeof(unsigned char))))
+		return (0);
+	ft_lstaddend(bytes_end, tmp_list);
+	tmp_char = tmp;
+	if (!(tmp_list = ft_lstnew(&tmp_char, sizeof(unsigned char))))
+		return (0);
+	ft_lstaddend(bytes_end, tmp_list);
+	return (1);
 }
 
 int			convert_to_binary(t_function *functions, char *filename)
@@ -208,6 +247,7 @@ int			convert_to_binary(t_function *functions, char *filename)
 		return (0);
 	if (!(add_header_to_bytes(functions, &bytes_end)))
 		return (0);
+	functions = functions->next;
 	while (functions)
 	{
 		line = functions->lines;
