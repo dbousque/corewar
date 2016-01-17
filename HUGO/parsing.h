@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 16:40:01 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/17 16:41:50 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ struct			s_instruct
 	char		*name;
 	int			type;
 	int			opcode;
-	t_instrcut	*next;
+	t_instruct	*next;
 };
 
 extern t_op		op_tab[17];
