@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 16:45:58 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/17 16:58:39 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define INDIR 2
 # define DIRE 3
 # define HEADER 4
+# define REG 5
 
 typedef struct s_function	t_function;
 typedef struct s_line		t_line;
