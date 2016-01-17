@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 18:02:18 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/17 19:08:30 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		check_begin(char *tmp)
 	return (0);
 }
 
-int		check_function(char *tmp)
+int		check_function(char *tmp, char *line)
 {
 	int		i;
 	int		j;
@@ -82,9 +82,9 @@ int		check_function(char *tmp)
 	vars->tmp2 = ft_strsub(tmp, 0, i);
 	if (is_label_char(vars->tmp2) == 0)
 		return (0);
-	vars->name = ft_strdup(vars->tmp2); // A METTRE DANS UNE STRUCT VAR
+	vars->name = ft_strdup(vars->tmp2);
 	vars->tmp2 = ft_strsub(tmp, i, len);
-	return (check_params(vars->tmp2));
+	return (check_params(vars->tmp2, line));
 }
 
 int		check_line(char *line)
@@ -105,7 +105,7 @@ int		check_line(char *line)
 		return (check_begin(tmp));
 	}
 	else
-		return (check_function(tmp));
+		return (check_function(tmp, line));
 }
 
 void	add_command(int test, t_function **file)
