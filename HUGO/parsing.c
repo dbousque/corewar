@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 19:08:30 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/17 19:24:04 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int		check_line(char *line)
 			return (0);
 		begin++;
 		return (check_begin(tmp));
-	}
+	} // RAJOUTER LE ELSE IF POUR LE NOM DES FONCTIONS QUI SONT SOLO
 	else
 		return (check_function(tmp, line));
 }
