@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 16:58:39 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/17 18:01:14 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,16 @@
 typedef struct s_function	t_function;
 typedef struct s_line		t_line;
 typedef struct s_instruct	t_instruct;
+
+typedef struct	s_tempo
+{
+	char		*tmp2;
+	char		*name;
+	char		*label;
+	char		*param1;
+	char		*param2;
+	char		*param3;
+}				t_tempo;
 
 struct			s_function
 {
