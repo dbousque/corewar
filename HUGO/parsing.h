@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 16:29:20 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/17 16:40:01 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # define OPCODE 1
 # define INDIR 2
 # define DIRE 3
+# define HEADER 4
 
 typedef struct s_function	t_function;
 typedef struct s_line		t_line;
@@ -24,15 +25,17 @@ typedef struct s_instruct	t_instruct;
 
 struct			s_function
 {
+	int			header;
 	char		*label;
 	t_line		*lines;
+	t_function  *next;
 };
 
 struct			s_line
 {
 	int			numero;
-	t_instruct	content;
-	t_line		next;
+	t_instruct	*content;
+	t_line		*next;
 };
 
 struct			s_instruct
@@ -40,7 +43,7 @@ struct			s_instruct
 	char		*name;
 	int			type;
 	int			opcode;
-	t_instrcut	next;
+	t_instrcut	*next;
 };
 
 extern t_op		op_tab[17];
