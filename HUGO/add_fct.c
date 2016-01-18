@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:05:35 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 18:21:07 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 18:24:26 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	add_line_1_param(t_function **file, char *line, int test)
 		vars->i++;
 	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i - vars->j);
 	make_line_1(file, vars, test);
+	free(vars);
 }
 
 void	add_line_2_param(t_function **file, char *line, int test)
@@ -138,4 +139,5 @@ void	add_line_3_param(t_function **file, char *line, int test)
 	vars->i++;
 	vars->param3 = ft_strsub(vars->str2, vars->i, vars->j - vars->i);
 	make_line_3(file, vars, test);
+	free(vars);
 }
