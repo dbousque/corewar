@@ -6,11 +6,11 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:35:09 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 13:46:43 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 15:44:47 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "corewar.h"
+#include "parsing.h"
 
 void		ft_lstaddend_funct(t_function **alst, t_function *new_r)
 {
@@ -91,7 +91,7 @@ t_instruct	*new_instruct(char *str, int typ, int opcod)
 		return (NULL);
 	res->name = ft_strdup(str);
 	res->type = typ;
-	res->opcod = opcode;
+	res->opcode = opcod;
 	res->next = NULL;
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 13:56:43 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 15:51:52 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # define DIRE 3
 # define HEADER 4
 # define REG 5
+# define LABEL 6
 
 typedef struct s_function	t_function;
 typedef struct s_line		t_line;
@@ -36,6 +37,9 @@ typedef struct	s_tempo
 	char		*param1;
 	char		*param2;
 	char		*param3;
+	char		*param4;
+	char		*param5;
+	char		*param6;
 	int			i;
 	int			j;
 }				t_tempo;
@@ -76,7 +80,31 @@ int				is_label_char(char *str);
 int				check_begin(char *tmp);
 int				check_function(char *tmp);
 int				check_line(char *line);
+int				check_param(char *str);
+int				check_name_solo(char *str);
 
-void	add_command(int test, t_function **file);
+void			add_c_name(t_function **file, char *line, int test);
+void			add_comment(t_function **file, char *line, int test);
+void			add_fun(t_function **file, char *line, int test);
+void			add_line_1_param(t_function **file, char *line, int test);
+void			add_line_2_param(t_function **file, char *line, int test);
+void			add_line_3_param(t_function **file, char *line, int test);
+void			add_line_4_param(t_function **file, char *line, int test);
+void			add_line_5_param(t_function **file, char *line, int test);
+void			add_line_6_param(t_function **file, char *line, int test);
+void			add_command(int test, t_function **file, char *line);
+void			ft_lstaddend_funct(t_function **alst, t_function *new_r);
+void			ft_lstaddend_line(t_line **alst, t_line *new_r);
+void			ft_lstaddend_instruct(t_instruct **alst, t_instruct *new_r);
+void			make_line_1(t_function **file, t_tempo *vars, int test);
+void			make_line_2(t_function **file, t_tempo *vars, int test);
+void			make_line_3(t_function **file, t_tempo *vars, int test);
+void			make_line_4(t_function **file, t_tempo *vars, int test);
+void			make_line_5(t_function **file, t_tempo *vars, int test);
+void			make_line_6(t_function **file, t_tempo *vars, int test);
+
+t_function		*new_function(char *str);
+t_line			*new_line(int count);
+t_instruct		*new_instruct(char *str, int typ, int opcod);
 
 #endif

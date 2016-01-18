@@ -6,15 +6,15 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:05:35 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 14:08:11 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 16:06:56 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "corewar.h"
+#include "parsing.h"
 
 int		g_nb_line;
 
-void	add_c_name(t_function **file, char *line)
+void	add_c_name(t_function **file, char *line, int test)
 {
 	int			i;
 	int			j;
@@ -30,7 +30,7 @@ void	add_c_name(t_function **file, char *line)
 	ft_lstaddend_funct(file, tmp);
 }
 
-void	add_comment(t_function **file, char *line)
+void	add_comment(t_function **file, char *line, int test)
 {
 	int			i;
 	int			j;
@@ -46,7 +46,7 @@ void	add_comment(t_function **file, char *line)
 	ft_lstaddend_funct(file, tmp);
 }
 
-void	add_fun(t_function **file, char *line)
+void	add_fun(t_function **file, char *line, int test)
 {
 	int 		i;
 	char		*tmp;
@@ -61,41 +61,72 @@ void	add_fun(t_function **file, char *line)
 	ft_lstaddend_funct(file, tmp2);
 }
 
-void	add_sti(t_function **file, char *line)
+void	add_line_1_param(t_function **file, char *line, int test)
 {
 	t_function	*tmp;
-	t_line		*tmp2;
 	t_tempo		*vars;
 
-	vars.j = 0;
-	vars.i = 0;
-	tmp = *file;
+	vars->j = 0;
+	vars->i = 0;
 	g_nb_line++;
-	vars.str2 = ft_strtrim(line);
-	while (tmp)
-		tmp = tmp->next;
-	tmp2 = new_line(g_nb_line);
-	ft_lstaddend_line(&tmp->lines, tmp2);
-	while (vars.str2[i] != 'i')
-		vars.i++;
-	vars.j = vars.i;
-	while (vars.str[vars.i] != SEPARATOR_CHAR)
-		vars.i++;
-	vars.param1 = ft_strsub(vars.str, vars.j, vars.i);
-	vars.j = vars.i + 1;
-	while (vars.str[vars.j] != SEPARATOR_CHAR)
-		vars.j++;
-	vars.param2 = ft_strsub(vars.str, vars.i, vars.j);
-	vars.i = vars.j + 1;
-	while (vars.str[vars.i] != '\n')
-		vars.i++;
-	vars.param3 = ft_strsub(vars.str, vars.j, vars.i);
+	vars->str2 = ft_strtrim(line);
+	while (vars->str2[vars->i] != op_tab[test].name[ft_strlen(op_tab[test].name) - 1])
+		vars->i++;
+	vars->name = ft_strsub(vars->str2, 0, vars->i);
+	vars->i++;
+	vars->j = vars->i;
+	while (vars->str2[vars->i] != '\n')
+		vars->i++;
+	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i);
+	make_line_1(file, vars, test);
 }
 
-void	add_st(t_function **file, char *line)
+void	add_line_2_param(t_function **file, char *line, int test)
 {
+	t_function	*tmp;
+	t_tempo		*vars;
+
+	vars->j = 0;
+	vars->i = 0;
+	g_nb_line++;
+	vars->str2 = ft_strtrim(line);
+	while (vars->str2[vars->i] != op_tab[test].name[ft_strlen(op_tab[test].name) - 1])
+		vars->i++;
+	vars->name = ft_strsub(vars->str2, 0, vars->i);
+	vars->i++;
+	vars->j = vars->i;
+	while (vars->str2[vars->i] != SEPARATOR_CHAR)
+		vars->i++;
+	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i);
+	vars->j = vars->i;
+	while (vars->str2[vars->j] != '\n')
+		vars->j++;
+	vars->param2 = ft_strsub(vars->str2, vars->i, vars->j);
+	make_line_2(file, vars, test);
 }
 
-void	add_live(t_function **file, char *line)
+void	add_line_3_param(t_function **file, char *line, int test)
 {
+	t_tempo		*vars;
+
+	vars->j = 0;
+	vars->i = 0;
+	g_nb_line++;
+	vars->str2 = ft_strtrim(line);
+	while (vars->str2[vars->i] != op_tab[test].name[ft_strlen(op_tab[test].name) - 1])
+		vars->i++;
+	vars->name = ft_strsub(vars->str2, 0, vars->i);
+	vars->j = vars->i;
+	while (vars->str2[vars->i] != SEPARATOR_CHAR)
+		vars->i++;
+	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i);
+	vars->j = vars->i + 1;
+	while (vars->str2[vars->j] != SEPARATOR_CHAR)
+		vars->j++;
+	vars->param2 = ft_strsub(vars->str2, vars->i, vars->j);
+	vars->i = vars->j + 1;
+	while (vars->str2[vars->i] != '\n')
+		vars->i++;
+	vars->param3 = ft_strsub(vars->str2, vars->j, vars->i);
+	make_line_3(file, vars, test);
 }

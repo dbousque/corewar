@@ -6,39 +6,55 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:03:47 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 19:15:38 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 16:19:39 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int		check_params(char *tmp, char *line)
+int		check_params(char *line)
 {
 	int		i;
 	int		j;
+	int		k;
 	char	*tmp2;
 
 	i = 0;
 	j = 0;
+	k = 0;
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
 	while (line[i] != ' ')
 		j++;
 	tmp2 = ft_strsub(line, i, j);
-	if (ft_strcmp(tmp2, "sti") == 0)
-		return (check_sti(tmp, line));
-	else if (ft_strcmp(tmp2, "st") == 0)
-		return (check_st(tmp, line));
-	else if (ft_strcmp(tmp2, "live") == 0)
-		return (check_live(tmp, line));
-	else if (ft_strcmp(tmp2, "ld") == 0)
-		return (check_ld(tmp, line));
-	else if (ft_strcmp(tmp2, "fork") == 0)
-		return (check_fork(tmp, line));
-	else if (ft_strcmp(tmp2, "zjmp") == 0)
-		return (check_zjmp(tmp, line));
-	else if (ft_strcmp(tmp2, "add") == 0)
-		return (check_add(tmp, line));
-	else if (ft_strcmp(tmp2, "sub") == 0)
-		return (check_sub(tmp, line));
+	while (ft_strcmp(tmp2, op_tab[k].name) != 0 && op_tab[k].nb_params != 0)
+		k++;
+	return (k);
+}
+
+int		check_name_solo(char *str)
+{
+	int	i;
+	int	j;
+	int fini;
+
+	i = 0;
+	fini = 0;
+	while (str[i] && fini == 0)
+	{
+		j = 0;
+		while (LABEL_CHARS[j])
+		{
+			if (str[i] == LABEL_CHARS[j])
+				break ;
+			j++;
+		}
+		if (LABEL_CHARS[j] == '\0')
+			fini = 1;
+		else
+			i++;
+	}
+	if (str[i] == LABEL_CHAR)
+		return (1);
+	return (0);
 }
