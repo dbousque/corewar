@@ -81,7 +81,6 @@ int		check_line(char *line)
 	test2 = ft_strdup(COMMENT_CMD_STRING);
 	tmp = ft_strtrim(line);
 	test3 = check_name_solo(tmp);
-	ft_printf("||%s||\n", line);
 	if (tmp[0] == test1[0] || tmp[0] == test2[0])
 	{
 		if (begin > 1)
