@@ -6,31 +6,11 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:03:47 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 16:39:46 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 18:49:29 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-int		check_params(char *line)
-{
-	int		i;
-	int		j;
-	int		k;
-	char	*tmp2;
-
-	i = 0;
-	j = 0;
-	k = 0;
-	while (line[i] == ' ' || line[i] == '\t')
-		i++;
-	while (line[j] != ' ')
-		j++;
-	tmp2 = ft_strsub(line, i, j - 1);
-	while (ft_strcmp(tmp2, op_tab[k].name) != 0 && op_tab[k].nb_params != 0)
-		k++;
-	return (k + 1);
-}
 
 int		check_name_solo(char *str)
 {

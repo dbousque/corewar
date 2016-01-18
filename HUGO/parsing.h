@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 17:37:21 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 19:14:01 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,13 @@ int				convert_file(char *filename);
 int				cant_read_file(char *filename);
 int				cant_create_file(char *filename);
 int				create_res_file(char *filename, char **filename_res);
-int				check_params(char *tmp);
 int				is_label_char(char *str);
 int				check_begin(char *tmp);
 int				check_function(char *tmp);
 int				check_line(char *line);
 int				check_param(char *str);
 int				check_name_solo(char *str);
+int				check_what_is(char *str);
 
 void			add_c_name(t_function **file, char *line, int test);
 void			add_comment(t_function **file, char *line, int test);

@@ -6,11 +6,30 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 14:21:34 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 18:19:20 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 19:19:34 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int		check_what_is(char *str)
+{
+	int		i;
+	int		j;
+	char	*str2;
+
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t')
+		i++;
+	j = i;
+	while (str[j] != ' ' && str[j] != '\t')
+		j++;
+	str2 = ft_strsub(str, i, j - i);
+	i = 0;
+	while (ft_strcmp(op_tab[i].name, str2) != 0 && op_tab[i].nb_params != 0)
+		i++;
+	return (i + 1);
+}
 
 int		check_param(char *str)
 {
