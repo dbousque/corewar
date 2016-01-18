@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:05:35 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 16:06:56 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 18:21:07 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	add_comment(t_function **file, char *line, int test)
 	tmp2 = ft_strtrim(line);
 	tmp2 = ft_strsub(tmp2, ft_strlen(COMMENT_CMD_STRING), ft_strlen(tmp2));
 	tmp = new_function(tmp2);
-	tmp->header = 1;
+	tmp->header = 2;
 	ft_lstaddend_funct(file, tmp);
 }
 
@@ -63,70 +63,79 @@ void	add_fun(t_function **file, char *line, int test)
 
 void	add_line_1_param(t_function **file, char *line, int test)
 {
-	t_function	*tmp;
 	t_tempo		*vars;
 
+	vars = (t_tempo *)malloc(sizeof(t_tempo));
 	vars->j = 0;
 	vars->i = 0;
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
-	while (vars->str2[vars->i] != op_tab[test].name[ft_strlen(op_tab[test].name) - 1])
+	vars->str2 = deblank(vars->str2);
+	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
 		vars->i++;
-	vars->name = ft_strsub(vars->str2, 0, vars->i);
 	vars->i++;
+	vars->name = ft_strsub(vars->str2, 0, vars->i);
 	vars->j = vars->i;
-	while (vars->str2[vars->i] != '\n')
+	while (vars->str2[vars->i] != '\0')
 		vars->i++;
-	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i);
+	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i - vars->j);
 	make_line_1(file, vars, test);
 }
 
 void	add_line_2_param(t_function **file, char *line, int test)
 {
-	t_function	*tmp;
 	t_tempo		*vars;
 
+	vars = (t_tempo *)malloc(sizeof(t_tempo));
 	vars->j = 0;
 	vars->i = 0;
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
-	while (vars->str2[vars->i] != op_tab[test].name[ft_strlen(op_tab[test].name) - 1])
+	vars->str2 = deblank(vars->str2);
+	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
 		vars->i++;
-	vars->name = ft_strsub(vars->str2, 0, vars->i);
 	vars->i++;
-	vars->j = vars->i;
-	while (vars->str2[vars->i] != SEPARATOR_CHAR)
-		vars->i++;
-	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i);
-	vars->j = vars->i;
-	while (vars->str2[vars->j] != '\n')
+	vars->name = ft_strsub(vars->str2, 0, vars->i);
+	vars->j = vars->i + 1;
+	while (vars->str2[vars->j] != SEPARATOR_CHAR)
 		vars->j++;
-	vars->param2 = ft_strsub(vars->str2, vars->i, vars->j);
+	vars->param1 = ft_strsub(vars->str2, vars->i, vars->j - vars->i);
+	vars->i = vars->j + 1;
+	while (vars->str2[vars->i] != '\0')
+		vars->i++;
+	vars->j++;
+	vars->param2 = ft_strsub(vars->str2, vars->j, vars->i);
 	make_line_2(file, vars, test);
+	free(vars);
 }
 
 void	add_line_3_param(t_function **file, char *line, int test)
 {
 	t_tempo		*vars;
 
+	vars = (t_tempo *)malloc(sizeof(t_tempo));
 	vars->j = 0;
 	vars->i = 0;
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
-	while (vars->str2[vars->i] != op_tab[test].name[ft_strlen(op_tab[test].name) - 1])
+	vars->str2 = deblank(vars->str2);
+	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
 		vars->i++;
+	vars->i++;
 	vars->name = ft_strsub(vars->str2, 0, vars->i);
 	vars->j = vars->i;
-	while (vars->str2[vars->i] != SEPARATOR_CHAR)
-		vars->i++;
-	vars->param1 = ft_strsub(vars->str2, vars->j, vars->i);
-	vars->j = vars->i + 1;
 	while (vars->str2[vars->j] != SEPARATOR_CHAR)
 		vars->j++;
-	vars->param2 = ft_strsub(vars->str2, vars->i, vars->j);
+	vars->param1 = ft_strsub(vars->str2, vars->i, vars->j - vars->i);
 	vars->i = vars->j + 1;
-	while (vars->str2[vars->i] != '\n')
+	while (vars->str2[vars->i] != SEPARATOR_CHAR)
 		vars->i++;
-	vars->param3 = ft_strsub(vars->str2, vars->j, vars->i);
+	vars->j++;
+	vars->param2 = ft_strsub(vars->str2, vars->j, vars->i - vars->j);
+	vars->j = vars->i + 1;
+	while (vars->str2[vars->j] != '\0')
+		vars->j++;
+	vars->i++;
+	vars->param3 = ft_strsub(vars->str2, vars->i, vars->j - vars->i);
 	make_line_3(file, vars, test);
 }

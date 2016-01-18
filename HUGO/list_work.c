@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:35:09 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 15:44:47 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 17:39:40 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,17 @@ void		ft_lstaddend_line(t_line **alst, t_line *new_r)
 	}
 }
 
-void		ft_lstaddend_instruct(t_instruct **alst, t_instruct *new_r)
+void		ft_lstaddend_instruct(t_line **alst, t_instruct *new_r)
 {
+	t_line		*tmp2;
 	t_instruct	*tmp;
 
-	tmp = *alst;
+	tmp2 = *alst;
+	while (tmp2->next)
+		tmp2 = tmp2->next;
+	tmp = tmp2->content;
 	if (!tmp)
-		*alst = new_r;
+		tmp2->content = new_r;
 	else
 	{
 		while (tmp->next)

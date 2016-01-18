@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 15:51:52 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 17:37:21 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ struct			s_instruct
 extern int		g_nb_line;
 extern t_op		op_tab[17];
 
+char*			deblank(char* input);
+
 int				convert_file(char *filename);
 int				cant_read_file(char *filename);
 int				cant_create_file(char *filename);
@@ -95,7 +97,7 @@ void			add_line_6_param(t_function **file, char *line, int test);
 void			add_command(int test, t_function **file, char *line);
 void			ft_lstaddend_funct(t_function **alst, t_function *new_r);
 void			ft_lstaddend_line(t_line **alst, t_line *new_r);
-void			ft_lstaddend_instruct(t_instruct **alst, t_instruct *new_r);
+void			ft_lstaddend_instruct(t_line **alst, t_instruct *new_r);
 void			make_line_1(t_function **file, t_tempo *vars, int test);
 void			make_line_2(t_function **file, t_tempo *vars, int test);
 void			make_line_3(t_function **file, t_tempo *vars, int test);

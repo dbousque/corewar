@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 16:20:20 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 17:44:00 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ int		check_line(char *line)
 	test2 = ft_strdup(COMMENT_CMD_STRING);
 	tmp = ft_strtrim(line);
 	test3 = check_name_solo(tmp);
-	ft_printf("%s|\n", line);
 	if (tmp[0] == test1[0] || tmp[0] == test2[0])
 	{
 		if (begin > 1)
@@ -99,7 +98,6 @@ int		check_line(char *line)
 	}
 	else
 	{
-		ft_printf("LA\n");
 		return (check_params(line));
 	}
 }
@@ -122,6 +120,7 @@ void	add_command(int test, t_function **file, char *line)
 	{
 		while (i < test)
 			i++;
+		i--;
 		if (op_tab[i].nb_params == 1)
 			add_line_1_param(file, line, test);
 		else if (op_tab[i].nb_params == 2)

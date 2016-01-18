@@ -6,11 +6,29 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 16:07:43 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 18:19:56 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+char* deblank(char* input)                                         
+{
+	int i;
+	int j;
+	char *output;
+	
+	output = input;
+	for (i = 0, j = 0; i < ft_strlen(input); i++,j++)          
+	{
+		if (input[i] != ' ')                           
+			output[j] = input[i];                     
+		else
+			j--;                                     
+	}
+	output[j] = 0;
+	return (output);
+}
 
 int				error_while_reading(char *filename)
 {
