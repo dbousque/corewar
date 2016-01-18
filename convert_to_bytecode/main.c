@@ -184,6 +184,12 @@ int			big_error(void)
 	return (0);
 }
 
+void		*big_error_null(void)
+{
+	ft_putendl_fd("BIG ERROR", 2);
+	return (NULL);
+}
+
 int			write_opcode(unsigned char opcode, t_list **bytes_end)
 {
 	t_list	*tmp;
@@ -302,9 +308,13 @@ t_to_resolve	*new_resolve(char *label, t_function *function_from,
 	return (res);
 }
 
-void		replace_bytes(t_list *bytes, void *val, size_t val_size, size_t size)
+void		replace_bytes(t_list *bytes, void *val, size_t size)
 {
-	bytes->content = val + (val_size - size);
+	void	*res;
+
+	res = malloc(size);
+	ft_memcpy(res, val, size);
+	bytes->content = res;
 	bytes->content_size = size;
 }
 
@@ -319,13 +329,14 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 	{
 		done = 0;
 		to_res = ((t_to_resolve*)labels_to_resolve->content);
+		ft_printf("end : %d, tmp : %d\n", to_res->function_from->bytes_written, to_res->bytes_written_in_function_from);
 		bytes_inbetween = to_res->function_from->bytes_written - to_res->bytes_written_in_function_from;
 		tmp_function = to_res->function_from->next;
 		while (tmp_function && !done)
 		{
 			if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
 			{
-				replace_bytes(to_res->byte_to_override, &bytes_inbetween, sizeof(int), DIR_SIZE);
+				replace_bytes(to_res->byte_to_override, &bytes_inbetween, DIR_SIZE);
 				done = 1;
 			}
 			bytes_inbetween += tmp_function->bytes_written;
@@ -361,11 +372,11 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 			val_val = ft_atoi(instruct->name + 1);
 			val = (unsigned char*)&val_val;
 			//val += sizeof(val_val) - REG_SIZE;
-			ft_printf("sizeof : %d, reg_size : %d\n", sizeof(val_val), REG_SIZE);
-			ft_printf("val_val : %d, val : %08b\n", val_val, *val);
+			//ft_printf("sizeof : %d, reg_size : %d\n", sizeof(val_val), REG_SIZE);
+			//ft_printf("val_val : %d, val : %08b\n", val_val, *val);
 			tmp = ft_lstnew(val, REG_SIZE);
 			ft_lstaddend(bytes_end, tmp);
-			ft_printf("int : %u, reg : %08b\n", val_val, *(unsigned char*)(*bytes_end)->content);
+			//ft_printf("int : %u, reg : %08b\n", val_val, *(unsigned char*)(*bytes_end)->content);
 			function->bytes_written += REG_SIZE;
 		}
 		else if (instruct->type == DIRE)
@@ -377,7 +388,7 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 				//val += sizeof(val_val) - DIR_SIZE;
 				tmp = ft_lstnew(val, DIR_SIZE);
 				ft_lstaddend(bytes_end, tmp);
-				if (!val_val)
+				if (val_val == (unsigned int)-1)
 				{
 					ft_lstaddend(labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 2, function, function->bytes_written, *bytes_end), sizeof(t_to_resolve)));
 					if (!*labels_to_resolve)
@@ -448,16 +459,17 @@ int			add_functions(t_function *functions, t_list **bytes_end)
 	return (resolve_unresolved_labels(labels_to_resolve));
 }
 
-int			add_header_to_bytes2(t_instruct *name, t_instruct *comment, t_list **bytes_end)
+t_list		*add_header_to_bytes2(t_instruct *name, t_instruct *comment, t_list **bytes_end)
 {
 	int				i;
 	int				x;
 	unsigned char	zero;
+	t_list			*prog_size;
 
 	zero = 0;
 	if (ft_strlen(name->name) > PROG_NAME_LENGTH
 		|| ft_strlen(comment->name) > COMMENT_LENGTH)
-		return (big_error());
+		return (big_error_null());
 	x = 0;
 	while (name->name[x])
 	{
@@ -470,6 +482,9 @@ int			add_header_to_bytes2(t_instruct *name, t_instruct *comment, t_list **bytes
 		ft_lstaddend(bytes_end, ft_lstnew(&zero, sizeof(unsigned char)));
 		i++;
 	}
+	if (!(prog_size = ft_lstnew(NULL, 0)))
+		return (NULL);
+	ft_lstaddend(bytes_end, prog_size);
 	x = 0;
 	while (comment->name[x])
 	{
@@ -482,16 +497,16 @@ int			add_header_to_bytes2(t_instruct *name, t_instruct *comment, t_list **bytes
 		ft_lstaddend(bytes_end, ft_lstnew(&zero, sizeof(unsigned char)));
 		i++;
 	}
-	return (1);
+	return (prog_size);
 }
 
-int			add_header_to_bytes(t_function *functions, t_list **bytes_end)
+t_list		*add_header_to_bytes(t_function *functions, t_list **bytes_end)
 {
 	t_instruct	*name;
 	t_instruct	*comment;
 
 	if (functions->header != 1)
-		return (big_error());
+		return (big_error_null());
 	if (ft_strcmp(functions->lines->content->name, NAME_CMD_STRING) == 0
 		&& ft_strcmp(functions->lines->next->content->name, COMMENT_CMD_STRING) == 0)
 	{
@@ -505,7 +520,7 @@ int			add_header_to_bytes(t_function *functions, t_list **bytes_end)
 		comment = functions->lines->content->next;
 	}
 	else
-		return (big_error());
+		return (big_error_null());
 	return (add_header_to_bytes2(name, comment, bytes_end));
 }
 
@@ -539,38 +554,41 @@ int			add_exec_magic_to_bytes(t_list **bytes, t_list **bytes_end)
 	return (1);
 }
 
+int			update_size_bytes(t_list *size_bytes, t_function *functions)
+{
+	unsigned long long	prog_len;
+	unsigned int		*res;
+
+	prog_len = 0;
+	while (functions)
+	{
+		prog_len += functions->bytes_written;
+		functions = functions->next;
+	}
+	if (!(res = (unsigned int*)malloc(sizeof(unsigned int))))
+		return (big_error());
+	*res = (unsigned int)prog_len;
+	size_bytes->content = res;
+	size_bytes->content_size = sizeof(unsigned int);
+	return (1);
+}
+
 int			convert_to_binary(t_function *functions, char *filename)
 {
-	//t_line		*line;
-//	t_instruct	*instruct;
 	t_list		*bytes;
 	t_list		*bytes_end;
+	t_list		*size_bytes;
 
 	bytes = NULL;
 	bytes_end = NULL;
 	if (!(add_exec_magic_to_bytes(&bytes, &bytes_end)))
 		return (0);
-	if (!(add_header_to_bytes(functions, &bytes_end)))
+	if (!(size_bytes = add_header_to_bytes(functions, &bytes_end)))
 		return (0);
 	if (!(add_functions(functions->next, &bytes_end)))
 		return (0);
-	/*functions = functions->next;
-	while (functions)
-	{
-		line = functions->lines;
-		ft_printf("FUNCTION NAME : %s\n", functions->label);
-		while (line)
-		{
-			instruct = line->content;
-			while (instruct)
-			{
-				ft_putendl(instruct->name);
-				instruct = instruct->next;
-			}
-			line = line->next;
-		}
-		functions = functions->next;
-	}*/
+	if (!(update_size_bytes(size_bytes, functions->next)))
+		return (0);
 	return (write_bytes_to_file(filename, bytes));
 }
 
