@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 13:40:20 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 13:56:43 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,14 @@ typedef struct s_instruct	t_instruct;
 typedef struct	s_tempo
 {
 	char		*tmp2;
+	char		*str2;
 	char		*name;
 	char		*label;
 	char		*param1;
 	char		*param2;
 	char		*param3;
+	int			i;
+	int			j;
 }				t_tempo;
 
 struct			s_function
@@ -61,6 +64,7 @@ struct			s_instruct
 	t_instruct	*next;
 };
 
+extern int		g_nb_line;
 extern t_op		op_tab[17];
 
 int				convert_file(char *filename);

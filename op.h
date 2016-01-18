@@ -6,7 +6,7 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2016/01/17 15:28:49 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/18 14:14:33 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct	s_op
 	int			opcode;
 	int			unknown1;
 	char		*comment;
-	int			unknown2;
+	int			has_param_byte;
 	int			unknown3;
 }				t_op;
 

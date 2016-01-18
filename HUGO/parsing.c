@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 12:29:16 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 14:11:30 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,29 +110,29 @@ int		check_line(char *line)
 // 1 pour header - 2 nom de fonction - 3 sti - 4st - 5 live - 6 ld - 7 fork - 8 zjmp - 9 add - 10 sub - 12 comm
 void	add_command(int test, t_function **file, char *line)
 {
-	if (test == 1)
-		add_c_name(file, line);
+	if (test == 100)
+		add_c_name(file, line, test);
+	else if (test == 101)
+		add_comment(file, line, test);
+	else if (test == 102)
+		add_fun(file, line, test);
 	else if (test == 11)
-		add_comment(file, line);
-	else if (test == 2)
-		add_fun(file, line);
+		add_sti(file, line, test);
 	else if (test == 3)
-		add_sti(file, line);
-	else if (test == 4)
-		add_st(file, line);
-	else if (test == 5)
-		add_live(file, line);
-	else if (test == 6)
-		add_ld(file, line);
-	else if (test == 7)
-		add_fork(file, line);
-	else if (test == 8)
-		add_zjmp(file, line);
-	else if (test == 9)
-		add_add(file, line);
-	else if (test == 10)
-		add_sub(file, line);
+		add_st(file, line, test);
+	else if (test == 1)
+		add_live(file, line, test);
+	else if (test == 2)
+		add_ld(file, line, test);
 	else if (test == 12)
+		add_fork(file, line, test);
+	else if (test == 9)
+		add_zjmp(file, line, test);
+	else if (test == 4)
+		add_add(file, line, test);
+	else if (test == 5)
+		add_sub(file, line, test);
+	else if (test == 103)
 		;
 	else
 		exit_prgm(); // A FAIRE RAPIDO
