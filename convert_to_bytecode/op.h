@@ -6,7 +6,7 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2016/01/17 19:13:24 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/18 19:44:12 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 */
 
 #define IND_SIZE				2
-#define REG_SIZE				4
-#define DIR_SIZE				REG_SIZE
+#define REG_SIZE				1
+#define DIR_SIZE				2
 
 
 # define REG_CODE				1
@@ -75,7 +75,7 @@ typedef struct	s_op
 	int			opcode;
 	int			unknown1;
 	char		*comment;
-	int			unknown2;
+	int			has_param_byte;
 	int			unknown3;
 }				t_op;
 

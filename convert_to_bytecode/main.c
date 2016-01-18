@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/01/18 19:54:03 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/18 19:54:06 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "convert_to_bytecode.h"
 
@@ -13,6 +23,7 @@ t_function	*get_functions(char *filename)
 	functions->next->next->next = NULL;
 
 	functions->label = "header";
+	functions->header = 1;
 	functions->lines = (t_line*)malloc(sizeof(t_line));
 	functions->lines->next = (t_line*)malloc(sizeof(t_line));
 	functions->lines->numero = 0;
@@ -144,6 +155,7 @@ int			write_bytes_to_file(char *filename, t_list *bytes)
 {
 	int		fd;
 	char	**res_filename;
+	int		i;
 
 	if (!(res_filename = (char**)malloc(sizeof(char*))))
 		return (cant_create_file(NULL));
@@ -154,7 +166,13 @@ int			write_bytes_to_file(char *filename, t_list *bytes)
 	while (bytes)
 	{
 		//ft_printf("%d\n", *(unsigned char*)bytes->content);
-		write(fd, (unsigned char*)bytes->content, 1);
+		i = bytes->content_size - 1;
+		while (i >= 0)
+		{
+			write(fd, bytes->content + i, 1);
+			i--;
+		}
+		//write(fd, bytes->content, bytes->content_size);
 		bytes = bytes->next;
 	}
 	return (0);
@@ -164,6 +182,270 @@ int			big_error(void)
 {
 	ft_putendl_fd("BIG ERROR", 2);
 	return (0);
+}
+
+int			write_opcode(unsigned char opcode, t_list **bytes_end)
+{
+	t_list	*tmp;
+
+	if (!(tmp = ft_lstnew(&opcode, sizeof(unsigned char))))
+		return (0);
+	ft_lstaddend(bytes_end, tmp);
+	return (1);
+}
+
+t_op		*get_opcode_descr_with_opcode(int opcode)
+{
+	int		i;
+
+	i = 0;
+	while (op_tab[i].name)
+	{
+		if (op_tab[i].opcode == opcode)
+			return (&(op_tab[i]));
+		i++;
+	}
+	return (NULL);
+}
+
+unsigned char	set_two_bits_from(unsigned char byte, unsigned char bits, int from)
+{
+	from = 8 - from;
+	byte = (byte | (bits<<(from - 2)));
+	return (byte);
+}
+
+int			write_param_byte_if_nec(t_instruct *instruct, t_list **bytes_end,
+														t_function *function)
+{
+	t_list			*tmp;
+	t_op			*opcode;
+	unsigned char	param_byte;
+	int				decal;
+
+	if (!(opcode = get_opcode_descr_with_opcode(instruct->opcode)))
+		return (big_error());
+	if (!opcode->has_param_byte)
+		return (1);
+	param_byte = 0;
+	decal = 0;
+	instruct = instruct->next;
+	while (instruct)
+	{
+		if (instruct->type == REG)
+			param_byte = set_two_bits_from(param_byte, REG_CODE, decal);
+		else if (instruct->type == INDIR)
+			param_byte = set_two_bits_from(param_byte, IND_CODE, decal);
+		else if (instruct->type == DIRE)
+			param_byte = set_two_bits_from(param_byte, DIR_CODE, decal);
+		else
+			return (big_error());
+		decal += 2;
+		instruct = instruct->next;
+	}
+	if (!(tmp = ft_lstnew(&param_byte, sizeof(unsigned char))))
+		return (0);
+	ft_lstaddend(bytes_end, tmp);
+	function->bytes_written++;
+	return (1);
+}
+
+unsigned long long	get_relative_addr_of_label(char *label, t_function *function,
+														t_function *functions)
+{
+	unsigned long long	res;
+	unsigned int		bytes_written;
+	int					found;
+
+	found = 0;
+	res = 0;
+	bytes_written = 0;
+	ft_putendl(label);
+	while (functions)
+	{
+		if (ft_strcmp(functions->label, label) == 0)
+			found = 1;
+		if (found)
+			bytes_written += functions->bytes_written;
+		if (functions == function)
+			return (res - bytes_written - 1);
+		functions = functions->next;
+	}
+	return (res);
+}
+
+int			label_not_found(char *label)
+{
+	ft_putstr_fd("LABEL NOT FOUND : ", 2);
+	ft_putendl_fd(label, 2);
+	return (0);
+}
+
+typedef struct	s_to_resolve
+{
+	char		*label_to_seek;
+	t_function	*function_from;
+	int			bytes_written_in_function_from;
+	t_list		*byte_to_override;
+}				t_to_resolve;
+
+t_to_resolve	*new_resolve(char *label, t_function *function_from,
+							int bytes_written_from, t_list *byte_to_override)
+{
+	t_to_resolve	*res;
+	if (!(res = (t_to_resolve*)malloc(sizeof(t_to_resolve))))
+		return (NULL);
+	res->label_to_seek = ft_strdup(label);
+	res->function_from = function_from;
+	res->bytes_written_in_function_from = bytes_written_from;
+	res->byte_to_override = byte_to_override;
+	return (res);
+}
+
+void		replace_bytes(t_list *bytes, void *val, size_t val_size, size_t size)
+{
+	bytes->content = val + (val_size - size);
+	bytes->content_size = size;
+}
+
+int			resolve_unresolved_labels(t_list *labels_to_resolve)
+{
+	t_function		*tmp_function;
+	t_to_resolve	*to_res;
+	unsigned int	bytes_inbetween;
+	char			done;
+
+	while (labels_to_resolve)
+	{
+		done = 0;
+		to_res = ((t_to_resolve*)labels_to_resolve->content);
+		bytes_inbetween = to_res->function_from->bytes_written - to_res->bytes_written_in_function_from;
+		tmp_function = to_res->function_from->next;
+		while (tmp_function && !done)
+		{
+			if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
+			{
+				replace_bytes(to_res->byte_to_override, &bytes_inbetween, sizeof(int), DIR_SIZE);
+				done = 1;
+			}
+			bytes_inbetween += tmp_function->bytes_written;
+			tmp_function = tmp_function->next;
+		}
+		labels_to_resolve = labels_to_resolve->next;
+	}
+	return (1);
+}
+
+int			write_params(t_instruct *instruct, t_list **bytes_end,
+									t_function *function, t_function *functions, t_list **labels_to_resolve, t_list **labels_to_resolve_end)
+{
+	t_list			*tmp;
+	unsigned int	val_val;
+	unsigned char	*val;
+
+	val = NULL;
+	while (instruct)
+	{
+		ft_putendl(instruct->name);
+		if (instruct->type == INDIR)
+		{
+			val_val = ft_atoi(instruct->name);
+			val = (unsigned char*)&val_val;
+			//val += sizeof(val_val) - IND_SIZE;
+			tmp = ft_lstnew(val, IND_SIZE);
+			ft_lstaddend(bytes_end, tmp);
+			function->bytes_written += IND_SIZE;
+		}
+		else if (instruct->type == REG)
+		{
+			val_val = ft_atoi(instruct->name + 1);
+			val = (unsigned char*)&val_val;
+			//val += sizeof(val_val) - REG_SIZE;
+			ft_printf("sizeof : %d, reg_size : %d\n", sizeof(val_val), REG_SIZE);
+			ft_printf("val_val : %d, val : %08b\n", val_val, *val);
+			tmp = ft_lstnew(val, REG_SIZE);
+			ft_lstaddend(bytes_end, tmp);
+			ft_printf("int : %u, reg : %08b\n", val_val, *(unsigned char*)(*bytes_end)->content);
+			function->bytes_written += REG_SIZE;
+		}
+		else if (instruct->type == DIRE)
+		{
+			if (instruct->name[1] == LABEL_CHAR)
+			{
+				val_val = get_relative_addr_of_label(instruct->name + 2, function, functions);
+				val = (unsigned char*)&val_val;
+				//val += sizeof(val_val) - DIR_SIZE;
+				tmp = ft_lstnew(val, DIR_SIZE);
+				ft_lstaddend(bytes_end, tmp);
+				if (!val_val)
+				{
+					ft_lstaddend(labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 2, function, function->bytes_written, *bytes_end), sizeof(t_to_resolve)));
+					if (!*labels_to_resolve)
+						*labels_to_resolve = *labels_to_resolve_end;
+				}
+			}
+			else
+			{
+				val_val = ft_atoi(instruct->name + 1);
+				val = (unsigned char*)&val_val;
+				//val += sizeof(val_val) - DIR_SIZE;
+				tmp = ft_lstnew(val, DIR_SIZE);
+				ft_lstaddend(bytes_end, tmp);
+			}
+			function->bytes_written += DIR_SIZE;
+		}
+		else
+			return (0);
+		instruct = instruct->next;
+	}
+	return (1);
+}
+
+int			write_void_byte(t_list **bytes_end)
+{
+	t_list			*tmp;
+	unsigned char	zero;
+
+	zero = 0;
+	if (!(tmp = ft_lstnew(&zero, sizeof(unsigned char))))
+		return (0);
+	ft_lstaddend(bytes_end, tmp);
+	return (1);
+}
+
+int			add_functions(t_function *functions, t_list **bytes_end)
+{
+	t_function	*tmp_function;
+	t_line		*tmp_line;
+	t_instruct	*tmp_instruct;
+	t_list		*labels_to_resolve;
+	t_list		*labels_to_resolve_end;
+
+	labels_to_resolve = NULL;
+	labels_to_resolve_end = NULL;
+	tmp_function = functions;
+	while (tmp_function)
+	{
+		tmp_function->bytes_written = 0;
+		tmp_line = tmp_function->lines;
+		while (tmp_line)
+		{
+			tmp_instruct = tmp_line->content;
+			if (!(write_opcode(tmp_instruct->opcode, bytes_end)))
+				return (big_error());
+			tmp_function->bytes_written += 1;
+			if (!(write_param_byte_if_nec(tmp_instruct, bytes_end, tmp_function)))
+				return (big_error());
+			if (!(write_params(tmp_instruct->next, bytes_end, tmp_function,
+								functions, &labels_to_resolve, &labels_to_resolve_end)))
+				return (big_error());
+			tmp_line = tmp_line->next;
+		}
+		//if (!(write_void_byte(bytes_end)))
+		//	return (big_error());
+		tmp_function = tmp_function->next;
+	}
+	return (resolve_unresolved_labels(labels_to_resolve));
 }
 
 int			add_header_to_bytes2(t_instruct *name, t_instruct *comment, t_list **bytes_end)
@@ -208,7 +490,7 @@ int			add_header_to_bytes(t_function *functions, t_list **bytes_end)
 	t_instruct	*name;
 	t_instruct	*comment;
 
-	if (ft_strcmp(functions->label, "header") != 0)
+	if (functions->header != 1)
 		return (big_error());
 	if (ft_strcmp(functions->lines->content->name, NAME_CMD_STRING) == 0
 		&& ft_strcmp(functions->lines->next->content->name, COMMENT_CMD_STRING) == 0)
@@ -269,6 +551,8 @@ int			convert_to_binary(t_function *functions, char *filename)
 	if (!(add_exec_magic_to_bytes(&bytes, &bytes_end)))
 		return (0);
 	if (!(add_header_to_bytes(functions, &bytes_end)))
+		return (0);
+	if (!(add_functions(functions->next, &bytes_end)))
 		return (0);
 	/*functions = functions->next;
 	while (functions)
