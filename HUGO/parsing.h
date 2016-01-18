@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 18:15:06 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 13:40:20 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct	s_tempo
 struct			s_function
 {
 	int			header;
+	int			bytes_written;
 	char		*label;
 	t_line		*lines;
 	t_function  *next;

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:12:50 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 19:32:47 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 10:54:28 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,34 @@ int		check_ld(char *tmp, char *line)
 	while (tmp[i] != 'd')
 		i++;
 	i++;
+	j = i;
+	while (tmp[j] != SEPARATOR_CHAR)
+		j++;
+	tmp2 = ft_strsub(tmp, i, j);
+	j++;
+	if (tmp[j] != 'r') // VERIFIER LE NUMERO DU REGISTRE ?
+		return (0);
+	// CHECKER TMP2 ET RETURN FINAL
 }
 
 int		check_fork(char *tmp, char *line)
 {
+	int		i;
+	int		j;
+	char	*tmp2;
+
+	i = 0;
+	j = 0;
+	while (tmp[i] != 'k')
+		i++;
+	i++;
+	if (tmp[i] != DIRECT_CHAR)
+		return (0);
+	j = i;
+	while (tmp[j] != '\n')
+		j++;
+	tmp2 = ft_strsub(tmp, i, j);
+	if (is_label_char(tmp2) == 0)
+		return (0);
+	return (1);
 }

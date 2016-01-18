@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/17 19:24:04 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/18 12:29:16 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,33 @@ int		check_line(char *line)
 	else
 		return (check_function(tmp, line));
 }
-
-void	add_command(int test, t_function **file)
+// 1 pour header - 2 nom de fonction - 3 sti - 4st - 5 live - 6 ld - 7 fork - 8 zjmp - 9 add - 10 sub - 12 comm
+void	add_command(int test, t_function **file, char *line)
 {
+	if (test == 1)
+		add_c_name(file, line);
+	else if (test == 11)
+		add_comment(file, line);
+	else if (test == 2)
+		add_fun(file, line);
+	else if (test == 3)
+		add_sti(file, line);
+	else if (test == 4)
+		add_st(file, line);
+	else if (test == 5)
+		add_live(file, line);
+	else if (test == 6)
+		add_ld(file, line);
+	else if (test == 7)
+		add_fork(file, line);
+	else if (test == 8)
+		add_zjmp(file, line);
+	else if (test == 9)
+		add_add(file, line);
+	else if (test == 10)
+		add_sub(file, line);
+	else if (test == 12)
+		;
+	else
+		exit_prgm(); // A FAIRE RAPIDO
 }
