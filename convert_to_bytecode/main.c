@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 19:54:03 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/18 19:54:06 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/19 13:40:35 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,6 +293,7 @@ typedef struct	s_to_resolve
 	t_function	*function_from;
 	int			bytes_written_in_function_from;
 	t_list		*byte_to_override;
+	int			small_dir;
 }				t_to_resolve;
 
 t_to_resolve	*new_resolve(char *label, t_function *function_from,
@@ -330,15 +331,17 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 		done = 0;
 		to_res = ((t_to_resolve*)labels_to_resolve->content);
 		ft_printf("end : %d, tmp : %d\n", to_res->function_from->bytes_written, to_res->bytes_written_in_function_from);
-		bytes_inbetween = to_res->function_from->bytes_written - to_res->bytes_written_in_function_from;
+		bytes_inbetween = to_res->function_from->bytes_written;// - to_res->bytes_written_in_function_from;
 		tmp_function = to_res->function_from->next;
 		while (tmp_function && !done)
 		{
 			if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
 			{
-				replace_bytes(to_res->byte_to_override, &bytes_inbetween, DIR_SIZE);
+				ft_printf("bytes inbetween : %d\n", bytes_inbetween);
+				replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
 				done = 1;
 			}
+			ft_printf("function : %s, bytes_written : %d\n", tmp_function->label, tmp_function->bytes_written);
 			bytes_inbetween += tmp_function->bytes_written;
 			tmp_function = tmp_function->next;
 		}
@@ -353,8 +356,12 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 	t_list			*tmp;
 	unsigned int	val_val;
 	unsigned char	*val;
+	t_op			*opcode;
 
+	if (!(opcode = get_opcode_descr_with_opcode(instruct->opcode)))
+		return (big_error());
 	val = NULL;
+	instruct = instruct->next;
 	while (instruct)
 	{
 		ft_putendl(instruct->name);
@@ -362,7 +369,6 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 		{
 			val_val = ft_atoi(instruct->name);
 			val = (unsigned char*)&val_val;
-			//val += sizeof(val_val) - IND_SIZE;
 			tmp = ft_lstnew(val, IND_SIZE);
 			ft_lstaddend(bytes_end, tmp);
 			function->bytes_written += IND_SIZE;
@@ -371,12 +377,8 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 		{
 			val_val = ft_atoi(instruct->name + 1);
 			val = (unsigned char*)&val_val;
-			//val += sizeof(val_val) - REG_SIZE;
-			//ft_printf("sizeof : %d, reg_size : %d\n", sizeof(val_val), REG_SIZE);
-			//ft_printf("val_val : %d, val : %08b\n", val_val, *val);
 			tmp = ft_lstnew(val, REG_SIZE);
 			ft_lstaddend(bytes_end, tmp);
-			//ft_printf("int : %u, reg : %08b\n", val_val, *(unsigned char*)(*bytes_end)->content);
 			function->bytes_written += REG_SIZE;
 		}
 		else if (instruct->type == DIRE)
@@ -385,25 +387,24 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 			{
 				val_val = get_relative_addr_of_label(instruct->name + 2, function, functions);
 				val = (unsigned char*)&val_val;
-				//val += sizeof(val_val) - DIR_SIZE;
-				tmp = ft_lstnew(val, DIR_SIZE);
+				tmp = ft_lstnew(val, opcode->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
 				ft_lstaddend(bytes_end, tmp);
 				if (val_val == (unsigned int)-1)
 				{
 					ft_lstaddend(labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 2, function, function->bytes_written, *bytes_end), sizeof(t_to_resolve)));
 					if (!*labels_to_resolve)
 						*labels_to_resolve = *labels_to_resolve_end;
+					((t_to_resolve*)(*labels_to_resolve_end)->content)->small_dir = opcode->small_dir;
 				}
 			}
 			else
 			{
 				val_val = ft_atoi(instruct->name + 1);
 				val = (unsigned char*)&val_val;
-				//val += sizeof(val_val) - DIR_SIZE;
-				tmp = ft_lstnew(val, DIR_SIZE);
+				tmp = ft_lstnew(val, opcode->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
 				ft_lstaddend(bytes_end, tmp);
 			}
-			function->bytes_written += DIR_SIZE;
+			function->bytes_written += opcode->small_dir ? DIR_SIZE / 2 : DIR_SIZE;
 		}
 		else
 			return (0);
@@ -447,7 +448,7 @@ int			add_functions(t_function *functions, t_list **bytes_end)
 			tmp_function->bytes_written += 1;
 			if (!(write_param_byte_if_nec(tmp_instruct, bytes_end, tmp_function)))
 				return (big_error());
-			if (!(write_params(tmp_instruct->next, bytes_end, tmp_function,
+			if (!(write_params(tmp_instruct, bytes_end, tmp_function,
 								functions, &labels_to_resolve, &labels_to_resolve_end)))
 				return (big_error());
 			tmp_line = tmp_line->next;
