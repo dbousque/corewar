@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 19:54:03 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/19 13:40:35 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/19 14:02:09 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ t_function	*get_functions(char *filename)
 	functions->next->next->label = "live";
 	functions->next->next->lines = (t_line*)malloc(sizeof(t_line));
 	functions->next->next->lines->next = (t_line*)malloc(sizeof(t_line));
-	functions->next->next->lines->next->next = NULL;
+	functions->next->next->lines->next->next = (t_line*)malloc(sizeof(t_line));
+	functions->next->next->lines->next->next->next = NULL;
 
 	functions->next->next->lines->numero = 0;
 	functions->next->next->lines->content = (t_instruct*)malloc(sizeof(t_instruct));
@@ -106,6 +107,16 @@ t_function	*get_functions(char *filename)
 	functions->next->next->lines->next->content->next->name = "%:live";
 	functions->next->next->lines->next->content->next->type = DIRE;
 	functions->next->next->lines->next->content->next->next = NULL;
+
+	functions->next->next->lines->next->next->numero = 2;
+	functions->next->next->lines->next->next->content = (t_instruct*)malloc(sizeof(t_instruct));
+	functions->next->next->lines->next->next->content->name = "zjmp";
+	functions->next->next->lines->next->next->content->type = OPCODE;
+	functions->next->next->lines->next->next->content->opcode = 9;
+	functions->next->next->lines->next->next->content->next = (t_instruct*)malloc(sizeof(t_instruct));
+	functions->next->next->lines->next->next->content->next->name = "%:live";
+	functions->next->next->lines->next->next->content->next->type = DIRE;
+	functions->next->next->lines->next->next->content->next->next = NULL;
 	return (functions);
 }
 
@@ -274,7 +285,7 @@ unsigned long long	get_relative_addr_of_label(char *label, t_function *function,
 		if (found)
 			bytes_written += functions->bytes_written;
 		if (functions == function)
-			return (res - bytes_written - 1);
+			return (res - bytes_written + 1);
 		functions = functions->next;
 	}
 	return (res);
@@ -389,7 +400,7 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 				val = (unsigned char*)&val_val;
 				tmp = ft_lstnew(val, opcode->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
 				ft_lstaddend(bytes_end, tmp);
-				if (val_val == (unsigned int)-1)
+				if (val_val == (unsigned int)1)
 				{
 					ft_lstaddend(labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 2, function, function->bytes_written, *bytes_end), sizeof(t_to_resolve)));
 					if (!*labels_to_resolve)
