@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 19:14:01 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 12:09:12 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int				check_line(char *line);
 int				check_param(char *str);
 int				check_name_solo(char *str);
 int				check_what_is(char *str);
+int				recup_opcode(char *str);
 
 void			add_c_name(t_function **file, char *line, int test);
 void			add_comment(t_function **file, char *line, int test);
@@ -98,12 +99,12 @@ void			add_command(int test, t_function **file, char *line);
 void			ft_lstaddend_funct(t_function **alst, t_function *new_r);
 void			ft_lstaddend_line(t_line **alst, t_line *new_r);
 void			ft_lstaddend_instruct(t_line **alst, t_instruct *new_r);
-void			make_line_1(t_function **file, t_tempo *vars, int test);
-void			make_line_2(t_function **file, t_tempo *vars, int test);
-void			make_line_3(t_function **file, t_tempo *vars, int test);
-void			make_line_4(t_function **file, t_tempo *vars, int test);
-void			make_line_5(t_function **file, t_tempo *vars, int test);
-void			make_line_6(t_function **file, t_tempo *vars, int test);
+void			make_line_1(t_function **file, t_tempo *vars);
+void			make_line_2(t_function **file, t_tempo *vars);
+void			make_line_3(t_function **file, t_tempo *vars);
+void			make_line_4(t_function **file, t_tempo *vars);
+void			make_line_5(t_function **file, t_tempo *vars);
+void			make_line_6(t_function **file, t_tempo *vars);
 
 t_function		*new_function(char *str);
 t_line			*new_line(int count);

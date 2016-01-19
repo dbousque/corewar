@@ -6,7 +6,7 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2016/01/18 14:14:33 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 12:00:28 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct	s_op
 	int			unknown1;
 	char		*comment;
 	int			has_param_byte;
-	int			unknown3;
+	int			small_dir;
 }				t_op;
 
 typedef struct		header_s

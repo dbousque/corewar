@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 09:42:55 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 12:01:40 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	affiche(t_function **file)
 			while (tmp3)
 			{
 				ft_printf(" %s ", tmp3->name);
+				ft_printf("opcode : %d ", tmp3->opcode);
 				tmp3 = tmp3->next;
 			}
 			ft_printf("\n");
