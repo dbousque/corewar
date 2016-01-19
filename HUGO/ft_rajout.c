@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:47:32 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 14:53:21 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 15:48:34 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int		is_number(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] < '0' && str[i] > '9')
+	while (str[i] < '0' || str[i] > '9')
 		i++;
 	if (i > 1)
 		return (0);

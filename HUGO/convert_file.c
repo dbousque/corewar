@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 15:44:08 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 15:46:53 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int				convert_file(char *filename)
 	if (ret == -1)
 		return (error_while_reading(filename));
 	affiche(&file);
+	check_file(&file);
 	convert_to_bytecode(file, filename);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 15:37:38 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 16:11:04 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	check_params(char *str, int val)
 	{
 		if (is_number(str) == 1 && the_number(str) <= REG_NUMBER)
 		{
+			ft_printf("|| %s ||\n", str);
+			ft_printf("|| %d ||\n", val);
 			if (val == T_REG)
 				;
 			else
