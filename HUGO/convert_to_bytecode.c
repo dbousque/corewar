@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:24:25 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/19 15:43:37 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 17:54:21 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,22 +337,27 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 	t_to_resolve	*to_res;
 	unsigned int	bytes_inbetween;
 	char			done;
+	int				tour;
 
 	while (labels_to_resolve)
 	{
 		done = 0;
+		tour = 0;
 		to_res = ((t_to_resolve*)labels_to_resolve->content);
 		ft_printf("end : %d, tmp : %d\n", to_res->function_from->bytes_written, to_res->bytes_written_in_function_from);
-		bytes_inbetween = to_res->function_from->bytes_written;// - to_res->bytes_written_in_function_from;
+		bytes_inbetween = to_res->function_from->bytes_written - to_res->bytes_written_in_function_from + 1;
 		tmp_function = to_res->function_from->next;
 		while (tmp_function && !done)
 		{
 			if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
 			{
 				ft_printf("bytes inbetween : %d\n", bytes_inbetween);
+				if (tour && !to_res->small_dir)
+					bytes_inbetween += 2;
 				replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
 				done = 1;
 			}
+			tour = 1;
 			ft_printf("function : %s, bytes_written : %d\n", tmp_function->label, tmp_function->bytes_written);
 			bytes_inbetween += tmp_function->bytes_written;
 			tmp_function = tmp_function->next;
