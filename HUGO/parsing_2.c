@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:03:47 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 14:07:40 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 18:18:57 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,20 @@ int		recup_opcode(char *str)
 	return (op_tab[i].opcode);
 }
 
+int		check_name_double(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != ' ' && str[i] != '\t' && str[i] != '\0')
+		i++;
+	while (str[i] == ' ' || str[i] == '\t')
+		i++;
+	if (str[i] == '\0')
+		return (0);
+	return (1);
+}
+
 int		check_name_solo(char *str)
 {
 	int	i;
@@ -40,7 +54,7 @@ int		check_name_solo(char *str)
 
 	i = 0;
 	fini = 0;
-	while (str[i] && fini == 0)
+	while (str[i] && fini == 0 && str[i] != ' ' && str[i] != '\t')
 	{
 		j = 0;
 		while (LABEL_CHARS[j])

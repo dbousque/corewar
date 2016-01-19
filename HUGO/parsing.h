@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 15:43:10 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 18:11:48 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ struct			s_instruct
 	t_instruct	*next;
 };
 
+extern int		g_tmp;
 extern int		g_nb_line;
 extern t_op		op_tab[17];
 
@@ -88,18 +89,19 @@ int				recup_opcode(char *str);
 int				str_to_int(char *str);
 int				is_number(char *str);
 int				the_number(char *str);
+int				check_name_double(char *str);
 int				convert_to_bytecode(t_function *functions, char *filename);
 
 void			check_file(t_function **file);
-void			check_instruct(t_instruct **content);
-void			exit_prgm_nbr(void);
-void			exit_prgm_rg_big(void);
-void			exit_prgm_type_rg(void);
-void			exit_prgm_type_ind(void);
-void			exit_prgm_type_dir_l(void);
-void			exit_prgm_type_dir_n(void);
-void			exit_prgm_lab_in(void);
-void			exit_prgm_fk_dir(void);
+void			check_instruct(t_instruct **content, char *str2);
+void			exit_prgm_nbr(char *str, char *str2);
+void			exit_prgm_rg_big(char *str, char *str2);
+void			exit_prgm_type_rg(char *str, char *str2);
+void			exit_prgm_type_ind(char *str, char *str2);
+void			exit_prgm_type_dir_l(char *str, char *str2);
+void			exit_prgm_type_dir_n(char *str, char *str2);
+void			exit_prgm_lab_in(char *str, char *str2);
+void			exit_prgm_fk_dir(char *str, char *str2);
 void			add_c_name(t_function **file, char *line, int test);
 void			add_comment(t_function **file, char *line, int test);
 void			add_fun(t_function **file, char *line, int test);

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 16:36:08 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 17:29:41 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		is_in_tab(int a, int *tab, int i)
 	return (0);
 }
 
-void	check_params(char *str, int *tab, int i)
+void	check_params(char *str, int *tab, int i, char *str2)
 {
 	char	*tmp;
 
@@ -31,10 +31,10 @@ void	check_params(char *str, int *tab, int i)
 			if (is_in_tab(T_REG, tab, i))
 				;
 			else
-				exit_prgm_type_rg();
+				exit_prgm_type_rg(str2, str);
 		}
 		else
-			exit_prgm_rg_big();
+			exit_prgm_rg_big(str2, str);
 	}
 	else if (str[0] == DIRECT_CHAR)
 	{
@@ -45,10 +45,10 @@ void	check_params(char *str, int *tab, int i)
 				if (is_in_tab(T_DIR, tab, i))
 					;
 				else
-					exit_prgm_type_dir_l();
+					exit_prgm_type_dir_l(str2, str);
 			}
 			else
-				exit_prgm_lab_in();
+				exit_prgm_lab_in(str2, str);
 		}
 		else
 		{
@@ -57,10 +57,10 @@ void	check_params(char *str, int *tab, int i)
 				if (is_in_tab(T_DIR, tab, i))
 					;
 				else
-					exit_prgm_type_dir_n();
+					exit_prgm_type_dir_n(str2, str);
 			}
 			else
-				exit_prgm_fk_dir();
+				exit_prgm_fk_dir(str2, str);
 		}
 	}
 	else
@@ -70,14 +70,14 @@ void	check_params(char *str, int *tab, int i)
 			if (is_in_tab(T_IND, tab, i))
 				;
 			else
-				exit_prgm_type_ind();
+				exit_prgm_type_ind(str2, str);
 		}
 		else
-			exit_prgm_nbr();
+			exit_prgm_nbr(str2, str);
 	}
 }
 
-void	check_instruct(t_instruct **content)
+void	check_instruct(t_instruct **content, char *str2)
 {
 	t_instruct	*tmp;
 	char		*str;
@@ -91,20 +91,20 @@ void	check_instruct(t_instruct **content)
 	while (tmp)
 	{
 		test = str_to_int(str);
-		check_params(tmp->name, op_tab[test].params_types, i);
+		check_params(tmp->name, op_tab[test].params_types, i, str2);
 		tmp = tmp->next;
 		i++;
 	}
 }
 
-void	check_funct(t_line** lines)
+void	check_funct(t_line** lines, char *str2)
 {
 	t_line	*tmp;
 
 	tmp = *lines;
 	while (tmp)
 	{
-		check_instruct(&tmp->content);
+		check_instruct(&tmp->content, str2);
 		tmp = tmp->next;
 	}
 }
@@ -117,7 +117,7 @@ void	check_file(t_function **file) // FAIRE PASSER LE NOM ET LA LIGNE POUR L AFF
 	while (tmp)
 	{
 		if (tmp->header == 0)
-			check_funct(&tmp->lines);
+			check_funct(&tmp->lines, tmp->label);
 		tmp = tmp->next;
 	}
 }

@@ -6,11 +6,13 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 16:16:26 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 18:19:19 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int		g_tmp;
 
 int		is_label_char(char *str)
 {
@@ -76,12 +78,14 @@ int		check_line(char *line)
 	char		*test1;
 	char		*test2;
 	int			test3;
+	int			test4;
 	static int	begin = 0;
 
 	test1 = ft_strdup(NAME_CMD_STRING);
 	test2 = ft_strdup(COMMENT_CMD_STRING);
 	tmp = ft_strtrim(line);
 	test3 = check_name_solo(tmp);
+	test4 = check_name_double(tmp);
 	if (tmp[0] == test1[0] || tmp[0] == test2[0])
 	{
 		if (begin > 1)
@@ -92,7 +96,11 @@ int		check_line(char *line)
 	else if (line[0] == '\0')
 		return (103);
 	else if (test3 == 1)
+	{
+		if (test4 == 1)
+			return (106);
 		return (102);
+	}
 	else if (line[0] == '#')
 		return (105);
 	else
@@ -101,6 +109,7 @@ int		check_line(char *line)
 void	add_command(int test, t_function **file, char *line)
 {
 	int		i;
+	char	*str3;
 
 	i = 0;
 	if (test == 100)
@@ -109,6 +118,16 @@ void	add_command(int test, t_function **file, char *line)
 		add_comment(file, line, test);
 	else if (test == 102)
 		add_fun(file, line, test);
+	else if (test == 106)
+	{
+		while (line[i] != LABEL_CHAR)
+			i++;
+		str3 = ft_strsub(line, 0, i);
+		add_fun(file, str3, test);
+		str3 = ft_strsub(line, i + 1, ft_strlen(line) - i);
+		g_tmp = check_line(str3);
+		add_command(g_tmp, file, str3);
+	}
 	else if (test == 103 || test == 105)
 		;
 	else if (test == 0)
