@@ -6,11 +6,21 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:03:47 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 12:11:35 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 14:07:40 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int		str_to_int(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (ft_strcmp(op_tab[i].name, str) != 0)
+		i++;
+	return (i);
+}
 
 int		recup_opcode(char *str)
 {
