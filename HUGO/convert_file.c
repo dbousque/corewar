@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 15:46:53 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 16:42:05 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	affiche(t_function **file)
 		tmp = tmp->next;
 	}
 }
-
+//lol
 int				convert_file(char *filename)
 {
 	t_function *file;
