@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 18:19:19 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 18:52:17 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ void	add_command(int test, t_function **file, char *line)
 	char	*str3;
 
 	i = 0;
+	ft_printf("%d\n", test);
+	ft_printf("|| %s ||\n", line);
 	if (test == 100)
 		add_c_name(file, line, test);
 	else if (test == 101)

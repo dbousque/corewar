@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:05:35 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 12:10:16 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 19:01:36 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	add_line_3_param(t_function **file, char *line, int test)
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
 	vars->str2 = deblank(vars->str2);
-	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
+	while (vars->i < ft_strlen(op_tab[test - 1].name) - 1)
 		vars->i++;
 	vars->i++;
 	vars->name = ft_strsub(vars->str2, 0, vars->i);

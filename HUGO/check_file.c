@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 17:29:41 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 19:13:00 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,11 @@ void	check_params(char *str, int *tab, int i, char *str2)
 		}
 		else
 		{
-			if (is_number(str) == 1)
+			if (str[1] == '-') // CAS DU NEGATIF A GERER MIEUX QUE CA
+				;
+			else if (is_number(str) == 1)
 			{
-				if (is_in_tab(T_DIR, tab, i))
+				if (is_in_tab(T_DIR, tab, i)) // WTF NEGATIF PREND PAS DIR ON DIRAIT, ALORS QUE LD A BIEN UN DIR
 					;
 				else
 					exit_prgm_type_dir_n(str2, str);
