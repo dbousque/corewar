@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 09:23:01 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 16:16:26 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int		is_label_char(char *str)
 		{
 			if (label[j] == str[i])
 				break;
+			j++;
 		}
 		if (j == len - 1)
 			return (0);

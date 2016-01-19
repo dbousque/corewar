@@ -6,13 +6,20 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 16:11:04 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 16:36:08 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	check_params(char *str, int val)
+int		is_in_tab(int a, int *tab, int i)
+{
+	if (tab[i] & a)
+		return (1);
+	return (0);
+}
+
+void	check_params(char *str, int *tab, int i)
 {
 	char	*tmp;
 
@@ -21,9 +28,7 @@ void	check_params(char *str, int val)
 	{
 		if (is_number(str) == 1 && the_number(str) <= REG_NUMBER)
 		{
-			ft_printf("|| %s ||\n", str);
-			ft_printf("|| %d ||\n", val);
-			if (val == T_REG)
+			if (is_in_tab(T_REG, tab, i))
 				;
 			else
 				exit_prgm_type_rg();
@@ -37,7 +42,7 @@ void	check_params(char *str, int val)
 		{
 			if (is_label_char(ft_strsub(str, 2, ft_strlen(str) - 2)) == 1)
 			{
-				if (val == T_DIR)
+				if (is_in_tab(T_DIR, tab, i))
 					;
 				else
 					exit_prgm_type_dir_l();
@@ -49,7 +54,7 @@ void	check_params(char *str, int val)
 		{
 			if (is_number(str) == 1)
 			{
-				if (val == T_DIR)
+				if (is_in_tab(T_DIR, tab, i))
 					;
 				else
 					exit_prgm_type_dir_n();
@@ -62,7 +67,7 @@ void	check_params(char *str, int val)
 	{
 		if (is_number(str) == 1)
 		{
-			if (val == T_IND)
+			if (is_in_tab(T_IND, tab, i))
 				;
 			else
 				exit_prgm_type_ind();
@@ -82,11 +87,12 @@ void	check_instruct(t_instruct **content)
 	tmp = *content;
 	i = 0;
 	str = tmp->name;
-	test = str_to_int(str);
 	tmp = tmp->next;
 	while (tmp)
 	{
-		check_params(tmp->name, op_tab[test].params_types[i]);
+		test = str_to_int(str);
+		check_params(tmp->name, op_tab[test].params_types, i);
+		tmp = tmp->next;
 		i++;
 	}
 }
