@@ -6,7 +6,7 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2016/01/19 12:00:28 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 12:04:45 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 */
 
 #define IND_SIZE				2
-#define REG_SIZE				4
-#define DIR_SIZE				REG_SIZE
+#define REG_SIZE				1
+#define DIR_SIZE				4
 
 
 # define REG_CODE				1
@@ -55,16 +55,16 @@
 typedef char	t_arg_type;
 
 #define T_REG					1
-#define T_DIR					4
-#define T_IND					2
+#define T_DIR					2
+#define T_IND					4
 #define T_LAB					8
 
 /*
 **
 */
 
-# define PROG_NAME_LENGTH		(128)
-# define COMMENT_LENGTH			(2048)
+# define PROG_NAME_LENGTH		(132)
+# define COMMENT_LENGTH			(2052)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
 typedef struct	s_op

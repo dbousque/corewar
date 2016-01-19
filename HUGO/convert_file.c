@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 12:01:40 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 14:32:41 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	affiche(t_function **file)
 			while (tmp3)
 			{
 				ft_printf(" %s ", tmp3->name);
-				ft_printf("opcode : %d ", tmp3->opcode);
+				ft_printf("opcode : %d, type : %d ", tmp3->opcode, tmp3->type);
 				tmp3 = tmp3->next;
 			}
 			ft_printf("\n");
@@ -87,8 +87,9 @@ int				convert_file(char *filename)
 		test = check_line(line);
 		add_command(test, &file, line);
 	}
-	affiche(&file);
 	if (ret == -1)
 		return (error_while_reading(filename));
+	affiche(&file);
+	convert_to_bytecode(file, filename);
 	return (0);
 }

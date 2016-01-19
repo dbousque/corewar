@@ -1,7 +1,10 @@
-.comment "LOL ALIVE"
 .name "zork"
+.comment "I'M ALIIIIVE"
 
-live:
-	ld %2, r1
-	sti r1, %232, r4
-	zjmp %:live
+l2:		
+		sti r1, %:live, %1
+		and r1, %0, r1
+
+live:	
+		live %1
+		zjmp %:live

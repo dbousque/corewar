@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 15:46:11 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 15:46:12 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 14:54:24 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		cant_read_file(char *filename)
 	return (0);
 }
 
-int		cant_create_file(char *filename)
+/*int		cant_create_file(char *filename)
 {
 	ft_putstr_fd("Failed to create binary file ", 2);
 	ft_putendl_fd(filename, 2);
@@ -67,7 +67,7 @@ int		create_res_file(char *filename, char **filename_res)
 	(*filename_res)[last_point + 2] = 'o';
 	(*filename_res)[last_point + 3] = 'r';
 	return (open(*filename_res, O_CREAT | O_TRUNC | O_RDWR));
-}
+}*/
 
 int		main(int argc, char **argv)
 {

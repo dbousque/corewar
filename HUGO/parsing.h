@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 12:09:12 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 14:30:43 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,7 @@ void			make_line_6(t_function **file, t_tempo *vars);
 t_function		*new_function(char *str);
 t_line			*new_line(int count);
 t_instruct		*new_instruct(char *str, int typ, int opcod);
+
+int				convert_to_bytecode(t_function *functions, char *filename);
 
 #endif
