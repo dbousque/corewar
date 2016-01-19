@@ -6,25 +6,29 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 19:05:45 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 09:42:55 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-char* deblank(char* input)                                         
+char* deblank(char* input)
 {
 	int i;
 	int j;
 	char *output;
 	
 	output = input;
-	for (i = 0, j = 0; i < ft_strlen(input); i++,j++)          
+	i = 0;
+	j = 0;
+	while (i < ft_strlen(input))
 	{
-		if (input[i] != ' ')                           
-			output[j] = input[i];                     
+		if (input[i] != ' ' && input[i] != '\t')
+			output[j] = input[i];
 		else
-			j--;                                     
+			j--;
+		i++;
+		j++;
 	}
 	output[j] = 0;
 	return (output);
@@ -82,7 +86,7 @@ int				convert_file(char *filename)
 		test = check_line(line);
 		add_command(test, &file, line);
 	}
-//	affiche(&file);
+	affiche(&file);
 	if (ret == -1)
 		return (error_while_reading(filename));
 	return (0);

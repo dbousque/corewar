@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 19:19:22 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 09:23:01 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int		check_line(char *line)
 		return (103);
 	else if (test3 == 1)
 		return (102);
+	else if (line[0] == '#')
+		return (105);
 	else
 		return (check_what_is(line));
 }
@@ -106,7 +108,7 @@ void	add_command(int test, t_function **file, char *line)
 		add_comment(file, line, test);
 	else if (test == 102)
 		add_fun(file, line, test);
-	else if (test == 103)
+	else if (test == 103 || test == 105)
 		;
 	else if (test == 0)
 		;

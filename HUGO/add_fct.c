@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:05:35 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 19:03:51 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 09:37:29 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	add_c_name(t_function **file, char *line, int test)
 	j = 0;
 	tmp2 = ft_strtrim(line);
 	tmp2 = ft_strsub(tmp2, ft_strlen(NAME_CMD_STRING), ft_strlen(tmp2));
+	tmp2 = ft_strtrim(tmp2);
 	tmp = new_function(tmp2);
 	tmp->header = 1;
 	ft_lstaddend_funct(file, tmp);
@@ -41,6 +42,7 @@ void	add_comment(t_function **file, char *line, int test)
 	j = 0;
 	tmp2 = ft_strtrim(line);
 	tmp2 = ft_strsub(tmp2, ft_strlen(COMMENT_CMD_STRING), ft_strlen(tmp2));
+	tmp2 = ft_strtrim(tmp2);
 	tmp = new_function(tmp2);
 	tmp->header = 2;
 	ft_lstaddend_funct(file, tmp);
@@ -71,7 +73,7 @@ void	add_line_1_param(t_function **file, char *line, int test)
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
 	vars->str2 = deblank(vars->str2);
-	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1]) // TEST = TEST - 1??
+	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
 		vars->i++;
 	vars->i++;
 	vars->name = ft_strsub(vars->str2, 0, vars->i);

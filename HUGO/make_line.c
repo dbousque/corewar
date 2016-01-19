@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 14:21:34 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 19:19:34 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/19 09:23:26 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,6 @@ void	make_line_3(t_function **file, t_tempo *vars, int test)
 	t_instruct	*tmp3;
 
 	tmp = *file;
-	tmp2 = NULL;
-	tmp3 = NULL;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp2 = new_line(g_nb_line);
