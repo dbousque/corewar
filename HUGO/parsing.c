@@ -6,13 +6,14 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 18:52:17 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 14:29:43 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
 int		g_tmp;
+int		g_lines_tot;
 
 int		is_label_char(char *str)
 {
@@ -79,13 +80,12 @@ int		check_line(char *line)
 	char		*test2;
 	int			test3;
 	int			test4;
+	int			test5;
 	static int	begin = 0;
 
 	test1 = ft_strdup(NAME_CMD_STRING);
 	test2 = ft_strdup(COMMENT_CMD_STRING);
 	tmp = ft_strtrim(line);
-	test3 = check_name_solo(tmp);
-	test4 = check_name_double(tmp);
 	if (tmp[0] == test1[0] || tmp[0] == test2[0])
 	{
 		if (begin > 1)
@@ -95,13 +95,13 @@ int		check_line(char *line)
 	}
 	else if (line[0] == '\0')
 		return (103);
-	else if (test3 == 1)
+	else if (check_name_solo(tmp) == 1)
 	{
-		if (test4 == 1)
+		if (check_name_double(tmp) == 1)
 			return (106);
 		return (102);
 	}
-	else if (line[0] == '#')
+	else if (is_comment(tmp) == 1)
 		return (105);
 	else
 		return (check_what_is(line));
@@ -112,8 +112,6 @@ void	add_command(int test, t_function **file, char *line)
 	char	*str3;
 
 	i = 0;
-	ft_printf("%d\n", test);
-	ft_printf("|| %s ||\n", line);
 	if (test == 100)
 		add_c_name(file, line, test);
 	else if (test == 101)

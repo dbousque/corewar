@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 18:11:48 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 14:36:37 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@
 typedef struct s_function	t_function;
 typedef struct s_line		t_line;
 typedef struct s_instruct	t_instruct;
+
+typedef struct	s_param
+{
+	char	type;
+	int		val;
+}				t_param;
 
 typedef struct	s_tempo
 {
@@ -68,6 +74,7 @@ struct			s_instruct
 	t_instruct	*next;
 };
 
+extern int		g_lines_tot;
 extern int		g_tmp;
 extern int		g_nb_line;
 extern t_op		op_tab[17];
@@ -90,6 +97,7 @@ int				str_to_int(char *str);
 int				is_number(char *str);
 int				the_number(char *str);
 int				check_name_double(char *str);
+int				is_comment(char *str);
 int				convert_to_bytecode(t_function *functions, char *filename);
 
 void			check_file(t_function **file);

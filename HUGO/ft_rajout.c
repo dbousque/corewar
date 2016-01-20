@@ -6,11 +6,25 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:47:32 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 15:48:34 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 14:35:24 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int		is_comment(char *str)
+{
+	int i;
+
+	i = 0;
+	while (COMMENT_CHARS[i])
+	{
+		if (str[0] == COMMENT_CHARS[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 int		is_number(char *str)
 {

@@ -1,3 +1,5 @@
+;bien cousin ?
+
 .name "zork"
 .comment "I'M ALIIIIVE"
 

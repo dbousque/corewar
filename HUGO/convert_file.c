@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 17:03:59 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 11:06:47 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int				convert_file(char *filename)
 	int			fd;
 	int			test;
 
+	g_lines_tot = 0;
 	file = NULL;
 	fd = open(filename, O_RDONLY);
 	if (fd <= -1)
@@ -86,6 +87,7 @@ int				convert_file(char *filename)
 	{
 		test = check_line(line);
 		add_command(test, &file, line);
+		g_lines_tot++;
 	}
 	if (ret == -1)
 		return (error_while_reading(filename));
