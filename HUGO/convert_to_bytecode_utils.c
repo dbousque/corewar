@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 14:56:50 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 14:57:46 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/20 18:10:41 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int		create_res_file(char *filename, char **filename_res)
 	(*filename_res)[last_point + 1] = 'c';
 	(*filename_res)[last_point + 2] = 'o';
 	(*filename_res)[last_point + 3] = 'r';
-	return (open(*filename_res, O_CREAT | O_TRUNC | O_RDWR));
+	return (open(*filename_res, O_CREAT | O_TRUNC | O_RDWR, 0600));
 }
 
 int			write_bytes_to_file(char *filename, t_list *bytes)
