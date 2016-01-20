@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:34:18 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 16:09:15 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/20 16:39:03 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,11 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 					bytes_inbetween += tmp_function->bytes_written;
 				if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
 				{
+					bytes_inbetween = 0 - bytes_inbetween + 1;
+					if (get_opcode_descr_with_opcode(to_res->opcode)->opcode == 10)
+						bytes_inbetween += 1;
+					else if (to_res->has_param_byte)
+						bytes_inbetween += 2;
 					replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
 					done = 1;
 				}
