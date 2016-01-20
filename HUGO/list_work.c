@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:35:09 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/18 17:39:40 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 16:09:50 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void		ft_lstaddend_funct(t_function **alst, t_function *new_r)
 		while (tmp->next)
 			tmp = tmp->next;
 		tmp->next = new_r;
+		new_r->prev = tmp;
 	}
 }
 
@@ -72,6 +73,7 @@ t_function	*new_function(char *str)
 	res->label = ft_strdup(str);
 	res->lines = NULL;
 	res->next = NULL;
+	res->prev = NULL;
 	return (res);
 }
 

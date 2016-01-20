@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:07:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 12:10:34 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 15:10:37 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	add_line_4_param(t_function **file, char *line, int test)
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
 	vars->str2 = deblank(vars->str2);
+	vars->str2 = rem_com_if(vars->str2);
 	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
 		vars->i++;
 	vars->i++;
@@ -59,6 +60,7 @@ void	add_line_5_param(t_function **file, char *line, int test)
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
 	vars->str2 = deblank(vars->str2);
+	vars->str2 = rem_com_if(vars->str2);
 	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
 		vars->i++;
 	vars->i++;
@@ -101,6 +103,7 @@ void	add_line_6_param(t_function **file, char *line, int test)
 	g_nb_line++;
 	vars->str2 = ft_strtrim(line);
 	vars->str2 = deblank(vars->str2);
+	vars->str2 = rem_com_if(vars->str2);
 	while (vars->str2[vars->i] != op_tab[test - 1].name[ft_strlen(op_tab[test - 1].name) - 1])
 		vars->i++;
 	vars->i++;

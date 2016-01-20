@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 14:44:35 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 16:06:47 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,9 @@ int		check_line(char *line)
 }
 void	add_command(int test, t_function **file, char *line)
 {
-	int		i;
-	char	*str3;
+	int			i;
+	t_function	*tmp;
+	char		*str3;
 
 	i = 0;
 	if (test == 100)
@@ -131,6 +132,11 @@ void	add_command(int test, t_function **file, char *line)
 		;
 	else
 	{
+		if (last_fun_h(file) == 1)
+		{
+			tmp = new_function(NULL);
+			ft_lstaddend_funct(file, tmp);
+		}
 		while (i < test)
 			i++;
 		i--;

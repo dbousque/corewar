@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 14:51:28 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 16:09:08 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ struct			s_function
 	char		*label;
 	t_line		*lines;
 	t_function  *next;
+	t_function  *prev;
 };
 
 struct			s_line
