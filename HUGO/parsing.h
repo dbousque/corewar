@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 16:09:08 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 16:37:44 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int				is_number(char *str);
 int				the_number(char *str);
 int				check_name_double(char *str);
 int				is_comment(char *str);
+int				last_fun_h(t_function **file);
 int				convert_to_bytecode(t_function *functions, char *filename);
 
 void			check_file(t_function **file);

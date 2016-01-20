@@ -6,11 +6,23 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:47:32 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 15:09:59 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 17:40:35 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int		last_fun_h(t_function **file)
+{
+	t_function *tmp;
+
+	tmp = *file;
+	while (tmp->next)
+		tmp = tmp->next;
+	if (tmp->header == 1 || tmp->header == 2)
+		return (1);
+	return (0);
+}
 
 int		is_comment(char *str)
 {

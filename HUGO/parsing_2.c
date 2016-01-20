@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:03:47 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/19 18:18:57 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 17:06:22 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ int		recup_opcode(char *str)
 	int		i;
 
 	i = 0;
-	while (ft_strcmp(op_tab[i].name, str) != 0)
+	while (op_tab[i].name && ft_strcmp(op_tab[i].name, str) != 0)
 		i++;
+	if (!op_tab[i].name)
+		return (0);
 	return (op_tab[i].opcode);
 }
 

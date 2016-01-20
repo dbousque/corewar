@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:35:09 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 16:09:50 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 17:43:31 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ t_function	*new_function(char *str)
 		return (NULL);
 	res->header = 0;
 	res->bytes_written = 0;
-	res->label = ft_strdup(str);
+	if (str != NULL)
+		res->label = ft_strdup(str);
+	else
+		str = NULL;
 	res->lines = NULL;
 	res->next = NULL;
 	res->prev = NULL;
