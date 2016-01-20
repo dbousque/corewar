@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:47:32 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 17:40:35 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 18:15:31 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ char	*rem_com_if(char *str)
 	j = 0;
 	while (COMMENT_CHARS[j])
 	{
+		i = 0;
 		while (str[i] != COMMENT_CHARS[j] && str[i])
 			i++;
 		if (str[i] == '\0')

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 17:45:21 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 18:20:19 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int		check_line(char *line)
 		begin++;
 		return (check_begin(tmp));
 	}
-	else if (line[0] == '\0')
+	else if (tmp[0] == '\0')
 		return (103);
 	else if (check_name_solo(tmp) == 1)
 	{
@@ -132,8 +132,6 @@ void	add_command(int test, t_function **file, char *line)
 		;
 	else
 	{
-		ft_printf("|| %s ||\n", line);
-//		ft_printf("|| %d ||\n", last_fun_h(file));
 		if (last_fun_h(file) == 1)
 		{
 			tmp = new_function(NULL);
