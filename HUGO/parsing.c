@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 14:29:43 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 14:41:20 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,6 @@ int		check_line(char *line)
 	char		*tmp;
 	char		*test1;
 	char		*test2;
-	int			test3;
-	int			test4;
-	int			test5;
 	static int	begin = 0;
 
 	test1 = ft_strdup(NAME_CMD_STRING);

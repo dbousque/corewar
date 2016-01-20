@@ -6,5 +6,5 @@ l2:
 		and r1, %0, r1
 
 live:	
-		live %1
+		live %1, r1
 		zjmp %:live
