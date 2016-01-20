@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:24:25 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 15:53:51 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/20 17:29:36 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int			add_functions(t_function *functions, t_list **bytes_end)
 	tmp_function = functions;
 	while (tmp_function)
 	{
+		ft_putendl(tmp_function->label);
+		ft_putendl("LA");
 		tmp_function->bytes_written = 0;
 		tmp_line = tmp_function->lines;
 		while (tmp_line)
