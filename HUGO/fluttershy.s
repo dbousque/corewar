@@ -133,7 +133,7 @@ torpl1:
 	ldi		%:torpinit, r2, r4
 	sti		r4, %400, r2
 	add		r2, r3, r2
-	ldi		%:torpinit, r2, r4
+	ldi		%:torpinit, %:torpinit, r4
 	sti		r4, %383, r2
 	add		r2, r3, r2
 torpchk:

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:31:58 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 15:36:04 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/20 17:37:10 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 	unsigned int	val_val;
 	unsigned char	*val;
 	t_op			*opcode;
+	int				bytes_written_before;
 
+	bytes_written_before = function->bytes_written;
 	if (!(opcode = get_opcode_descr_with_opcode(instruct->opcode)))
 		return (big_error());
 	val = NULL;
@@ -53,7 +55,7 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 				ft_lstaddend(bytes_end, tmp);
 				if (val_val == (unsigned int)1)
 				{
-					ft_lstaddend(labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 2, function, function->bytes_written, *bytes_end), sizeof(t_to_resolve)));
+					ft_lstaddend(labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 2, function, bytes_written_before, *bytes_end), sizeof(t_to_resolve)));
 					if (!*labels_to_resolve)
 						*labels_to_resolve = *labels_to_resolve_end;
 					((t_to_resolve*)(*labels_to_resolve_end)->content)->small_dir = opcode->small_dir;
