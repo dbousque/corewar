@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 14:36:37 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 14:51:28 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ extern int		g_tmp;
 extern int		g_nb_line;
 extern t_op		op_tab[17];
 
-char*			deblank(char* input);
+char			*deblank(char* input);
+char			*rem_com_if(char *str);
 
 int				convert_file(char *filename);
 int				cant_read_file(char *filename);

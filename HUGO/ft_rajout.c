@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:47:32 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 14:35:24 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 14:52:04 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,22 @@ int		is_comment(char *str)
 		i++;
 	}
 	return (0);
+}
+
+char	*rem_com_if(char *str)
+{
+	int		i;
+//	char	*tmp;
+
+	i = 0;
+//	tmp = NULL;
+	while (str[i] != '#' && str[i])
+		i++;
+	if (str[i] == '\0')
+		;
+	else
+		str = ft_strsub(str, 0, i);
+	return (str);
 }
 
 int		is_number(char *str)
