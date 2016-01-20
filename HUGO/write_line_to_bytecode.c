@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:31:58 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 17:37:10 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/20 18:50:43 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 	instruct = instruct->next;
 	while (instruct)
 	{
-		ft_putendl(instruct->name);
 		if (instruct->type == INDIR)
 		{
 			val_val = ft_atoi(instruct->name);
