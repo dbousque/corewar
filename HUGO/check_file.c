@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 18:35:33 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/20 18:45:30 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	check_params(char *str, int *tab, int i, char *str2)
 	{
 		if (str[1] == LABEL_CHAR)
 		{
-			if (is_label_char(ft_strsub(str, 2, ft_strlen(str) - 2)) == 1)
+			if (is_label_char(ft_strsub(str, 2, ft_strlen(str) - 3)) == 1)
 			{
 				if (is_in_tab(T_DIR, tab, i))
 					;
