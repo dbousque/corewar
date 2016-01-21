@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 14:56:50 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 18:10:41 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 19:17:17 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,12 @@ int			write_bytes_to_file(char *filename, t_list *bytes)
 	ft_printf("Writing output program to %s\n", *res_filename);
 	while (bytes)
 	{
-//		ft_putendl("BYTE!");
-		//ft_printf("%d\n", *(unsigned char*)bytes->content);
 		i = bytes->content_size - 1;
 		while (i >= 0)
 		{
 			write(fd, bytes->content + i, 1);
 			i--;
 		}
-		//write(fd, bytes->content, bytes->content_size);
 		bytes = bytes->next;
 	}
 	return (0);

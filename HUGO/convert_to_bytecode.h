@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:01:31 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 17:00:47 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 19:16:55 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void				*big_error_null(void);
 int					update_size_bytes(t_list *size_bytes,
 														t_function *functions);
 int					merge_first_two_functions(t_function **functions);
-t_list				*add_header_to_bytes(t_function *functions, 
+t_list				*add_header_to_bytes(t_function *functions,
 														t_list **bytes_end);
 int					add_exec_magic_to_bytes(t_list **bytes, t_list **bytes_end);
 int					write_params(t_instruct *instruct, t_function *function,

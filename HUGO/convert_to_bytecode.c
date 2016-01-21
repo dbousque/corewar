@@ -6,13 +6,13 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:24:25 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 17:04:26 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 18:09:05 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "convert_to_bytecode.h"
 
-int			write_void_byte(t_list **bytes_end)
+int					write_void_byte(t_list **bytes_end)
 {
 	t_list			*tmp;
 	unsigned char	zero;
@@ -36,38 +36,36 @@ t_bytes_n_labels	*get_bytes_n_labels(t_list **bytes_end)
 	return (res);
 }
 
-int			add_functions(t_function *functions, t_list **bytes_end)
+int					add_functions(t_function *functions, t_list **bytes_end)
 {
-	t_function			*tmp_function;
+	t_function			*tmp_func;
 	t_line				*tmp_line;
-	t_instruct			*tmp_instruct;
+	t_instruct			*tmp_i;
 	t_bytes_n_labels	*bytes_n_labels;
 
 	bytes_n_labels = get_bytes_n_labels(bytes_end);
-	tmp_function = functions;
-	while (tmp_function)
+	tmp_func = functions;
+	while (tmp_func)
 	{
-		tmp_function->bytes_written = 0;
-		tmp_line = tmp_function->lines;
+		tmp_func->bytes_written = 0;
+		tmp_line = tmp_func->lines;
 		while (tmp_line)
 		{
-			tmp_instruct = tmp_line->content;
-			if (!(write_opcode(tmp_instruct->opcode, &(bytes_n_labels->bytes_end))))
+			tmp_i = tmp_line->content;
+			if (!(write_opcode(tmp_i->opcode, &(bytes_n_labels->bytes_end))))
 				return (big_error());
-			tmp_function->bytes_written += 1;
-			if (!(write_param_byte_if_nec(tmp_instruct, &(bytes_n_labels->bytes_end), tmp_function)))
-				return (big_error());
-			if (!(write_params(tmp_instruct, tmp_function, functions,
-															bytes_n_labels)))
+			tmp_func->bytes_written += 1;
+			if (!(write_param_byte_if_nec(tmp_i, &(bytes_n_labels->bytes_end),
+	tmp_func)) || !(write_params(tmp_i, tmp_func, functions, bytes_n_labels)))
 				return (big_error());
 			tmp_line = tmp_line->next;
 		}
-		tmp_function = tmp_function->next;
+		tmp_func = tmp_func->next;
 	}
 	return (resolve_unresolved_labels(bytes_n_labels->labels_to_resolve));
 }
 
-int			convert_to_binary(t_function *functions, char *filename)
+int					convert_to_binary(t_function *functions, char *filename)
 {
 	t_list		*bytes;
 	t_list		*bytes_end;
@@ -86,7 +84,7 @@ int			convert_to_binary(t_function *functions, char *filename)
 	return (write_bytes_to_file(filename, bytes));
 }
 
-int			convert_to_bytecode(t_function *functions, char *filename)
+int					convert_to_bytecode(t_function *functions, char *filename)
 {
 	if (!(merge_first_two_functions(&functions)))
 		return (0);
