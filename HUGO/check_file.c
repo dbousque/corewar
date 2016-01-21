@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 18:45:30 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 14:07:33 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,10 @@ void	check_params(char *str, int *tab, int i, char *str2)
 				exit_prgm_type_ind(str2, str);
 		}
 		else if (str[0] == LABEL_CHAR)
-			;
+			if (is_in_tab(T_IND, tab, i))
+				;
+			else
+				exit_prgm_type_ind(str2, str);
 		else
 			exit_prgm_nbr(str2, str);
 	}
