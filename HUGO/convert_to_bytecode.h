@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:01:31 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 12:18:40 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 17:00:47 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,14 @@ typedef struct		s_to_resolve
 	int				small_dir;
 	int				opcode;
 	int				has_param_byte;
-	int				is_dir;
 }					t_to_resolve;
+
+typedef struct	s_bytes_n_labels
+{
+	t_list		*bytes_end;
+	t_list		*labels_to_resolve;
+	t_list		*labels_to_resolve_end;
+}				t_bytes_n_labels;
 
 int					write_bytes_to_file(char *filename, t_list *bytes);
 int					big_error(void);
@@ -38,9 +44,8 @@ int					merge_first_two_functions(t_function **functions);
 t_list				*add_header_to_bytes(t_function *functions, 
 														t_list **bytes_end);
 int					add_exec_magic_to_bytes(t_list **bytes, t_list **bytes_end);
-int					write_params(t_instruct *instruct, t_list **bytes_end,
-	t_function *function, t_function *functions, t_list **labels_to_resolve,
-												t_list **labels_to_resolve_end);
+int					write_params(t_instruct *instruct, t_function *function,
+					t_function *functions, t_bytes_n_labels *bytes_n_labels);
 int					write_opcode(unsigned char opcode, t_list **bytes_end);
 t_op				*get_opcode_descr_with_opcode(int opcode);
 int					write_param_byte_if_nec(t_instruct *instruct,

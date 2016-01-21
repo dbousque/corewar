@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:31:58 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 17:07:18 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 16:02:49 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void		add_to_labels_to_resolve1(t_instruct *instruct,
 	val_val = 1;
 	val = (unsigned char*)&val_val;
 	tmp = ft_lstnew(val, IND_SIZE);
-	ft_lstaddend(&(bytes_n_labels->bytes_end), tmp);
-	ft_lstaddend(&(bytes_n_labels->labels_to_resolve_end), ft_lstnew(new_resolve(instruct->name + 1, function, bytes_written_before, bytes_n_labels->bytes_end), sizeof(t_to_resolve)));
-	if (!bytes_n_labels->labels_to_resolve)
-		bytes_n_labels->labels_to_resolve = bytes_n_labels->labels_to_resolve_end;
-	((t_to_resolve*)(bytes_n_labels->labels_to_resolve_end)->content)->small_dir = opcode->small_dir;
-	((t_to_resolve*)(bytes_n_labels->labels_to_resolve_end)->content)->opcode = opcode->opcode;
-	((t_to_resolve*)(bytes_n_labels->labels_to_resolve_end)->content)->has_param_byte = opcode->has_param_byte;
+	ft_lstaddend(bytes_n_labels->bytes_end, tmp);
+	ft_lstaddend(bytes_n_labels->labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 1, function, bytes_written_before, *(bytes_n_labels->bytes_end)), sizeof(t_to_resolve)));
+	if (!*(bytes_n_labels->labels_to_resolve))
+		*(bytes_n_labels->labels_to_resolve) = *(bytes_n_labels->labels_to_resolve_end);
+	((t_to_resolve*)(*(bytes_n_labels->labels_to_resolve_end))->content)->small_dir = opcode->small_dir;
+	((t_to_resolve*)(*(bytes_n_labels->labels_to_resolve_end))->content)->opcode = opcode->opcode;
+	((t_to_resolve*)(*(bytes_n_labels->labels_to_resolve_end))->content)->has_param_byte = opcode->has_param_byte;
 }
 
 int			write_params(t_instruct *instruct, t_function *function,
@@ -47,6 +47,7 @@ int			write_params(t_instruct *instruct, t_function *function,
 	instruct = instruct->next;
 	while (instruct)
 	{
+		ft_putendl("LOL");
 		if (instruct->type == INDIR)
 		{
 			if (instruct->name[0] == LABEL_CHAR)
@@ -56,7 +57,7 @@ int			write_params(t_instruct *instruct, t_function *function,
 				val_val = ft_atoi(instruct->name);
 				val = (unsigned char*)&val_val;
 				tmp = ft_lstnew(val, IND_SIZE);
-				ft_lstaddend(&(bytes_n_labels->bytes_end), tmp);
+				ft_lstaddend(bytes_n_labels->bytes_end, tmp);
 			}
 			function->bytes_written += IND_SIZE;
 		}
@@ -65,7 +66,7 @@ int			write_params(t_instruct *instruct, t_function *function,
 			val_val = ft_atoi(instruct->name + 1);
 			val = (unsigned char*)&val_val;
 			tmp = ft_lstnew(val, REG_SIZE);
-			ft_lstaddend(&(bytes_n_labels->bytes_end), tmp);
+			ft_lstaddend(bytes_n_labels->bytes_end, tmp);
 			function->bytes_written += REG_SIZE;
 		}
 		else if (instruct->type == DIRE)
@@ -75,21 +76,20 @@ int			write_params(t_instruct *instruct, t_function *function,
 				val_val = 1;
 				val = (unsigned char*)&val_val;
 				tmp = ft_lstnew(val, opcode->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
-				ft_lstaddend(&(bytes_n_labels->bytes_end), tmp);
-				tmp = ft_lstnew(new_resolve(instruct->name + 2, function, bytes_written_before, bytes_n_labels->bytes_end), sizeof(t_to_resolve));
-				ft_lstaddend(&(bytes_n_labels->labels_to_resolve_end), tmp);
-				if (!bytes_n_labels->labels_to_resolve)
-					bytes_n_labels->labels_to_resolve = bytes_n_labels->labels_to_resolve_end;
-				((t_to_resolve*)(bytes_n_labels->labels_to_resolve_end)->content)->small_dir = opcode->small_dir;
-				((t_to_resolve*)(bytes_n_labels->labels_to_resolve_end)->content)->opcode = opcode->opcode;
-				((t_to_resolve*)(bytes_n_labels->labels_to_resolve_end)->content)->has_param_byte = opcode->has_param_byte;
+				ft_lstaddend(bytes_n_labels->bytes_end, tmp);
+				ft_lstaddend(bytes_n_labels->labels_to_resolve_end, ft_lstnew(new_resolve(instruct->name + 2, function, bytes_written_before, *(bytes_n_labels->bytes_end)), sizeof(t_to_resolve)));
+				if (!*(bytes_n_labels->labels_to_resolve))
+					*(bytes_n_labels->labels_to_resolve) = *(bytes_n_labels->labels_to_resolve_end);
+				((t_to_resolve*)(*(bytes_n_labels->labels_to_resolve_end))->content)->small_dir = opcode->small_dir;
+				((t_to_resolve*)(*(bytes_n_labels->labels_to_resolve_end))->content)->opcode = opcode->opcode;
+				((t_to_resolve*)(*(bytes_n_labels->labels_to_resolve_end))->content)->has_param_byte = opcode->has_param_byte;
 			}
 			else
 			{
 				val_val = ft_atoi(instruct->name + 1);
 				val = (unsigned char*)&val_val;
 				tmp = ft_lstnew(val, opcode->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
-				ft_lstaddend(&(bytes_n_labels->bytes_end), tmp);
+				ft_lstaddend(bytes_n_labels->bytes_end, tmp);
 			}
 			function->bytes_written += opcode->small_dir ? DIR_SIZE / 2 : DIR_SIZE;
 		}
@@ -115,10 +115,10 @@ t_op		*get_opcode_descr_with_opcode(int opcode)
 	int		i;
 
 	i = 0;
-	while (g_op_tab[i].name)
+	while (op_tab[i].name)
 	{
-		if (g_op_tab[i].opcode == opcode)
-			return (&(g_op_tab[i]));
+		if (op_tab[i].opcode == opcode)
+			return (&(op_tab[i]));
 		i++;
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:34:18 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 13:39:42 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 13:52:58 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,8 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 		tmp_function = to_res->function_from->next;
 		while (tmp_function && !done)
 		{
-			ft_putstr("label_to_seek : ");
-			ft_putendl(to_res->label_to_seek);
 			if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
 			{
-				ft_putendl("FOUND");
 				if (to_res->has_param_byte)
 					bytes_inbetween += 1;
 				replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->byte_to_override->content_size);

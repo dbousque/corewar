@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:24:25 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 18:49:54 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 17:04:26 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,26 @@ int			write_void_byte(t_list **bytes_end)
 	return (1);
 }
 
+t_bytes_n_labels	*get_bytes_n_labels(t_list **bytes_end)
+{
+	t_bytes_n_labels	*res;
+
+	if (!(res = (t_bytes_n_labels*)malloc(sizeof(t_bytes_n_labels))))
+		return (NULL);
+	res->bytes_end = *bytes_end;
+	res->labels_to_resolve = NULL;
+	res->labels_to_resolve_end = NULL;
+	return (res);
+}
+
 int			add_functions(t_function *functions, t_list **bytes_end)
 {
-	t_function	*tmp_function;
-	t_line		*tmp_line;
-	t_instruct	*tmp_instruct;
-	t_list		*labels_to_resolve;
-	t_list		*labels_to_resolve_end;
+	t_function			*tmp_function;
+	t_line				*tmp_line;
+	t_instruct			*tmp_instruct;
+	t_bytes_n_labels	*bytes_n_labels;
 
-	labels_to_resolve = NULL;
-	labels_to_resolve_end = NULL;
+	bytes_n_labels = get_bytes_n_labels(bytes_end);
 	tmp_function = functions;
 	while (tmp_function)
 	{
@@ -42,19 +52,19 @@ int			add_functions(t_function *functions, t_list **bytes_end)
 		while (tmp_line)
 		{
 			tmp_instruct = tmp_line->content;
-			if (!(write_opcode(tmp_instruct->opcode, bytes_end)))
+			if (!(write_opcode(tmp_instruct->opcode, &(bytes_n_labels->bytes_end))))
 				return (big_error());
 			tmp_function->bytes_written += 1;
-			if (!(write_param_byte_if_nec(tmp_instruct, bytes_end, tmp_function)))
+			if (!(write_param_byte_if_nec(tmp_instruct, &(bytes_n_labels->bytes_end), tmp_function)))
 				return (big_error());
-			if (!(write_params(tmp_instruct, bytes_end, tmp_function,
-						functions, &labels_to_resolve, &labels_to_resolve_end)))
+			if (!(write_params(tmp_instruct, tmp_function, functions,
+															bytes_n_labels)))
 				return (big_error());
 			tmp_line = tmp_line->next;
 		}
 		tmp_function = tmp_function->next;
 	}
-	return (resolve_unresolved_labels(labels_to_resolve));
+	return (resolve_unresolved_labels(bytes_n_labels->labels_to_resolve));
 }
 
 int			convert_to_binary(t_function *functions, char *filename)
