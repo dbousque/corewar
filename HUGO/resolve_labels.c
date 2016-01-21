@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:34:18 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 18:39:23 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 12:22:24 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 		{
 			if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
 			{
-				if ((to_res->has_param_byte))
+				if (to_res->has_param_byte)
 					bytes_inbetween += 1;
-				replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
+				replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->byte_to_override->content_size);
 				done = 1;
 			}
 			bytes_inbetween += tmp_function->bytes_written;
@@ -114,7 +114,7 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 					bytes_inbetween = 0 - bytes_inbetween + 1;
 					if (to_res->has_param_byte)
 						bytes_inbetween += 1;
-					replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->small_dir ? DIR_SIZE / 2 : DIR_SIZE);
+					replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->byte_to_override->content_size);
 					done = 1;
 				}
 				tmp_function = tmp_function->prev;

@@ -7,7 +7,7 @@ def testdir(path):
 	dirs = os.listdir(path)
 
 	for file in dirs:
-		if os.path.isdir(path + str(file)) and ord(str(file)[0]) < ord("l"):
+		if os.path.isdir(path + str(file)):
 			testdir(path + str(file) + "/")
 		if ".s"in file:
 			os.system("./a.out " + path + str(file) + " > /dev/null")

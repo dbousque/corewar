@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:01:31 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 15:46:45 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 12:18:40 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct		s_to_resolve
 	int				small_dir;
 	int				opcode;
 	int				has_param_byte;
+	int				is_dir;
 }					t_to_resolve;
 
 int					write_bytes_to_file(char *filename, t_list *bytes);
