@@ -10,6 +10,7 @@ def testdir(path):
 		if os.path.isdir(path + str(file)):
 			testdir(path + str(file) + "/")
 		if ".s"in file:
+			print path
 			os.system("./a.out " + path + str(file) + " > /dev/null")
 			os.system("cp " + path + str(file.replace(".s", ".cor")) + " res_aout")
 			os.system("./asm " + path + str(file) + " > /dev/null")
