@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:31:58 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 12:43:35 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/21 13:45:09 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 			{
 				val_val = get_relative_addr_of_label(instruct->name + 1, function, functions, opcode);
 				val = (unsigned char*)&val_val;
-				tmp = ft_lstnew(val, opcode->small_dir ? IND_SIZE / 2 : IND_SIZE);
+				tmp = ft_lstnew(val, IND_SIZE);
 				ft_lstaddend(bytes_end, tmp);
 				if (val_val == (unsigned int)1)
 				{
@@ -46,7 +46,7 @@ int			write_params(t_instruct *instruct, t_list **bytes_end,
 					((t_to_resolve*)(*labels_to_resolve_end)->content)->has_param_byte = opcode->has_param_byte;
 					((t_to_resolve*)(*labels_to_resolve_end)->content)->is_dir = 0;
 				}
-				function->bytes_written += opcode->small_dir ? IND_SIZE / 2 : IND_SIZE;
+				function->bytes_written += IND_SIZE;
 			}
 			else
 			{
