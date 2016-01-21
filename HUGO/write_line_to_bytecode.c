@@ -184,11 +184,9 @@ unsigned char	set_two_bits_from(unsigned char byte, unsigned char bits,
 	return (byte);
 }
 
-unsigned char	get_param_byte(t_instruct *instruct, int decal)
+unsigned char	get_param_byte(unsigned char param_byte, t_instruct *instruct,
+																	int decal)
 {
-	unsigned char	param_byte;
-
-	param_byte = 0;
 	if (instruct->type == REG)
 		param_byte = set_two_bits_from(param_byte, REG_CODE, decal);
 	else if (instruct->type == INDIR)
@@ -217,7 +215,7 @@ int				write_param_byte_if_nec(t_instruct *instruct,
 	instruct = instruct->next;
 	while (instruct)
 	{
-		if (!(param_byte = get_param_byte(instruct, decal)))
+		if (!(param_byte = get_param_byte(param_byte, instruct, decal)))
 			return (0);
 		decal += 2;
 		instruct = instruct->next;

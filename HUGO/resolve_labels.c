@@ -12,7 +12,7 @@
 
 #include "convert_to_bytecode.h"
 
-unsigned long long	get_relative_addr_of_label(char *label, t_function *function,
+/*unsigned long long	get_relative_addr_of_label(char *label, t_function *function,
 										t_function *functions, t_op *opcode)
 {
 	unsigned long long	res;
@@ -42,7 +42,7 @@ unsigned long long	get_relative_addr_of_label(char *label, t_function *function,
 		functions = functions->next;
 	}
 	return (res);
-}
+}*/
 
 int			label_not_found(char *label)
 {
@@ -74,53 +74,74 @@ void		replace_bytes(t_list *bytes, void *val, size_t size)
 	bytes->content_size = size;
 }
 
-int			resolve_unresolved_labels(t_list *labels_to_resolve)
+int			resolve_unresolved_labels_bef(t_list *labels_to_resolve,
+														t_to_resolve *to_res)
 {
 	t_function		*tmp_function;
-	t_to_resolve	*to_res;
 	unsigned int	bytes_inbetween;
+	char			done;
+
+	done = 0;
+	bytes_inbetween = 0;
+	tmp_function = to_res->function_from;
+	while (tmp_function && !done)
+	{
+		if (tmp_function == to_res->function_from)
+			bytes_inbetween += to_res->bytes_written_in_function_from;
+		else
+			bytes_inbetween += tmp_function->bytes_written;
+		if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
+		{
+			bytes_inbetween = 0 - bytes_inbetween + 1;
+			if (to_res->has_param_byte)
+				bytes_inbetween += 1;
+			replace_bytes(to_res->byte_to_override, &bytes_inbetween,
+									to_res->byte_to_override->content_size);
+			done = 1;
+		}
+		tmp_function = tmp_function->prev;
+	}
+	return (!done ? 0 : 1);
+}
+
+int			resolve_unresolved_labels_after(t_list *labels_to_resolve,
+														t_to_resolve *to_res)
+{
+	t_function		*tmp_function;
+	unsigned int	bytes_inbetween;
+	char			done;
+
+	done = 0;
+	bytes_inbetween = to_res->function_from->bytes_written
+								- to_res->bytes_written_in_function_from + 1;
+	tmp_function = to_res->function_from->next;
+	while (tmp_function && !done)
+	{
+		if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
+		{
+			if (to_res->has_param_byte)
+				bytes_inbetween += 1;
+			replace_bytes(to_res->byte_to_override, &bytes_inbetween,
+									to_res->byte_to_override->content_size);
+			done = 1;
+		}
+		bytes_inbetween += tmp_function->bytes_written;
+		tmp_function = tmp_function->next;
+	}
+	return (!done ? 0 : 1);
+}
+
+int			resolve_unresolved_labels(t_list *labels_to_resolve)
+{
+	t_to_resolve	*to_res;
 	char			done;
 
 	while (labels_to_resolve)
 	{
 		done = 0;
 		to_res = ((t_to_resolve*)labels_to_resolve->content);
-		bytes_inbetween = to_res->function_from->bytes_written - to_res->bytes_written_in_function_from + 1;
-		tmp_function = to_res->function_from->next;
-		while (tmp_function && !done)
-		{
-			if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
-			{
-				if (to_res->has_param_byte)
-					bytes_inbetween += 1;
-				replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->byte_to_override->content_size);
-				done = 1;
-			}
-			bytes_inbetween += tmp_function->bytes_written;
-			tmp_function = tmp_function->next;
-		}
-		if (!done)
-		{
-			bytes_inbetween = 0;
-			tmp_function = to_res->function_from;
-			while (tmp_function && !done)
-			{
-				if (tmp_function == to_res->function_from)
-					bytes_inbetween += to_res->bytes_written_in_function_from;
-				else
-					bytes_inbetween += tmp_function->bytes_written;
-				if (ft_strcmp(to_res->label_to_seek, tmp_function->label) == 0)
-				{
-					bytes_inbetween = 0 - bytes_inbetween + 1;
-					if (to_res->has_param_byte)
-						bytes_inbetween += 1;
-					replace_bytes(to_res->byte_to_override, &bytes_inbetween, to_res->byte_to_override->content_size);
-					done = 1;
-				}
-				tmp_function = tmp_function->prev;
-			}
-		}
-		if (!done)
+		done = resolve_unresolved_labels_after(labels_to_resolve, to_res);
+		if (!done && !resolve_unresolved_labels_bef(labels_to_resolve, to_res))
 			return (label_not_found(to_res->label_to_seek));
 		labels_to_resolve = labels_to_resolve->next;
 	}
