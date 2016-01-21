@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 14:47:32 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 18:15:31 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 15:20:21 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*rem_com_if(char *str)
 		else
 		{
 			str = ft_strsub(str, 0, i);
-			break;
+			break ;
 		}
 		j++;
 	}

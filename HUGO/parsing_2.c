@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:03:47 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 17:06:22 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 16:48:03 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int		str_to_int(char *str)
 	int		i;
 
 	i = 0;
-	while (ft_strcmp(op_tab[i].name, str) != 0)
+	while (ft_strcmp(g_op_tab[i].name, str) != 0)
 		i++;
 	return (i);
 }
@@ -27,11 +27,11 @@ int		recup_opcode(char *str)
 	int		i;
 
 	i = 0;
-	while (op_tab[i].name && ft_strcmp(op_tab[i].name, str) != 0)
+	while (g_op_tab[i].name && ft_strcmp(g_op_tab[i].name, str) != 0)
 		i++;
-	if (!op_tab[i].name)
+	if (!g_op_tab[i].name)
 		return (0);
-	return (op_tab[i].opcode);
+	return (g_op_tab[i].opcode);
 }
 
 int		check_name_double(char *str)

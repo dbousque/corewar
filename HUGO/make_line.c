@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 14:21:34 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 17:31:29 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 16:47:53 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		check_what_is(char *str)
 		j++;
 	str2 = ft_strsub(str, i, j - i);
 	i = 0;
-	while (ft_strcmp(op_tab[i].name, str2) != 0 && op_tab[i].nb_params != 0)
+	while (ft_strcmp(g_op_tab[i].name, str2) != 0 && g_op_tab[i].nb_params != 0)
 		i++;
 	return (i + 1);
 }
@@ -95,28 +95,5 @@ void	make_line_3(t_function **file, t_tempo *vars)
 	tmp3 = new_instruct(vars->param2, check_param(vars->param2), 0);
 	ft_lstaddend_instruct(&tmp->lines, tmp3);
 	tmp3 = new_instruct(vars->param3, check_param(vars->param3), 0);
-	ft_lstaddend_instruct(&tmp->lines, tmp3);
-}
-
-void	make_line_4(t_function **file, t_tempo *vars)
-{
-	t_function	*tmp;
-	t_line		*tmp2;
-	t_instruct	*tmp3;
-
-	tmp = *file;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp2 = new_line(g_nb_line);
-	ft_lstaddend_line(&tmp->lines, tmp2);
-	tmp3 = new_instruct(vars->name, LABEL, recup_opcode(vars->name));
-	ft_lstaddend_instruct(&tmp->lines, tmp3);
-	tmp3 = new_instruct(vars->param1, check_param(vars->param1), 0);
-	ft_lstaddend_instruct(&tmp->lines, tmp3);
-	tmp3 = new_instruct(vars->param2, check_param(vars->param2), 0);
-	ft_lstaddend_instruct(&tmp->lines, tmp3);
-	tmp3 = new_instruct(vars->param3, check_param(vars->param3), 0);
-	ft_lstaddend_instruct(&tmp->lines, tmp3);
-	tmp3 = new_instruct(vars->param4, check_param(vars->param4), 0);
 	ft_lstaddend_instruct(&tmp->lines, tmp3);
 }

@@ -6,27 +6,11 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:35:09 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 17:43:31 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 15:20:56 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-void		ft_lstaddend_funct(t_function **alst, t_function *new_r)
-{
-	t_function	*tmp;
-
-	tmp = *alst;
-	if (!tmp)
-		*alst = new_r;
-	else
-	{
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new_r;
-		new_r->prev = tmp;
-	}
-}
 
 void		ft_lstaddend_line(t_line **alst, t_line *new_r)
 {

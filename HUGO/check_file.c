@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 14:07:33 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 16:46:45 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,67 +21,12 @@ int		is_in_tab(int a, int *tab, int i)
 
 void	check_params(char *str, int *tab, int i, char *str2)
 {
-	char	*tmp;
-
-	tmp = NULL;
 	if (str[0] == 'r')
-	{
-		if (is_number(str) == 1 && the_number(str) <= REG_NUMBER)
-		{
-			if (is_in_tab(T_REG, tab, i))
-				;
-			else
-				exit_prgm_type_rg(str2, str);
-		}
-		else
-			exit_prgm_rg_big(str2, str);
-	}
+		cut_check_p1(str, str2, tab, i);
 	else if (str[0] == DIRECT_CHAR)
-	{
-		if (str[1] == LABEL_CHAR)
-		{
-			if (is_label_char(ft_strsub(str, 2, ft_strlen(str) - 3)) == 1)
-			{
-				if (is_in_tab(T_DIR, tab, i))
-					;
-				else
-					exit_prgm_type_dir_l(str2, str);
-			}
-			else
-				exit_prgm_lab_in(str2, str);
-		}
-		else
-		{
-			if (str[1] == '-') // CAS DU NEGATIF A GERER MIEUX QUE CA
-				;
-			else if (is_number(str) == 1)
-			{
-				if (is_in_tab(T_DIR, tab, i)) // WTF NEGATIF PREND PAS DIR ON DIRAIT, ALORS QUE LD A BIEN UN DIR
-					;
-				else
-					exit_prgm_type_dir_n(str2, str);
-			}
-			else
-				exit_prgm_fk_dir(str2, str);
-		}
-	}
+		cut_check_p2(str, str2, tab, i);
 	else
-	{
-		if (is_number(str) == 1)
-		{
-			if (is_in_tab(T_IND, tab, i))
-				;
-			else
-				exit_prgm_type_ind(str2, str);
-		}
-		else if (str[0] == LABEL_CHAR)
-			if (is_in_tab(T_IND, tab, i))
-				;
-			else
-				exit_prgm_type_ind(str2, str);
-		else
-			exit_prgm_nbr(str2, str);
-	}
+		cut_check_p3(str, str2, tab, i);
 }
 
 void	check_instruct(t_instruct **content, char *str2)
@@ -98,13 +43,13 @@ void	check_instruct(t_instruct **content, char *str2)
 	while (tmp)
 	{
 		test = str_to_int(str);
-		check_params(tmp->name, op_tab[test].params_types, i, str2);
+		check_params(tmp->name, g_op_tab[test].params_types, i, str2);
 		tmp = tmp->next;
 		i++;
 	}
 }
 
-void	check_funct(t_line** lines, char *str2)
+void	check_funct(t_line **lines, char *str2)
 {
 	t_line	*tmp;
 
@@ -116,7 +61,7 @@ void	check_funct(t_line** lines, char *str2)
 	}
 }
 
-void	check_file(t_function **file) // FAIRE PASSER LE NOM ET LA LIGNE POUR L AFFICHAGE DE L ERREUR
+void	check_file(t_function **file)
 {
 	t_function *tmp;
 

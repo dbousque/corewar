@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 16:37:44 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 16:45:30 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ struct			s_function
 	int			bytes_written;
 	char		*label;
 	t_line		*lines;
-	t_function  *next;
-	t_function  *prev;
+	t_function	*next;
+	t_function	*prev;
 };
 
 struct			s_line
@@ -77,12 +77,14 @@ struct			s_instruct
 
 extern int		g_lines_tot;
 extern int		g_tmp;
+extern int		g_begin;
 extern int		g_nb_line;
-extern t_op		op_tab[17];
+extern t_op		g_op_tab[17];
 
-char			*deblank(char* input);
+char			*deblank(char *input);
 char			*rem_com_if(char *str);
 
+int				cut_check_begin(char *tmp);
 int				convert_file(char *filename);
 int				cant_read_file(char *filename);
 int				cant_create_file(char *filename);
@@ -100,9 +102,22 @@ int				is_number(char *str);
 int				the_number(char *str);
 int				check_name_double(char *str);
 int				is_comment(char *str);
+int				is_in_tab(int a, int *tab, int i);
 int				last_fun_h(t_function **file);
 int				convert_to_bytecode(t_function *functions, char *filename);
 
+void			cut_parsing_1(t_function **file, char *line, int test);
+void			cut_parsing_2(t_function **file, char *line, int test);
+void			cut_parsing_3(t_function **file, char *line, int test);
+void			cut_check_p1(char *str, char *str2, int *tab, int i);
+void			cut_check_p2(char *str, char *str2, int *tab, int i);
+void			cut_check_p3(char *str, char *str2, int *tab, int i);
+void			cut_1_5_param(t_tempo **vars, int test);
+void			cut_2_5_param(t_tempo **vars, int test);
+void			cut_1_6_param(t_tempo **vars, int test);
+void			cut_2_6_param(t_tempo **vars, int test);
+void			cut_param_3(t_tempo **vars, int test);
+void			cut_param_4(t_tempo **vars, int test);
 void			check_file(t_function **file);
 void			check_instruct(t_instruct **content, char *str2);
 void			exit_prgm_nbr(char *str, char *str2);
