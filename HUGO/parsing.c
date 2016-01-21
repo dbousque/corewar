@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/20 18:24:15 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/21 12:36:07 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ void	add_command(int test, t_function **file, char *line)
 	{
 		while (line[i] != LABEL_CHAR)
 			i++;
+		i++;
 		str3 = ft_strsub(line, 0, i);
 		add_fun(file, str3, test);
 		str3 = ft_strsub(line, i + 1, ft_strlen(line) - i);
