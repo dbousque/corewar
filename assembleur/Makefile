@@ -6,7 +6,7 @@
 #    By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/01 20:43:29 by hbeaujou          #+#    #+#              #
-#    Updated: 2016/01/22 14:45:38 by hbeaujou         ###   ########.fr        #
+#    Updated: 2016/01/22 20:29:30 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,8 @@ SOURCES =	srcs/add_fct.c	\
 			srcs/write_line_to_bytecode.c \
 			srcs/write_line_to_bytecode2.c \
 			srcs/write_line_to_bytecode3.c \
+			srcs/good_file_format.c \
+			srcs/good_file_format2.c
 
 HEADERS	= -I./includes/
 
