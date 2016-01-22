@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/22 13:53:11 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/22 14:32:11 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*deblank(char *input)
 	output = input;
 	i = 0;
 	j = 0;
-	while (i < ft_strlen(input))
+	while (i < (int)ft_strlen(input))
 	{
 		if (input[i] != ' ' && input[i] != '\t')
 			output[j] = input[i];
@@ -67,6 +67,12 @@ void	affiche(t_function **file)
 	}
 }
 
+char	is_valid_line(char *line)
+{
+	(void)line;
+	return (1);
+}
+
 int		convert_file(char *filename)
 {
 	t_function	*file;
@@ -83,6 +89,8 @@ int		convert_file(char *filename)
 		return (cant_read_file(filename));
 	while ((ret = get_next_line(fd, &line)) == 1)
 	{
+		if (!(test = is_valid_line(line)))
+			return (0);
 		test = check_line(line);
 		add_command(test, &file, line);
 		g_lines_tot++;
