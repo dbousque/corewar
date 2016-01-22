@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/21 15:55:36 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:46:51 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 14:33:06 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	cut_1_5_param(t_tempo **vars, int test)
 {
-	while ((*vars)->i < ft_strlen(g_op_tab[test - 1].name) - 1)
+	while ((*vars)->i < (int)ft_strlen(g_op_tab[test - 1].name) - 1)
 		(*vars)->i++;
 	(*vars)->i++;
 	(*vars)->name = ft_strsub((*vars)->str2, 0, (*vars)->i);
@@ -32,7 +32,7 @@ void	cut_1_5_param(t_tempo **vars, int test)
 	(*vars)->i = (*vars)->j + 1;
 }
 
-void	cut_2_5_param(t_tempo **vars, int test)
+void	cut_2_5_param(t_tempo **vars)
 {
 	while ((*vars)->str2[(*vars)->i] != SEPARATOR_CHAR)
 		(*vars)->i++;

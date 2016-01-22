@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/21 15:24:07 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:47:17 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 14:33:47 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		cut_check_begin(char *tmp)
 
 void	cut_param_3(t_tempo **vars, int test)
 {
-	while ((*vars)->i < ft_strlen(g_op_tab[test - 1].name) - 1)
+	while ((*vars)->i < (int)ft_strlen(g_op_tab[test - 1].name) - 1)
 		(*vars)->i++;
 	(*vars)->i++;
 	(*vars)->name = ft_strsub((*vars)->str2, 0, (*vars)->i);
@@ -47,7 +47,7 @@ void	cut_param_3(t_tempo **vars, int test)
 
 void	cut_param_4(t_tempo **vars, int test)
 {
-	while ((*vars)->i < ft_strlen(g_op_tab[test - 1].name) - 1)
+	while ((*vars)->i < (int)ft_strlen(g_op_tab[test - 1].name) - 1)
 		(*vars)->i++;
 	(*vars)->i++;
 	(*vars)->name = ft_strsub((*vars)->str2, 0, (*vars)->i);

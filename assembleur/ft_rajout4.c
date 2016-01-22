@@ -6,13 +6,13 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/21 16:17:36 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:47:47 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 14:38:29 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	cut_1_6_param(t_tempo **vars, int test)
+void	cut_1_6_param(t_tempo **vars)
 {
 	while ((*vars)->str2[(*vars)->i] != SEPARATOR_CHAR)
 		(*vars)->i++;
@@ -33,7 +33,7 @@ void	cut_1_6_param(t_tempo **vars, int test)
 	(*vars)->j = (*vars)->i + 1;
 }
 
-void	cut_2_6_param(t_tempo **vars, int test)
+void	cut_2_6_param(t_tempo **vars)
 {
 	while ((*vars)->str2[(*vars)->j] != SEPARATOR_CHAR)
 		(*vars)->j++;
@@ -54,14 +54,14 @@ void	cut_2_6_param(t_tempo **vars, int test)
 			(*vars)->i, (*vars)->j - (*vars)->i);
 }
 
-void	cut_parsing_1(t_function **file, char *line, int test)
+void	cut_parsing_1(t_function **file, char *line)
 {
 	if (g_begin != 2)
 		exit_prgm_nbr(NULL, NULL);
-	add_fun(file, line, test);
+	add_fun(file, line);
 }
 
-void	cut_parsing_2(t_function **file, char *line, int test)
+void	cut_parsing_2(t_function **file, char *line)
 {
 	int		i;
 	char	*str3;
@@ -74,7 +74,7 @@ void	cut_parsing_2(t_function **file, char *line, int test)
 		i++;
 	i++;
 	str3 = ft_strsub(line, 0, i);
-	add_fun(file, str3, test);
+	add_fun(file, str3);
 	str3 = ft_strsub(line, i + 1, ft_strlen(line) - i);
 	g_tmp = check_line(str3);
 	add_command(g_tmp, file, str3);

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:05:35 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:46:30 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 14:31:38 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		g_nb_line;
 
-void	add_c_name(t_function **file, char *line, int test)
+void	add_c_name(t_function **file, char *line)
 {
 	int			i;
 	int			j;
@@ -31,7 +31,7 @@ void	add_c_name(t_function **file, char *line, int test)
 	ft_lstaddend_funct(file, tmp);
 }
 
-void	add_comment(t_function **file, char *line, int test)
+void	add_comment(t_function **file, char *line)
 {
 	int			i;
 	int			j;
@@ -48,7 +48,7 @@ void	add_comment(t_function **file, char *line, int test)
 	ft_lstaddend_funct(file, tmp);
 }
 
-void	add_fun(t_function **file, char *line, int test)
+void	add_fun(t_function **file, char *line)
 {
 	int			i;
 	char		*tmp;
@@ -74,7 +74,7 @@ void	add_line_1_param(t_function **file, char *line, int test)
 	vars->str2 = ft_strtrim(line);
 	vars->str2 = deblank(vars->str2);
 	vars->str2 = rem_com_if(vars->str2);
-	while (vars->i < ft_strlen(g_op_tab[test - 1].name) - 1)
+	while (vars->i < (int)ft_strlen(g_op_tab[test - 1].name) - 1)
 		vars->i++;
 	vars->i++;
 	vars->name = ft_strsub(vars->str2, 0, vars->i);
@@ -97,7 +97,7 @@ void	add_line_2_param(t_function **file, char *line, int test)
 	vars->str2 = ft_strtrim(line);
 	vars->str2 = deblank(vars->str2);
 	vars->str2 = rem_com_if(vars->str2);
-	while (vars->i < ft_strlen(g_op_tab[test - 1].name) - 1)
+	while (vars->i < (int)ft_strlen(g_op_tab[test - 1].name) - 1)
 		vars->i++;
 	vars->i++;
 	vars->name = ft_strsub(vars->str2, 0, vars->i);

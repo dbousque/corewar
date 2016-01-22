@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:45:30 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 14:38:37 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,16 @@ int				is_in_tab(int a, int *tab, int i);
 int				last_fun_h(t_function **file);
 int				convert_to_bytecode(t_function *functions, char *filename);
 
-void			cut_parsing_1(t_function **file, char *line, int test);
-void			cut_parsing_2(t_function **file, char *line, int test);
+void			cut_parsing_1(t_function **file, char *line);
+void			cut_parsing_2(t_function **file, char *line);
 void			cut_parsing_3(t_function **file, char *line, int test);
 void			cut_check_p1(char *str, char *str2, int *tab, int i);
 void			cut_check_p2(char *str, char *str2, int *tab, int i);
 void			cut_check_p3(char *str, char *str2, int *tab, int i);
 void			cut_1_5_param(t_tempo **vars, int test);
-void			cut_2_5_param(t_tempo **vars, int test);
-void			cut_1_6_param(t_tempo **vars, int test);
-void			cut_2_6_param(t_tempo **vars, int test);
+void			cut_2_5_param(t_tempo **vars);
+void			cut_1_6_param(t_tempo **vars);
+void			cut_2_6_param(t_tempo **vars);
 void			cut_param_3(t_tempo **vars, int test);
 void			cut_param_4(t_tempo **vars, int test);
 void			check_file(t_function **file);
@@ -128,9 +128,9 @@ void			exit_prgm_type_dir_l(char *str, char *str2);
 void			exit_prgm_type_dir_n(char *str, char *str2);
 void			exit_prgm_lab_in(char *str, char *str2);
 void			exit_prgm_fk_dir(char *str, char *str2);
-void			add_c_name(t_function **file, char *line, int test);
-void			add_comment(t_function **file, char *line, int test);
-void			add_fun(t_function **file, char *line, int test);
+void			add_c_name(t_function **file, char *line);
+void			add_comment(t_function **file, char *line);
+void			add_fun(t_function **file, char *line);
 void			add_line_1_param(t_function **file, char *line, int test);
 void			add_line_2_param(t_function **file, char *line, int test);
 void			add_line_3_param(t_function **file, char *line, int test);

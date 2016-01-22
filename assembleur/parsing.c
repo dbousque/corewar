@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:36:03 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:39:51 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 14:39:05 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,13 +107,13 @@ void	add_command(int test, t_function **file, char *line)
 	t_function	*tmp;
 
 	if (test == 100)
-		add_c_name(file, line, test);
+		add_c_name(file, line);
 	else if (test == 101)
-		add_comment(file, line, test);
+		add_comment(file, line);
 	else if (test == 102)
-		cut_parsing_1(file, line, test);
+		cut_parsing_1(file, line);
 	else if (test == 106)
-		cut_parsing_2(file, line, test);
+		cut_parsing_2(file, line);
 	else if (test == 103 || test == 105)
 		;
 	else if (test == 0)
