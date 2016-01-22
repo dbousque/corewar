@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:00:06 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/22 14:38:37 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 17:37:26 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int				is_in_tab(int a, int *tab, int i);
 int				last_fun_h(t_function **file);
 int				convert_to_bytecode(t_function *functions, char *filename);
 
+void			check_space_label(int i, char *str);
 void			cut_parsing_1(t_function **file, char *line);
 void			cut_parsing_2(t_function **file, char *line);
 void			cut_parsing_3(t_function **file, char *line, int test);

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 18:03:47 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:48:03 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 17:37:04 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,6 @@ int		check_name_solo(char *str)
 	}
 	if (str[i] == LABEL_CHAR)
 		return (1);
+	check_space_label(i, str);
 	return (0);
 }

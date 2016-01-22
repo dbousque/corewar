@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 15:20:36 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 15:21:55 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 17:36:57 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,13 @@ void	make_line_6(t_function **file, t_tempo *vars)
 	ft_lstaddend_instruct(&tmp->lines, tmp3);
 	tmp3 = new_instruct(vars->param6, check_param(vars->param6), 0);
 	ft_lstaddend_instruct(&tmp->lines, tmp3);
+}
+
+void	check_space_label(int i, char *str)
+{
+	if (str[i + 1] == LABEL_CHAR)
+	{
+		ft_printf("Erreur d'ecriture du label - ligne : %d\n", g_lines_tot);
+		exit(0);
+	}
 }
