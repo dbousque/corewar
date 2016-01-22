@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/19 13:43:40 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 16:46:45 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 17:44:50 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,14 @@ void	check_file(t_function **file)
 {
 	t_function *tmp;
 
+	tmp = *file;
+	while (tmp->next)
+		tmp = tmp->next;
+	if (tmp->header == 1 || tmp->header == 2)
+	{
+		ft_printf("Only comment and name\n");
+		exit(0);
+	}
 	tmp = *file;
 	while (tmp)
 	{
