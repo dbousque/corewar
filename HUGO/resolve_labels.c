@@ -6,55 +6,17 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:34:18 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 13:52:58 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/22 13:45:22 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "convert_to_bytecode.h"
 
-/*unsigned long long	get_relative_addr_of_label(char *label, t_function *function,
-										t_function *functions, t_op *opcode)
-{
-	unsigned long long	res;
-	unsigned int		bytes_written;
-	int					found;
-
-	found = 0;
-	res = 0;
-	bytes_written = 0;
-	return (1);
-	while (functions)
-	{
-		if (ft_strcmp(functions->label, label) == 0)
-			found = 1;
-		if (found)
-			bytes_written += functions->bytes_written;
-		if (functions == function)
-		{
-			if (bytes_written > 0 && opcode->has_param_byte)
-			{
-				if (opcode->small_dir)
-					return (res - bytes_written + 2);
-				return (res - bytes_written + 3);
-			}
-			return (res - bytes_written + 1);
-		}
-		functions = functions->next;
-	}
-	return (res);
-}*/
-
-int			label_not_found(char *label)
-{
-	ft_putstr_fd("LABEL NOT FOUND : ", 2);
-	ft_putendl_fd(label, 2);
-	return (0);
-}
-
 t_to_resolve	*new_resolve(char *label, t_function *function_from,
 							int bytes_written_from, t_list *byte_to_override)
 {
 	t_to_resolve	*res;
+
 	if (!(res = (t_to_resolve*)malloc(sizeof(t_to_resolve))))
 		return (NULL);
 	res->label_to_seek = ft_strdup(label);
@@ -64,7 +26,7 @@ t_to_resolve	*new_resolve(char *label, t_function *function_from,
 	return (res);
 }
 
-void		replace_bytes(t_list *bytes, void *val, size_t size)
+void			replace_bytes(t_list *bytes, void *val, size_t size)
 {
 	void	*res;
 
@@ -74,8 +36,7 @@ void		replace_bytes(t_list *bytes, void *val, size_t size)
 	bytes->content_size = size;
 }
 
-int			resolve_unresolved_labels_bef(t_list *labels_to_resolve,
-														t_to_resolve *to_res)
+int				resolve_unresolved_labels_bef(t_to_resolve *to_res)
 {
 	t_function		*tmp_function;
 	unsigned int	bytes_inbetween;
@@ -104,13 +65,14 @@ int			resolve_unresolved_labels_bef(t_list *labels_to_resolve,
 	return (!done ? 0 : 1);
 }
 
-int			resolve_unresolved_labels_after(t_list *labels_to_resolve,
+int				resolve_unresolved_labels_after(t_list *labels_to_resolve,
 														t_to_resolve *to_res)
 {
 	t_function		*tmp_function;
 	unsigned int	bytes_inbetween;
 	char			done;
 
+	(void)labels_to_resolve;
 	done = 0;
 	bytes_inbetween = to_res->function_from->bytes_written
 								- to_res->bytes_written_in_function_from + 1;
@@ -131,7 +93,7 @@ int			resolve_unresolved_labels_after(t_list *labels_to_resolve,
 	return (!done ? 0 : 1);
 }
 
-int			resolve_unresolved_labels(t_list *labels_to_resolve)
+int				resolve_unresolved_labels(t_list *labels_to_resolve)
 {
 	t_to_resolve	*to_res;
 	char			done;
@@ -141,7 +103,7 @@ int			resolve_unresolved_labels(t_list *labels_to_resolve)
 		done = 0;
 		to_res = ((t_to_resolve*)labels_to_resolve->content);
 		done = resolve_unresolved_labels_after(labels_to_resolve, to_res);
-		if (!done && !resolve_unresolved_labels_bef(labels_to_resolve, to_res))
+		if (!done && !resolve_unresolved_labels_bef(to_res))
 			return (label_not_found(to_res->label_to_seek));
 		labels_to_resolve = labels_to_resolve->next;
 	}

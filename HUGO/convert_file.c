@@ -6,18 +6,18 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 15:59:39 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/21 14:18:12 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/22 13:53:11 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-char* deblank(char* input)
+char	*deblank(char *input)
 {
-	int i;
-	int j;
-	char *output;
-	
+	int		i;
+	int		j;
+	char	*output;
+
 	output = input;
 	i = 0;
 	j = 0;
@@ -34,7 +34,7 @@ char* deblank(char* input)
 	return (output);
 }
 
-int				error_while_reading(char *filename)
+int		error_while_reading(char *filename)
 {
 	ft_putstr_fd("Error while reading file ", 2);
 	ft_putendl_fd(filename, 2);
@@ -66,10 +66,10 @@ void	affiche(t_function **file)
 		tmp = tmp->next;
 	}
 }
-//lol
-int				convert_file(char *filename)
+
+int		convert_file(char *filename)
 {
-	t_function *file;
+	t_function	*file;
 	char		*line;
 	int			ret;
 	int			fd;
@@ -89,7 +89,6 @@ int				convert_file(char *filename)
 	}
 	if (ret == -1)
 		return (error_while_reading(filename));
-//	affiche(&file);
 	check_file(&file);
 	convert_to_bytecode(file, filename);
 	return (0);

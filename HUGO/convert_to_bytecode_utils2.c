@@ -6,11 +6,23 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 15:22:10 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/20 15:53:59 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/22 13:32:05 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "convert_to_bytecode.h"
+
+int			big_error(void)
+{
+	ft_putendl_fd("BIG ERROR", 2);
+	return (0);
+}
+
+void		*big_error_null(void)
+{
+	ft_putendl_fd("BIG ERROR", 2);
+	return (NULL);
+}
 
 int			update_size_bytes(t_list *size_bytes, t_function *functions)
 {

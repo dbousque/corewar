@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/20 14:56:50 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 19:17:17 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/22 13:32:13 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		create_res_file(char *filename, char **filename_res)
 	return (open(*filename_res, O_CREAT | O_TRUNC | O_RDWR, 0600));
 }
 
-int			write_bytes_to_file(char *filename, t_list *bytes)
+int		write_bytes_to_file(char *filename, t_list *bytes)
 {
 	int		fd;
 	char	**res_filename;
@@ -77,16 +77,4 @@ int			write_bytes_to_file(char *filename, t_list *bytes)
 		bytes = bytes->next;
 	}
 	return (0);
-}
-
-int			big_error(void)
-{
-	ft_putendl_fd("BIG ERROR", 2);
-	return (0);
-}
-
-void		*big_error_null(void)
-{
-	ft_putendl_fd("BIG ERROR", 2);
-	return (NULL);
 }

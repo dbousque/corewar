@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/17 16:01:31 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/21 19:16:55 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/22 13:41:49 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ typedef struct		s_to_resolve
 	int				has_param_byte;
 }					t_to_resolve;
 
-typedef struct	s_bytes_n_labels
+typedef struct		s_bytes_n_labels
 {
-	t_list		*bytes_end;
-	t_list		*labels_to_resolve;
-	t_list		*labels_to_resolve_end;
-}				t_bytes_n_labels;
+	t_list			*bytes_end;
+	t_list			*labels_to_resolve;
+	t_list			*labels_to_resolve_end;
+}					t_bytes_n_labels;
 
 int					write_bytes_to_file(char *filename, t_list *bytes);
 int					big_error(void);
@@ -50,10 +50,12 @@ int					write_opcode(unsigned char opcode, t_list **bytes_end);
 t_op				*get_opcode_descr_with_opcode(int opcode);
 int					write_param_byte_if_nec(t_instruct *instruct,
 									t_list **bytes_end, t_function *function);
-unsigned long long	get_relative_addr_of_label(char *label,
-					t_function *function, t_function *functions, t_op *opcode);
 t_to_resolve		*new_resolve(char *label, t_function *function_from,
 							int bytes_written_from, t_list *byte_to_override);
 int					resolve_unresolved_labels(t_list *labels_to_resolve);
+void				add_to_labels_to_resolve1(t_instruct *instruct,
+							t_function *function, int bytes_written_before,
+											t_bytes_n_labels *bytes_n_labels);
+int					label_not_found(char *label);
 
 #endif
