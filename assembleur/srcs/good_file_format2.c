@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/22 20:27:27 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/25 19:32:28 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/25 19:42:34 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,6 @@ char	is_label(char *line)
 			return (0);
 		i++;
 	}
-	return (0);
-}
-
-char	is_empty_line(char *line)
-{
-	if (!(line = ft_strtrim(line)))
-		return (0);
-	if (!(line = deblank(line)))
-		return (0);
-	if (ft_strlen(line) == 0)
-		return (1);
 	return (0);
 }
 

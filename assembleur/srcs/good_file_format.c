@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/22 20:26:02 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/22 20:47:25 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/25 19:42:43 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,17 @@ char	is_comment_line(char *line)
 	if (!(line = deblank(line)))
 		return (0);
 	if (is_comment_char(line[0]))
+		return (1);
+	return (0);
+}
+
+char	is_empty_line(char *line)
+{
+	if (!(line = ft_strtrim(line)))
+		return (0);
+	if (!(line = deblank(line)))
+		return (0);
+	if (ft_strlen(line) == 0)
 		return (1);
 	return (0);
 }
