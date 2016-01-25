@@ -6,7 +6,7 @@
 #    By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/01 20:43:29 by hbeaujou          #+#    #+#              #
-#    Updated: 2016/01/22 20:29:30 by dbousque         ###   ########.fr        #
+#    Updated: 2016/01/25 19:40:48 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,8 @@ CC		= gcc
 .SILENT:
 
 $(NAME): $(OBJECTS)
-	$(CC) $(WFLAGS) -L. libdodo.a $(OBJECTS) -o $(NAME)
+	make -C libdodo
+	$(CC) $(WFLAGS) -L. libdodo/libdodo.a $(OBJECTS) -o $(NAME)
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
 	printf "\n\e[32m----------------------------------\e[36m"
@@ -66,6 +67,7 @@ all: $(NAME)
 	printf "\033[0m\n"
 
 clean:
+	make clean -C libdodo
 	rm -rf $(OBJECTS)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): Objects deleted\n"
@@ -73,6 +75,7 @@ clean:
 	printf "\033[0m\n"
 
 fclean: clean
+	make fclean -C libdodo
 	rm -rf $(NAME)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): All deleted\n"

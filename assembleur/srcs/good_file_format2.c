@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/22 20:27:27 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/22 20:47:13 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/25 19:32:28 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,22 @@ char	is_label(char *line)
 	return (0);
 }
 
+char	is_empty_line(char *line)
+{
+	if (!(line = ft_strtrim(line)))
+		return (0);
+	if (!(line = deblank(line)))
+		return (0);
+	if (ft_strlen(line) == 0)
+		return (1);
+	return (0);
+}
+
 char	is_valid_line(char *line, int line_number)
 {
 	if (ft_strlen(line) > 0)
 	{
-		if (is_name_descr(line) || is_comment_descr(line)
+		if (is_name_descr(line) || is_comment_descr(line) || is_empty_line(line)
 			|| is_comment_line(line) || is_command(line) || is_label(line))
 			return (1);
 		ft_putstr_fd("Line n ", 2);
