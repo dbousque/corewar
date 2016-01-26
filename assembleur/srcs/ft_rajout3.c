@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/21 15:24:07 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/26 13:43:07 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/26 13:44:15 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	cut_param_3(t_tempo **vars, int test)
 		(*vars)->j++;
 	if ((*vars)->str2[(*vars)->j] == '\0')
 	{
-		ft_putstr_fd("Missing param\n");
+		ft_putstr_fd("Missing param\n", 2);
 		exit(0);
 	}
 	(*vars)->param1 = ft_strsub((*vars)->str2,
@@ -41,7 +41,7 @@ void	cut_param_3(t_tempo **vars, int test)
 		(*vars)->i++;
 	if ((*vars)->str2[(*vars)->j] == '\0')
 	{
-		ft_putstr_fd("Missing param\n");
+		ft_putstr_fd("Missing param\n", 2);
 		exit(0);
 	}
 	(*vars)->j++;
