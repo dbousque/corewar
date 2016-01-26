@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/21 16:07:51 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/26 13:35:25 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/26 13:46:42 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	cut_check_p3(char *str, char *str2, int *tab, int i)
 		ft_putstr_fd("No params for function : ", 2);
 		ft_putstr_fd(str2, 2);
 		ft_putchar('\n');
-		exit (0);
+		exit(0);
 	}
 	if (is_number(str) == 1)
 	{

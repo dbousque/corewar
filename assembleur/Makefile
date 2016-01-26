@@ -6,7 +6,7 @@
 #    By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/01 20:43:29 by hbeaujou          #+#    #+#              #
-#    Updated: 2016/01/25 19:40:48 by dbousque         ###   ########.fr        #
+#    Updated: 2016/01/26 13:53:26 by hbeaujou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SOURCES =	srcs/add_fct.c	\
 			srcs/ft_rajout2.c \
 			srcs/ft_rajout3.c \
 			srcs/ft_rajout4.c \
+			srcs/ft_rajout5.c \
 			srcs/list_work.c \
 			srcs/main.c \
 			srcs/make_line.c \

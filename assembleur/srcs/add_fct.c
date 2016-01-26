@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/18 11:05:35 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/26 13:44:37 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/26 13:49:50 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,7 @@ void	add_line_2_param(t_function **file, char *line, int test)
 	vars->j = vars->i + 1;
 	while (vars->str2[vars->j] != SEPARATOR_CHAR && vars->str2[vars->j])
 		vars->j++;
-	if (vars->str2[vars->j] == '\0')
-	{
-		ft_putstr_fd("Missing param\n", 2);
-		exit(0);
-	}
+	test_no_params(&vars);
 	vars->param1 = ft_strsub(vars->str2, vars->i, vars->j - vars->i);
 	vars->i = vars->j + 1;
 	while (vars->str2[vars->i] != '\0')
