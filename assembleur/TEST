@@ -1,0 +1,24 @@
+
+
+ .name   	 "lol"
+
+
+
+	  .comment  		  "lo%6&lolol  " 	 
+
+test:
+	aff r16
+
+test3:
+	aff r4
+
+
+
+
+
+
+	
+
+tests:
+test:
+	ld %:r1, r1
