@@ -6,12 +6,14 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2016/01/27 19:03:24 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/28 19:28:28 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OP_H
 # define OP_H
+
+#include "libdodo.h"
 
 /*
 ** Toutes les tailles sont en octets.
@@ -60,6 +62,50 @@
 
 typedef char	t_arg_type;
 
+typedef struct		s_player
+{
+	char			*name;
+	char			*comment;
+	int				number;
+	unsigned char	*code;
+	unsigned int	code_len;
+	unsigned char	*start;
+}					t_player;
+
+typedef struct		s_param
+{
+	char			type;
+	long long		value;
+}					t_param;
+
+typedef struct		s_instruct
+{
+	unsigned char	*start;
+	int				len;
+	int				opcode;
+	t_param			*params;
+}					t_instruct;
+
+typedef struct		s_process
+{
+	int				number;
+	int				*registres;
+	unsigned char	*next_instr;
+	char			carry;
+	int				remaining_cycles;
+	int				last_live;
+	int				nb_live;
+}					t_process;
+
+typedef struct		s_vm
+{
+	t_player		**players;
+	int				nb_players;
+	t_list			*processes;
+	unsigned char	*memory;
+	int				current_cycle;
+}					t_vm;
+
 typedef struct		s_op
 {
 	char			*name;
@@ -70,6 +116,8 @@ typedef struct		s_op
 	char			*comment;
 	int				has_param_byte;
 	int				small_dir;
+	int				(*function)(t_vm *vm, t_process *process,
+											unsigned int *params, int len);
 }					t_op;
 
 typedef struct		s_header

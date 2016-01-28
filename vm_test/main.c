@@ -6,55 +6,11 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/27 19:25:19 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/28 19:58:54 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-
-typedef struct		s_player
-{
-	char			*name;
-	char			*comment;
-	int				number;
-	unsigned char	*code;
-	unsigned int	code_len;
-	unsigned char	*start;
-}					t_player;
-
-typedef struct		s_param
-{
-	char			type;
-	long long		value;
-}					t_param;
-
-typedef struct		s_instruct
-{
-	unsigned char	*start;
-	int				len;
-	int				opcode;
-	t_param			*params;
-}					t_instruct;
-
-typedef struct		s_process
-{
-	int				number;
-	int				*registres;
-	unsigned char	*next_instr;
-	char			carry;
-	int				remaining_cycles;
-	int				last_live;
-	int				nb_live;
-}					t_process;
-
-typedef struct		s_vm
-{
-	t_player		**players;
-	int				nb_players;
-	t_list			*processes;
-	unsigned char	*memory;
-	int				current_cycle;
-}					t_vm;
 
 t_process	*new_process(unsigned char *start)
 {
@@ -295,12 +251,38 @@ void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *c
 		tmp = tmp->next;
 	}
 	if (total_nb_live >= NBR_LIVE)
+	{
 		*cycle_to_die -= CYCLE_DELTA;
+		*checks = MAX_CHECKS;
+	}
+	else
+		(*checks)--;
 	*to_die_iter = *cycle_to_die;
-	*checks = MAX_CHECKS;
 }
 
-void	increment_next_instr(t_vm *vm, t_process *process)
+void	increment_next_instr(t_vm *vm, t_process *process, int nb)
+{
+	int		i;
+
+	ft_printf("ADV %d (0x%04x -> 0x%04x) ", nb, process->next_instr - vm->memory, process->next_instr - vm->memory + nb);
+	i = 0;
+	while (i < nb)
+	{
+		ft_printf("%02x ", *(process->next_instr + i));
+		i++;
+	}
+	ft_putchar('\n');
+	while (nb > 0)
+	{
+		if (process->next_instr < vm->memory + MEM_SIZE - 1)
+			process->next_instr++;
+		else
+			process->next_instr = vm->memory;
+		nb--;
+	}
+}
+
+void	go_to_next_byte(t_vm *vm, t_process *process)
 {
 	if (process->next_instr < vm->memory + MEM_SIZE - 1)
 		process->next_instr++;
@@ -337,17 +319,178 @@ char	opcode_has_param_byte(unsigned char opcode)
 	return (0);
 }
 
-void	execute_instruction(t_vm *vm, t_process *process)
+t_op	*get_opcode_descr_with_opcode(unsigned char opcode)
 {
-	if (!valid_opcode(process->next_instr))
-		increment_next_instr(vm, process);
+	int		i;
+
+	i = 0;
+	while (g_op_tab[i].name)
+	{
+		if (g_op_tab[i].opcode == opcode)
+			return (&g_op_tab[i]);
+		i++;
+	}
+	ft_putendl_fd("BIG ERROR !", 2);
+	return (NULL);
+}
+
+int		is_in_tab(int a, int *tab, int i)
+{
+	if (tab[i] & a)
+		return (1);
+	return (0);
+}
+
+char	valid_param_byte(unsigned char *param_byte, unsigned char opcode)
+{
+	t_op			*opcode_descr;
+	int				decal;
+	int				i;
+	unsigned char	a;
+
+	opcode_descr = get_opcode_descr_with_opcode(opcode);
+	decal = 0;
+	//ft_printf("%08b : %08b\n", opcode_descr->params_types[0], *param_byte);
+	i = 0;
+	while (i < opcode_descr->nb_params)
+	{
+		a = (*param_byte >> decal) % 4;
+		//ft_printf("%02b\n", a);
+		if (!is_in_tab(a, opcode_descr->params_types, i))
+			return (0);
+		decal += 2;
+		i++;
+	}
+	return (1);
+}
+
+/*t_instruct	*new_instruct(t_process *process, unsigned char *param_byte)
+{
+	t_instruct	*res;
+
+	if (!(res = (t_instruct*)malloc(sizeof(t_instruct))))
+		return (NULL);
+	res->start = process->next_instr;
+
+}*/
+
+unsigned char	*next_instr(t_vm *vm, unsigned char *current_instr)
+{
+	if (current_instr < vm->memory + MEM_SIZE - 1)
+		return (current_instr + 1);
+	return (vm->memory);
+}
+
+int		get_length_of_type(t_op *opcode_descr, unsigned char type)
+{
+	if (type == DIR_CODE)
+	{
+		if (opcode_descr->small_dir)
+			return (DIR_SIZE / 2);
+		return (DIR_SIZE);
+	}
+	if (type == IND_CODE)
+		return (IND_SIZE);
+	return (REG_SIZE);
+}
+
+unsigned char	t_to_code(unsigned char t)
+{
+	if (t == T_REG)
+		return (REG_CODE);
+	if (t == T_IND)
+		return (IND_CODE);
+	return (DIR_CODE);
+}
+
+void	get_params_length(int *params_length, t_op *opcode_descr,
+													unsigned char *param_byte)
+{
+	int		decal;
+	int		i;
+
+	if (!param_byte)
+	{
+		params_length[0] = get_length_of_type(opcode_descr, t_to_code(opcode_descr->params_types[0]));
+	}
 	else
 	{
-		if (opcode_has_param_byte(*process->next_instr))
+		decal = 0;
+		i = 0;
+		while (i < opcode_descr->nb_params)
 		{
-			increment_next_instr(vm, process);
-			if (!valid_param_byte(process->next_instr + 1))
-		}	
+			params_length[i] = get_length_of_type(opcode_descr, (*param_byte >> decal) % 4);
+			i++;
+			decal += 2;
+		}
+	}
+}
+
+int		execute_param_byte(t_vm *vm, t_process *process)
+{
+	(void)vm;
+	(void)process;
+	return (1);
+}
+
+int		add_lengths(int *params_length)
+{
+	int		i;
+	int		len;
+
+	i = 0;
+	len = 0;
+	while (params_length[i])
+	{
+		len += params_length[i];
+		i++;
+	}
+	return (len);
+}
+
+int		execute_no_param_byte(t_vm *vm, t_process *process)
+{
+	int				opcode;
+	t_op			*opcode_descr;
+	unsigned int	*params;
+	int				*params_length;
+
+	opcode = *process->next_instr;
+	opcode_descr = get_opcode_descr_with_opcode(opcode);
+	if (!(params = (unsigned int*)malloc(sizeof(unsigned int) * opcode_descr->nb_params)))
+		return (1);
+	if (!(params_length = (int*)malloc(sizeof(int) * (opcode_descr->nb_params + 1))))
+		return (1);
+	params_length[opcode_descr->nb_params] = 0;
+	get_params_length(params_length, opcode_descr, NULL);
+	parse_params(vm, next_instr(vm, process->next_instr), params_length, params);
+	return (opcode_descr->function(vm, process, params, add_lengths(params_length)));
+}
+
+void	execute_instruction(t_vm *vm, t_process *process)
+{
+	unsigned char	*opcode;
+	int				len;
+
+	opcode = process->next_instr;
+	if (opcode_has_param_byte(*process->next_instr))
+	{
+		if (!valid_param_byte(next_instr(vm, process->next_instr), *opcode))
+		{
+			increment_next_instr(vm, process, 2);
+			process->remaining_cycles = 
+									get_cycles_for_opcode(*process->next_instr);
+			return ;
+		}
+		len = execute_param_byte(vm, process);
+		increment_next_instr(vm, process, len + 2);
+		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+	}
+	else
+	{
+		len = execute_no_param_byte(vm, process);
+		increment_next_instr(vm, process, len + 1);
+		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
 	}
 }
 
@@ -358,10 +501,10 @@ void	execute_processes(t_vm *vm)
 	tmp = vm->processes;
 	while (tmp)
 	{
-		if (((t_process*)tmp->content)->remaining_cycles == 0)
-		{
+		if (!valid_opcode(((t_process*)tmp->content)->next_instr))
+			go_to_next_byte(vm, ((t_process*)tmp->content));
+		else if (((t_process*)tmp->content)->remaining_cycles == 0)
 			execute_instruction(vm, ((t_process*)tmp->content));
-		}
 		else
 			((t_process*)tmp->content)->remaining_cycles--;
 		tmp = tmp->next;
@@ -394,8 +537,7 @@ int		run_vm(t_vm *vm)
 		execute_processes(vm);
 		vm->current_cycle++;
 		to_die_iter--;
-		checks--;
-		ft_printf("It is now cycle %d\n", vm->current_cycle);
+		//ft_printf("It is now cycle %d\n", vm->current_cycle);
 	}
 	return (1);
 }
@@ -418,8 +560,8 @@ int		main(int argc, char **argv)
 		add_player_to_vm(vm, get_player_from_file(vm, champion2, champ2_size));
 		vm->players[2] = NULL;
 		load_players_in_memory(vm);
-		dumpmemory(vm->memory);
 		run_vm(vm);
+		//dumpmemory(vm->memory);
 	}
 	return (0);
 }
