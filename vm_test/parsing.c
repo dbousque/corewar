@@ -6,12 +6,11 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 16:53:18 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/28 18:30:03 by hbeaujou         ###   ########.fr       */
+/*   Updated: 2016/01/28 18:56:35 by hbeaujou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "vm.h"
-#include <stdio.h>
+#include "vm.h"
 
 int		ft_pow(int nb, int pui)
 {
@@ -61,15 +60,4 @@ void	parse_params(unsigned char *str, int *to_read, unsigned int *final)
 		final[j] = res;
 		j++;
 	}
-}
-
-int	main(void)
-{
-	unsigned char str[6] = {1,0,0,6,0,4};
-	int to_read[4] = {2, 2, 2, 0};
-	unsigned int final[3] = {0, 0, 0};
-	parse_params(str, to_read, final);
-	printf("%d\n", final[0]);
-	printf("%d\n", final[1]);
-	printf("%d\n", final[2]);
 }
