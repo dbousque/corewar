@@ -244,6 +244,8 @@ int		create_start_processes(t_vm *vm)
 	if (!tmp)
 		return (0);
 	ft_lstadd(&vm->processes, tmp);
+	((t_process*)vm->processes->content)->remaining_cycles = 
+			get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
 	return (1);
 }
 
@@ -298,10 +300,55 @@ void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *c
 	*checks = MAX_CHECKS;
 }
 
+void	increment_next_instr(t_vm *vm, t_process *process)
+{
+	if (process->next_instr < vm->memory + MEM_SIZE - 1)
+		process->next_instr++;
+	else
+		process->next_instr = vm->memory;
+}
+
+char	valid_opcode(unsigned char *opcode)
+{
+	int		i;
+
+	i = 0;
+	while (g_op_tab[i].name)
+	{
+		if (*opcode == g_op_tab[i].opcode)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char	opcode_has_param_byte(unsigned char opcode)
+{
+	int		i;
+
+	i = 0;
+	while (g_op_tab[i].name)
+	{
+		if (g_op_tab[i].opcode == opcode)
+			return (g_op_tab[i].has_param_byte);
+		i++;
+	}
+	ft_putendl_fd("BIG ERROR !", 2);
+	return (0);
+}
+
 void	execute_instruction(t_vm *vm, t_process *process)
 {
-	(void)vm;
-	process->remaining_cycles = 5;
+	if (!valid_opcode(process->next_instr))
+		increment_next_instr(vm, process);
+	else
+	{
+		if (opcode_has_param_byte(*process->next_instr))
+		{
+			increment_next_instr(vm, process);
+			if (!valid_param_byte(process->next_instr + 1))
+		}	
+	}
 }
 
 void	execute_processes(t_vm *vm)
