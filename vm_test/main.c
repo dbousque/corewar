@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/29 17:37:48 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/29 19:38:02 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -403,7 +403,9 @@ int		get_length_of_type(t_op *opcode_descr, unsigned char type)
 	}
 	if (type == IND_CODE)
 		return (IND_SIZE);
-	return (REG_SIZE);
+	else if (type == REG_CODE)
+		return (REG_SIZE);
+	return (0);
 }
 
 unsigned char	t_to_code(unsigned char t)
@@ -438,14 +440,14 @@ void	get_params_length(int *params_length, t_op *opcode_descr,
 	}
 }
 
-int		add_lengths(int *params_length)
+int		add_lengths(int *params_length, int nb)
 {
 	int		i;
 	int		len;
 
 	i = 0;
 	len = 0;
-	while (params_length[i])
+	while (i < nb)
 	{
 		len += params_length[i];
 		i++;
@@ -464,12 +466,11 @@ int		execute_param_byte(t_vm *vm, t_process *process)
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
 	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
-	if (!(params_length = (int*)malloc(sizeof(int) * (opcode_descr->nb_params + 1))))
+	if (!(params_length = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
-	params_length[opcode_descr->nb_params] = 0;
 	get_params_length(params_length, opcode_descr, next_instr(vm, process->next_instr));
-	parse_params(vm, next_instr(vm, next_instr(vm, process->next_instr)), params_length, params);
-	return (opcode_descr->function(vm, process, params, add_lengths(params_length)));
+	parse_params(vm, next_instr(vm, next_instr(vm, process->next_instr)), params_length, params, opcode_descr->nb_params);
+	return (opcode_descr->function(vm, process, params, add_lengths(params_length, opcode_descr->nb_params)));
 }
 
 int		execute_no_param_byte(t_vm *vm, t_process *process)
@@ -483,12 +484,11 @@ int		execute_no_param_byte(t_vm *vm, t_process *process)
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
 	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
-	if (!(params_length = (int*)malloc(sizeof(int) * (opcode_descr->nb_params + 1))))
+	if (!(params_length = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
-	params_length[opcode_descr->nb_params] = 0;
 	get_params_length(params_length, opcode_descr, NULL);
-	parse_params(vm, next_instr(vm, process->next_instr), params_length, params);
-	return (opcode_descr->function(vm, process, params, add_lengths(params_length)));
+	parse_params(vm, next_instr(vm, process->next_instr), params_length, params, opcode_descr->nb_params);
+	return (opcode_descr->function(vm, process, params, add_lengths(params_length, opcode_descr->nb_params)));
 }
 
 char	opcode_is_not_zjmp(char opcode)
@@ -520,10 +520,10 @@ void	execute_instruction(t_vm *vm, t_process *process)
 	{
 		if (!valid_param_byte(next_instr(vm, process->next_instr), *opcode))
 		{
-			if (!(params_length = (int*)malloc(sizeof(int) * (opcode_descr->nb_params + 1))))
+			if (!(params_length = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 				return ;
 			get_params_length(params_length, opcode_descr, next_instr(vm, process->next_instr));
-			increment_next_instr(vm, process, add_lengths(params_length));
+			increment_next_instr(vm, process, add_lengths(params_length, opcode_descr->nb_params) + 2);
 			process->remaining_cycles = 
 									get_cycles_for_opcode(*process->next_instr);
 			return ;
@@ -577,6 +577,7 @@ int		run_vm(t_vm *vm)
 		return (0);
 	while (one_process_living(vm))
 	{
+		execute_processes(vm);
 		if (to_die_iter <= 0)
 			delete_dead_processes(vm, &to_die_iter, &cycle_to_die, &checks);
 		if (!vm->processes)
@@ -584,10 +585,10 @@ int		run_vm(t_vm *vm)
 		if (checks == 0)
 		{
 			cycle_to_die -= CYCLE_DELTA;
+			to_die_iter -= CYCLE_DELTA;
 			ft_printf("Cycle to die is now %d\n", cycle_to_die);
 			checks = MAX_CHECKS;
 		}
-		execute_processes(vm);
 		vm->current_cycle++;
 		to_die_iter--;
 		ft_printf("It is now cycle %d\n", vm->current_cycle);

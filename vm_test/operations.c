@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 18:03:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/29 17:52:08 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/29 19:43:25 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,12 +359,41 @@ int		op_sti(t_vm *vm, t_process *process, int *params, int len)
 	return (len);
 }
 
+int		*copy_regs(int *registres)
+{
+	int		*res;
+	int		i;
+
+	if (!(res = (int*)malloc(sizeof(int) * REG_NUMBER)))
+		return (NULL);
+	i = 0;
+	while (i < REG_NUMBER)
+	{
+		res[i] = registres[i];
+		i++;
+	}
+	return (res);
+}
+
 int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 {
-	(void)vm;
-	(void)process;
-	(void)params;
-	(void)len;
+	t_process		*fork;
+	unsigned char	*addr;
+
+	addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 1);
+	if (!(fork = new_process(addr)))
+		return (len);
+	fork->carry = process->carry;
+	if (!(fork->registres = copy_regs(process->registres)))
+		exit(1);
+	fork->last_live = 0;
+	fork->nb_live = 0;
+	fork->remaining_cycles = get_cycles_for_opcode(*fork->next_instr);
+	if (fork->remaining_cycles > 0)
+		fork->remaining_cycles--;
+	if (PRINT_INSTR)
+		ft_printf("P%5d | fork %d (%d)\n", process->number, (short)params[0], addr - vm->memory);
+	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
 }
 
@@ -388,10 +417,23 @@ int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 
 int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
 {
-	(void)vm;
-	(void)process;
-	(void)params;
-	(void)len;
+	t_process		*fork;
+	unsigned char	*addr;
+
+	addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 0);
+	if (!(fork = new_process(addr)))
+		return (len);
+	fork->carry = process->carry;
+	if (!(fork->registres = copy_regs(process->registres)))
+		exit(1);
+	fork->last_live = 0;
+	fork->nb_live = 0;
+	fork->remaining_cycles = get_cycles_for_opcode(*fork->next_instr);
+	if (fork->remaining_cycles > 0)
+		fork->remaining_cycles--;
+	if (PRINT_INSTR)
+		ft_printf("P%5d | lfork %d (%d)\n", process->number, (short)params[0], addr - vm->memory);
+	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
 }
 
@@ -411,7 +453,7 @@ int		op_aff(t_vm *vm, t_process *process, int *params, int len)
 	param = params[0];
 	if (param > 0 && param <= REG_NUMBER)
 	{
-		val = (unsigned int)(process->registres[param - 1]) % 256;
+		val = process->registres[param - 1] % 256;
 		ft_putstr("Aff: ");
 		write(1, &val, 1);
 		ft_putchar('\n');

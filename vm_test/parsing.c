@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 16:53:18 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/28 19:57:56 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/29 18:34:50 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ unsigned char	*next_byte_nb(t_vm *vm, unsigned char *byte, int nb)
 	return (byte);
 }
 
-void	parse_params(t_vm *vm, unsigned char *str, int *to_read, int *final)
+void	parse_params(t_vm *vm, unsigned char *str, int *to_read, int *final, int nb)
 {
 	int				i;
 	int				pow;
 	int				res;
 
 	i = 0;
-	while (to_read[i])
+	while (i < nb)
 	{
 		pow = to_read[i] - 1;
 		res = 0;
