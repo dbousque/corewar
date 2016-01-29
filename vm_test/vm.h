@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 15:03:43 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/28 19:51:11 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/29 14:53:55 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_vm	*init_vm(void);
 unsigned char	*next_byte_nb(t_vm *vm, unsigned char *byte, int nb);
 int		ft_pow(int nb, int pui);
 void	dumpmemory(unsigned char *memory);
+int		get_cycles_for_opcode(int opcode);
 unsigned char	*next_instr(t_vm *vm, unsigned char *current_instr);
 void	parse_params(t_vm *vm, unsigned char *str, int *to_read, int *final);
 void	print_memory(const void *addr, size_t size);

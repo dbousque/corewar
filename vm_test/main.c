@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/28 19:58:54 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/29 17:37:48 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,12 +196,16 @@ int		create_start_processes(t_vm *vm)
 	ft_lstaddend(&vm->processes, tmp);
 	((t_process*)vm->processes->content)->remaining_cycles = 
 			get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
+	((t_process*)vm->processes->content)->registres[0] = 1;
+	((t_process*)vm->processes->content)->carry = 0;
 	tmp = ft_lstnew(new_process(vm->players[1]->start), sizeof(t_process));
 	if (!tmp)
 		return (0);
 	ft_lstadd(&vm->processes, tmp);
 	((t_process*)vm->processes->content)->remaining_cycles = 
 			get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
+	((t_process*)vm->processes->content)->registres[0] = 2;
+	((t_process*)vm->processes->content)->carry = 0;
 	return (1);
 }
 
@@ -253,6 +257,7 @@ void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *c
 	if (total_nb_live >= NBR_LIVE)
 	{
 		*cycle_to_die -= CYCLE_DELTA;
+		ft_printf("Cycle to die is now %d\n", *cycle_to_die);
 		*checks = MAX_CHECKS;
 	}
 	else
@@ -288,6 +293,9 @@ void	go_to_next_byte(t_vm *vm, t_process *process)
 		process->next_instr++;
 	else
 		process->next_instr = vm->memory;
+	process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+	if (process->remaining_cycles > 0)
+		process->remaining_cycles--;
 }
 
 char	valid_opcode(unsigned char *opcode)
@@ -483,30 +491,58 @@ int		execute_no_param_byte(t_vm *vm, t_process *process)
 	return (opcode_descr->function(vm, process, params, add_lengths(params_length)));
 }
 
+char	opcode_is_not_zjmp(char opcode)
+{
+	int		i;
+
+	i = 0;
+	while (g_op_tab[i].name)
+	{
+		if (g_op_tab[i].opcode == opcode && ft_strcmp("zjmp", g_op_tab[i].name) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	execute_instruction(t_vm *vm, t_process *process)
 {
 	unsigned char	*opcode;
 	int				len;
+	char			is_not_zjmp;
+	int				*params_length;
+	t_op			*opcode_descr;
 
 	opcode = process->next_instr;
+	opcode_descr = get_opcode_descr_with_opcode(*opcode);
+	is_not_zjmp = opcode_is_not_zjmp(*process->next_instr);
 	if (opcode_has_param_byte(*process->next_instr))
 	{
 		if (!valid_param_byte(next_instr(vm, process->next_instr), *opcode))
 		{
-			increment_next_instr(vm, process, 2);
+			if (!(params_length = (int*)malloc(sizeof(int) * (opcode_descr->nb_params + 1))))
+				return ;
+			get_params_length(params_length, opcode_descr, next_instr(vm, process->next_instr));
+			increment_next_instr(vm, process, add_lengths(params_length));
 			process->remaining_cycles = 
 									get_cycles_for_opcode(*process->next_instr);
 			return ;
 		}
 		len = execute_param_byte(vm, process);
-		increment_next_instr(vm, process, len + 2);
+		if (is_not_zjmp || len != 0)
+			increment_next_instr(vm, process, len + 2);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+		if (process->remaining_cycles > 0)
+			process->remaining_cycles--;
 	}
 	else
 	{
 		len = execute_no_param_byte(vm, process);
-		increment_next_instr(vm, process, len + 1);
+		if (is_not_zjmp || len != 0)
+			increment_next_instr(vm, process, len + 1);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+		if (process->remaining_cycles > 0)
+			process->remaining_cycles--;
 	}
 }
 
@@ -548,12 +584,13 @@ int		run_vm(t_vm *vm)
 		if (checks == 0)
 		{
 			cycle_to_die -= CYCLE_DELTA;
+			ft_printf("Cycle to die is now %d\n", cycle_to_die);
 			checks = MAX_CHECKS;
 		}
 		execute_processes(vm);
 		vm->current_cycle++;
 		to_die_iter--;
-		//ft_printf("It is now cycle %d\n", vm->current_cycle);
+		ft_printf("It is now cycle %d\n", vm->current_cycle);
 	}
 	return (1);
 }
