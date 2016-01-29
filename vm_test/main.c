@@ -14,7 +14,7 @@
 
 t_process	*new_process(unsigned char *start)
 {
-	static int	nb = 0;
+	static int	nb = 1;
 	t_process	*res;
 
 	if (!(res = (t_process*)malloc(sizeof(t_process))))
@@ -349,16 +349,20 @@ char	valid_param_byte(unsigned char *param_byte, unsigned char opcode)
 	unsigned char	a;
 
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
-	decal = 0;
-	//ft_printf("%08b : %08b\n", opcode_descr->params_types[0], *param_byte);
+	decal = 6;
 	i = 0;
 	while (i < opcode_descr->nb_params)
 	{
 		a = (*param_byte >> decal) % 4;
-		//ft_printf("%02b\n", a);
+		if (a == REG_CODE)
+			a = T_REG;
+		else if (a == DIR_CODE)
+			a = T_DIR;
+		else if (a == IND_CODE)
+			a = T_IND;
 		if (!is_in_tab(a, opcode_descr->params_types, i))
 			return (0);
-		decal += 2;
+		decal -= 2;
 		i++;
 	}
 	return (1);
@@ -415,22 +419,15 @@ void	get_params_length(int *params_length, t_op *opcode_descr,
 	}
 	else
 	{
-		decal = 0;
+		decal = 6;
 		i = 0;
 		while (i < opcode_descr->nb_params)
 		{
 			params_length[i] = get_length_of_type(opcode_descr, (*param_byte >> decal) % 4);
 			i++;
-			decal += 2;
+			decal -= 2;
 		}
 	}
-}
-
-int		execute_param_byte(t_vm *vm, t_process *process)
-{
-	(void)vm;
-	(void)process;
-	return (1);
 }
 
 int		add_lengths(int *params_length)
@@ -448,16 +445,35 @@ int		add_lengths(int *params_length)
 	return (len);
 }
 
-int		execute_no_param_byte(t_vm *vm, t_process *process)
+int		execute_param_byte(t_vm *vm, t_process *process)
 {
 	int				opcode;
 	t_op			*opcode_descr;
-	unsigned int	*params;
+	int				*params;
 	int				*params_length;
 
 	opcode = *process->next_instr;
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
-	if (!(params = (unsigned int*)malloc(sizeof(unsigned int) * opcode_descr->nb_params)))
+	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
+		return (1);
+	if (!(params_length = (int*)malloc(sizeof(int) * (opcode_descr->nb_params + 1))))
+		return (1);
+	params_length[opcode_descr->nb_params] = 0;
+	get_params_length(params_length, opcode_descr, next_instr(vm, process->next_instr));
+	parse_params(vm, next_instr(vm, next_instr(vm, process->next_instr)), params_length, params);
+	return (opcode_descr->function(vm, process, params, add_lengths(params_length)));
+}
+
+int		execute_no_param_byte(t_vm *vm, t_process *process)
+{
+	int				opcode;
+	t_op			*opcode_descr;
+	int				*params;
+	int				*params_length;
+
+	opcode = *process->next_instr;
+	opcode_descr = get_opcode_descr_with_opcode(opcode);
+	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
 	if (!(params_length = (int*)malloc(sizeof(int) * (opcode_descr->nb_params + 1))))
 		return (1);

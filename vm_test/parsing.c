@@ -75,12 +75,11 @@ unsigned char	*next_byte_nb(t_vm *vm, unsigned char *byte, int nb)
 	return (byte);
 }
 
-void	parse_params(t_vm *vm, unsigned char *str, int *to_read,
-															unsigned int *final)
+void	parse_params(t_vm *vm, unsigned char *str, int *to_read, int *final)
 {
 	int				i;
 	int				pow;
-	unsigned int	res;
+	int				res;
 
 	i = 0;
 	while (to_read[i])

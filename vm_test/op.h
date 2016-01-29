@@ -116,8 +116,8 @@ typedef struct		s_op
 	char			*comment;
 	int				has_param_byte;
 	int				small_dir;
-	int				(*function)(t_vm *vm, t_process *process,
-											unsigned int *params, int len);
+	int				(*function)(t_vm *vm, t_process *process, int *params,
+																	int len);
 }					t_op;
 
 typedef struct		s_header
