@@ -12,7 +12,7 @@
 
 #include "vm.h"
 
-t_process	*new_process(unsigned char *start)
+t_process	*new_process(unsigned char *start, int cycle_creation)
 {
 	static int	nb = 1;
 	t_process	*res;
@@ -27,6 +27,7 @@ t_process	*new_process(unsigned char *start)
 	res->carry = 0;
 	res->remaining_cycles = 0;
 	res->last_live = 0;
+	res->creation_cycle = cycle_creation;
 	res->nb_live = 0;
 	return (res);
 }
@@ -75,7 +76,7 @@ unsigned int	get_value_big_endian(unsigned int val)
 	return (res);
 }
 
-t_player	*get_player_from_file(t_vm *vm, char *content, int content_len)
+t_player	*get_player_from_file(t_vm *vm, char *content, int content_len, int number)
 {
 	unsigned char	*file_content;
 	t_player		*res;
@@ -85,7 +86,7 @@ t_player	*get_player_from_file(t_vm *vm, char *content, int content_len)
 	file_content = (unsigned char*)content;
 	if (!(res = (t_player*)malloc(sizeof(t_player))))
 		return (NULL);
-	res->number = vm->nb_players;
+	res->number = number;
 	vm->nb_players++;
 	if (!(res->name = (char*)malloc(sizeof(char) * (PROG_NAME_LENGTH + 1))))
 		return (NULL);
@@ -99,12 +100,6 @@ t_player	*get_player_from_file(t_vm *vm, char *content, int content_len)
 	res->comment[COMMENT_LENGTH] = '\0';
 	ft_memcpy(res->comment, content + decal, COMMENT_LENGTH);
 	decal += COMMENT_LENGTH;
-	/*if (decal + res->code_len != (unsigned int)content_len)
-	{
-		ft_printf("code_len : %d, decal : %d, content_len : %d\n", res->code_len, decal, content_len);
-		ft_putendl_fd("Length not matching with actual length", 2);
-		return (NULL);
-	}*/
 	if (!(res->code = (unsigned char*)malloc(sizeof(unsigned char) * (content_len - decal))))
 		return (NULL);
 	ft_memcpy(res->code, file_content + decal, content_len - decal);
@@ -115,10 +110,10 @@ t_player	*get_player_from_file(t_vm *vm, char *content, int content_len)
 
 void	add_player_to_vm(t_vm *vm, t_player *player)
 {
-	(void)vm;
-	//ft_printf("player name : %s\nplayer comment : %s\n player len : %u\n", player->name, player->comment, player->code_len);
-	//print_memory(player->code, player->code_len);
-	vm->players[player->number] = player;
+	static int	index = 0;
+
+	vm->players[index] = player;
+	index++;
 }
 
 void	dumpmemory(unsigned char *memory)
@@ -169,6 +164,8 @@ t_vm	*init_vm(void)
 		return (NULL);
 	vm->nb_players = 0;
 	vm->current_cycle = 0;
+	vm->last_verif = 0;
+	vm->last_player = 0;
 	return (vm);
 }
 
@@ -190,21 +187,21 @@ int		create_start_processes(t_vm *vm)
 {
 	t_list	*tmp;
 
-	tmp = ft_lstnew(new_process(vm->players[0]->start), sizeof(t_process));
+	tmp = ft_lstnew(new_process(vm->players[0]->start, 0), sizeof(t_process));
 	if (!tmp)
 		return (0);
 	ft_lstaddend(&vm->processes, tmp);
 	((t_process*)vm->processes->content)->remaining_cycles = 
 			get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
-	((t_process*)vm->processes->content)->registres[0] = 1;
+	((t_process*)vm->processes->content)->registres[0] = vm->players[0]->number;
 	((t_process*)vm->processes->content)->carry = 0;
-	tmp = ft_lstnew(new_process(vm->players[1]->start), sizeof(t_process));
+	tmp = ft_lstnew(new_process(vm->players[1]->start, 0), sizeof(t_process));
 	if (!tmp)
 		return (0);
 	ft_lstadd(&vm->processes, tmp);
 	((t_process*)vm->processes->content)->remaining_cycles = 
 			get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
-	((t_process*)vm->processes->content)->registres[0] = 2;
+	((t_process*)vm->processes->content)->registres[0] = vm->players[1]->number;
 	((t_process*)vm->processes->content)->carry = 0;
 	return (1);
 }
@@ -230,17 +227,23 @@ char	one_process_living(t_vm *vm)
 
 void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *checks)
 {
-	t_list	*tmp;
-	t_list	*parent;
-	int		total_nb_live;
+	t_list		*tmp;
+	t_list		*parent;
+	int			total_nb_live;
+	t_process	*proc;
 
 	total_nb_live = 0;
 	parent = NULL;
 	tmp = vm->processes;
 	while (tmp)
 	{
-		if (((t_process*)tmp->content)->nb_live == 0)
+		proc = ((t_process*)tmp->content);
+		//if (proc->number == 738)
+		//	ft_printf("creation : %d, last_verif : %d, *cycle_to_die : %d\n", proc->creation_cycle, vm->last_verif, *cycle_to_die);
+		if (proc->nb_live == 0 && vm->current_cycle - proc->creation_cycle >= *cycle_to_die)
 		{
+			if (PRINT_INSTR)
+				ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n", proc->number, vm->current_cycle - (proc->last_live > 0 ? proc->last_live : proc->creation_cycle), *cycle_to_die);
 			if (parent)
 				parent->next = tmp->next;
 			else
@@ -257,11 +260,13 @@ void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *c
 	if (total_nb_live >= NBR_LIVE)
 	{
 		*cycle_to_die -= CYCLE_DELTA;
-		ft_printf("Cycle to die is now %d\n", *cycle_to_die);
+		if (PRINT_INSTR)
+			ft_printf("Cycle to die is now %d\n", *cycle_to_die);
 		*checks = MAX_CHECKS;
 	}
 	else
 		(*checks)--;
+	vm->last_verif = vm->current_cycle;
 	*to_die_iter = *cycle_to_die;
 }
 
@@ -269,14 +274,17 @@ void	increment_next_instr(t_vm *vm, t_process *process, int nb)
 {
 	int		i;
 
-	ft_printf("ADV %d (0x%04x -> 0x%04x) ", nb, process->next_instr - vm->memory, process->next_instr - vm->memory + nb);
-	i = 0;
-	while (i < nb)
+	if (PRINT_INSTR)
 	{
-		ft_printf("%02x ", *(process->next_instr + i));
-		i++;
+		ft_printf("ADV %d (0x%04x -> 0x%04x) ", nb, process->next_instr - vm->memory, process->next_instr - vm->memory + nb);
+		i = 0;
+		while (i < nb)
+		{
+			ft_printf("%02x ", *(process->next_instr + i));
+			i++;
+		}
+		ft_putchar('\n');
 	}
-	ft_putchar('\n');
 	while (nb > 0)
 	{
 		if (process->next_instr < vm->memory + MEM_SIZE - 1)
@@ -526,6 +534,8 @@ void	execute_instruction(t_vm *vm, t_process *process)
 			increment_next_instr(vm, process, add_lengths(params_length, opcode_descr->nb_params) + 2);
 			process->remaining_cycles = 
 									get_cycles_for_opcode(*process->next_instr);
+			if (process->remaining_cycles > 0)
+				process->remaining_cycles--;
 			return ;
 		}
 		len = execute_param_byte(vm, process);
@@ -586,12 +596,14 @@ int		run_vm(t_vm *vm)
 		{
 			cycle_to_die -= CYCLE_DELTA;
 			to_die_iter -= CYCLE_DELTA;
-			ft_printf("Cycle to die is now %d\n", cycle_to_die);
+			if (PRINT_INSTR)
+				ft_printf("Cycle to die is now %d\n", cycle_to_die);
 			checks = MAX_CHECKS;
 		}
 		vm->current_cycle++;
 		to_die_iter--;
-		ft_printf("It is now cycle %d\n", vm->current_cycle);
+		if (PRINT_INSTR)
+			ft_printf("It is now cycle %d\n", vm->current_cycle);
 	}
 	return (1);
 }
@@ -610,12 +622,12 @@ int		main(int argc, char **argv)
 		champion2 = get_file_content(argv[2], &champ2_size);
 		if (!(vm = init_vm()))
 			return (0);
-		add_player_to_vm(vm, get_player_from_file(vm, champion1, champ1_size));
-		add_player_to_vm(vm, get_player_from_file(vm, champion2, champ2_size));
+		add_player_to_vm(vm, get_player_from_file(vm, champion1, champ1_size, -1));
+		add_player_to_vm(vm, get_player_from_file(vm, champion2, champ2_size, -2));
 		vm->players[2] = NULL;
+		vm->last_player = -2;
 		load_players_in_memory(vm);
 		run_vm(vm);
-		//dumpmemory(vm->memory);
 	}
 	return (0);
 }

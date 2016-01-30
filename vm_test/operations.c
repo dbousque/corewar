@@ -12,7 +12,7 @@
 
 #include "vm.h"
 
-char	valid_player(t_vm *vm, int dir_val)
+t_player	*valid_player(t_vm *vm, int dir_val)
 {
 	int		i;
 
@@ -20,10 +20,10 @@ char	valid_player(t_vm *vm, int dir_val)
 	while (i < vm->nb_players)
 	{
 		if (dir_val == vm->players[i]->number)
-			return (1);
+			return (vm->players[i]);
 		i++;
 	}
-	return (0);
+	return (NULL);
 }
 
 int		type_of_n_param(t_vm *vm, t_process *process, int n)
@@ -105,15 +105,19 @@ char	valid_reg(int param)
 
 int		op_live(t_vm *vm, t_process *process, int *params, int len)
 {
-	int		dir_val;
+	int			dir_val;
+	t_player	*play;
 
 	dir_val = params[0];
 	if (PRINT_INSTR)
 		ft_printf("P%5d | live %d\n", process->number, dir_val);
 	process->last_live = vm->current_cycle;
 	process->nb_live++;
-	if (valid_player(vm, -dir_val))
-		ft_printf("Player %d (%s) is said to be alive\n", -dir_val, vm->players[-dir_val]->name);
+	if ((play = valid_player(vm, dir_val)))
+	{
+		vm->last_player = dir_val;
+		ft_printf("Player %d (%s) is said to be alive\n", -dir_val, play->name);
+	}
 	return (len);
 }
 
@@ -294,7 +298,8 @@ int		op_zjmp(t_vm *vm, t_process *process, int *params, int len)
 {
 	if (process->carry == 1)
 	{
-		ft_printf("P%5d | zjmp %d OK\n", process->number, (short)params[0]);
+		if (PRINT_INSTR)
+			ft_printf("P%5d | zjmp %d OK\n", process->number, (short)params[0]);
 		process->next_instr = get_real_addr_of_ind(vm, process->next_instr,
 														(short)params[0], 1);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
@@ -381,12 +386,12 @@ int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 	unsigned char	*addr;
 
 	addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 1);
-	if (!(fork = new_process(addr)))
+	if (!(fork = new_process(addr, vm->current_cycle - get_cycles_for_opcode(*process->next_instr))))
 		return (len);
 	fork->carry = process->carry;
 	if (!(fork->registres = copy_regs(process->registres)))
 		exit(1);
-	fork->last_live = 0;
+	fork->last_live = process->last_live;
 	fork->nb_live = 0;
 	fork->remaining_cycles = get_cycles_for_opcode(*fork->next_instr);
 	if (fork->remaining_cycles > 0)
@@ -399,19 +404,57 @@ int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 
 int		op_lld(t_vm *vm, t_process *process, int *params, int len)
 {
-	(void)vm;
-	(void)process;
-	(void)params;
-	(void)len;
+	int				val;
+	unsigned char	*addr;
+
+	if (valid_reg(params[1]))
+	{
+		if (type_of_n_param(vm, process, 0) == DIR_CODE)
+			val = params[0];
+		else
+		{
+			addr = get_real_addr_of_ind(vm, process->next_instr,
+														(short)params[0], 0);
+			val = get_val_at(vm, addr, 4);
+		}
+		if (PRINT_INSTR)
+			ft_printf("P%5d | lld %d r%d\n", process->number, val, params[1]);
+		process->registres[params[1] - 1] = val;
+		if (val == 0)
+			process->carry = 1;
+		else
+			process->carry = 0;
+	}
 	return (len);
 }
 
 int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 {
-	(void)vm;
-	(void)process;
-	(void)params;
-	(void)len;
+	int		val1;
+	int		val2;
+	int		res;
+	int		error;
+
+	if (valid_reg(params[2]))
+	{
+		error = 0;
+		val1 = get_val_of_n_param(vm, process, params, 0, &error);
+		if (error)
+			return (len);
+		val2 = get_val_of_n_param(vm, process, params, 1, &error);
+		if (error)
+			return (len);
+		res = get_val_at(vm, get_real_addr_of_ind(vm, process->next_instr, val1 + val2, 1), REG_SIZE);
+		process->registres[params[2] - 1] = res;
+		if (val1 + val2 == 0)
+			process->carry = 1;
+		else
+			process->carry = 0;
+		if (PRINT_INSTR)
+		{
+			ft_printf("P%5d | lldi %s %s %s\n", process->number, print_val(val1, type_of_n_param(vm, process, 0) == REG_CODE), print_val(val2, type_of_n_param(vm, process, 1) == REG_CODE), print_val(params[2], 1));
+		}
+	}
 	return (len);
 }
 
@@ -421,12 +464,12 @@ int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
 	unsigned char	*addr;
 
 	addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 0);
-	if (!(fork = new_process(addr)))
+	if (!(fork = new_process(addr, vm->current_cycle - get_cycles_for_opcode(*process->next_instr))))
 		return (len);
 	fork->carry = process->carry;
 	if (!(fork->registres = copy_regs(process->registres)))
 		exit(1);
-	fork->last_live = 0;
+	fork->last_live = process->last_live;
 	fork->nb_live = 0;
 	fork->remaining_cycles = get_cycles_for_opcode(*fork->next_instr);
 	if (fork->remaining_cycles > 0)

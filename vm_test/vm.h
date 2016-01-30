@@ -25,7 +25,7 @@ int		ft_pow(int nb, int pui);
 void	dumpmemory(unsigned char *memory);
 int		get_cycles_for_opcode(int opcode);
 unsigned char	*next_instr(t_vm *vm, unsigned char *current_instr);
-t_process	*new_process(unsigned char *start);
+t_process	*new_process(unsigned char *start, int creation_cycle);
 void	parse_params(t_vm *vm, unsigned char *str, int *to_read, int *final, int nb);
 void	print_memory(const void *addr, size_t size);
 int		op_live(t_vm *vm, t_process *process, int *params, int len);

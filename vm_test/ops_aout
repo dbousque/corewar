@@ -1,0 +1,770 @@
+P    2 | live 1
+P    1 | live 1
+P    2 | lfork -5 (2048)
+P    1 | lfork -5 (0)
+P    4 | live 1
+P    3 | live 1
+P    4 | lfork -5 (0)
+P    3 | lfork -5 (2048)
+P    6 | live 1
+P    5 | live 1
+P    6 | lfork -5 (2048)
+P    5 | lfork -5 (0)
+P    8 | live 1
+P    7 | live 1
+P    2 | live 1
+P    1 | live 1
+P    8 | lfork -5 (0)
+P    7 | lfork -5 (2048)
+P   10 | live 1
+P    9 | live 1
+P    2 | lfork -5 (0)
+P    1 | lfork -5 (2048)
+P   12 | live 1
+P   11 | live 1
+P   10 | lfork -5 (2048)
+P    9 | lfork -5 (0)
+P   14 | live 1
+P   13 | live 1
+P   12 | lfork -5 (2048)
+P   11 | lfork -5 (0)
+P   16 | live 1
+P   15 | live 1
+P   14 | lfork -5 (0)
+P   13 | lfork -5 (2048)
+P   18 | live 1
+P   17 | live 1
+P   16 | lfork -5 (0)
+P   15 | lfork -5 (2048)
+P   20 | live 1
+P   19 | live 1
+P   18 | lfork -5 (2048)
+P   17 | lfork -5 (0)
+P   22 | live 1
+P   21 | live 1
+P   20 | lfork -5 (2048)
+P   19 | lfork -5 (0)
+P   24 | live 1
+P   23 | live 1
+P   22 | lfork -5 (0)
+P   21 | lfork -5 (2048)
+P   26 | live 1
+P   25 | live 1
+P   24 | lfork -5 (0)
+P   23 | lfork -5 (2048)
+P   28 | live 1
+P   27 | live 1
+P   26 | lfork -5 (2048)
+P   25 | lfork -5 (0)
+P   30 | live 1
+P   29 | live 1
+P   28 | lfork -5 (2048)
+P   27 | lfork -5 (0)
+P   32 | live 1
+P   31 | live 1
+P   30 | lfork -5 (0)
+P   29 | lfork -5 (2048)
+P   34 | live 1
+P   33 | live 1
+P   32 | lfork -5 (0)
+P   31 | lfork -5 (2048)
+P   36 | live 1
+P   35 | live 1
+P   34 | lfork -5 (2048)
+P   33 | lfork -5 (0)
+P   38 | live 1
+P   37 | live 1
+P   36 | lfork -5 (2048)
+P   35 | lfork -5 (0)
+P   40 | live 1
+P   39 | live 1
+P   38 | lfork -5 (0)
+P   37 | lfork -5 (2048)
+P   42 | live 1
+P   41 | live 1
+P   40 | lfork -5 (0)
+P   39 | lfork -5 (2048)
+P   44 | live 1
+P   43 | live 1
+P   42 | lfork -5 (2048)
+P   41 | lfork -5 (0)
+P   46 | live 1
+P   45 | live 1
+P   44 | lfork -5 (2048)
+P   43 | lfork -5 (0)
+P   48 | live 1
+P   47 | live 1
+P   46 | lfork -5 (0)
+P   45 | lfork -5 (2048)
+P   50 | live 1
+P   49 | live 1
+P   48 | lfork -5 (0)
+P   47 | lfork -5 (2048)
+P   52 | live 1
+P   51 | live 1
+P   50 | lfork -5 (2048)
+P   49 | lfork -5 (0)
+P   54 | live 1
+P   53 | live 1
+P   52 | lfork -5 (2048)
+P   51 | lfork -5 (0)
+P   56 | live 1
+P   55 | live 1
+Cycle to die is now 1486
+P   54 | lfork -5 (0)
+P   53 | lfork -5 (2048)
+P   58 | live 1
+P   57 | live 1
+P   56 | lfork -5 (0)
+P   55 | lfork -5 (2048)
+P   60 | live 1
+P   59 | live 1
+P   58 | lfork -5 (2048)
+P   57 | lfork -5 (0)
+P   62 | live 1
+P   61 | live 1
+P   60 | lfork -5 (2048)
+P   59 | lfork -5 (0)
+P   64 | live 1
+P   63 | live 1
+P   62 | lfork -5 (0)
+P   61 | lfork -5 (2048)
+P   66 | live 1
+P   65 | live 1
+P   64 | lfork -5 (0)
+P   63 | lfork -5 (2048)
+P   68 | live 1
+P   67 | live 1
+P   66 | lfork -5 (2048)
+P   65 | lfork -5 (0)
+P   70 | live 1
+P   69 | live 1
+P   68 | lfork -5 (2048)
+P   67 | lfork -5 (0)
+P   72 | live 1
+P   71 | live 1
+P   70 | lfork -5 (0)
+P   69 | lfork -5 (2048)
+P   74 | live 1
+P   73 | live 1
+P   72 | lfork -5 (0)
+P   71 | lfork -5 (2048)
+P   76 | live 1
+P   75 | live 1
+P   74 | lfork -5 (2048)
+P   73 | lfork -5 (0)
+P   78 | live 1
+P   77 | live 1
+P   76 | lfork -5 (2048)
+P   75 | lfork -5 (0)
+P   80 | live 1
+P   79 | live 1
+P   78 | lfork -5 (0)
+P   77 | lfork -5 (2048)
+P   82 | live 1
+P   81 | live 1
+P   80 | lfork -5 (0)
+P   79 | lfork -5 (2048)
+P   84 | live 1
+P   83 | live 1
+P   82 | lfork -5 (2048)
+P   81 | lfork -5 (0)
+P   86 | live 1
+P   85 | live 1
+P   84 | lfork -5 (2048)
+P   83 | lfork -5 (0)
+P   88 | live 1
+P   87 | live 1
+P   86 | lfork -5 (0)
+P   85 | lfork -5 (2048)
+P   90 | live 1
+P   89 | live 1
+P   88 | lfork -5 (0)
+P   87 | lfork -5 (2048)
+P   92 | live 1
+P   91 | live 1
+P   90 | lfork -5 (2048)
+P   89 | lfork -5 (0)
+P   94 | live 1
+P   93 | live 1
+P   92 | lfork -5 (2048)
+P   91 | lfork -5 (0)
+P   96 | live 1
+P   95 | live 1
+P   94 | lfork -5 (0)
+P   93 | lfork -5 (2048)
+P   98 | live 1
+P   97 | live 1
+P   96 | lfork -5 (0)
+P   95 | lfork -5 (2048)
+P  100 | live 1
+P   99 | live 1
+P   98 | lfork -5 (2048)
+P   97 | lfork -5 (0)
+P  102 | live 1
+P  101 | live 1
+P  100 | lfork -5 (2048)
+P   99 | lfork -5 (0)
+P  104 | live 1
+P  103 | live 1
+P  102 | lfork -5 (0)
+P  101 | lfork -5 (2048)
+P  106 | live 1
+P  105 | live 1
+P  104 | lfork -5 (0)
+P  103 | lfork -5 (2048)
+P  108 | live 1
+P  107 | live 1
+P  106 | lfork -5 (2048)
+P  105 | lfork -5 (0)
+P  110 | live 1
+P  109 | live 1
+P  108 | lfork -5 (2048)
+P  107 | lfork -5 (0)
+P  112 | live 1
+P  111 | live 1
+Cycle to die is now 1436
+P  110 | lfork -5 (0)
+P  109 | lfork -5 (2048)
+P  114 | live 1
+P  113 | live 1
+P  112 | lfork -5 (0)
+P  111 | lfork -5 (2048)
+P  116 | live 1
+P  115 | live 1
+P  114 | lfork -5 (2048)
+P  113 | lfork -5 (0)
+P  118 | live 1
+P  117 | live 1
+P  116 | lfork -5 (2048)
+P  115 | lfork -5 (0)
+P  120 | live 1
+P  119 | live 1
+P  118 | lfork -5 (0)
+P  117 | lfork -5 (2048)
+P  122 | live 1
+P  121 | live 1
+P  120 | lfork -5 (0)
+P  119 | lfork -5 (2048)
+P  124 | live 1
+P  123 | live 1
+P  122 | lfork -5 (2048)
+P  121 | lfork -5 (0)
+P  126 | live 1
+P  125 | live 1
+P  124 | lfork -5 (2048)
+P  123 | lfork -5 (0)
+P  128 | live 1
+P  127 | live 1
+P  126 | lfork -5 (0)
+P  125 | lfork -5 (2048)
+P  130 | live 1
+P  129 | live 1
+P  128 | lfork -5 (0)
+P  127 | lfork -5 (2048)
+P  132 | live 1
+P  131 | live 1
+P  130 | lfork -5 (2048)
+P  129 | lfork -5 (0)
+P  134 | live 1
+P  133 | live 1
+P  132 | lfork -5 (2048)
+P  131 | lfork -5 (0)
+P  136 | live 1
+P  135 | live 1
+P  134 | lfork -5 (0)
+P  133 | lfork -5 (2048)
+P  138 | live 1
+P  137 | live 1
+P  136 | lfork -5 (0)
+P  135 | lfork -5 (2048)
+P  140 | live 1
+P  139 | live 1
+P  138 | lfork -5 (2048)
+P  137 | lfork -5 (0)
+P  142 | live 1
+P  141 | live 1
+P  140 | lfork -5 (2048)
+P  139 | lfork -5 (0)
+P  144 | live 1
+P  143 | live 1
+P  142 | lfork -5 (0)
+P  141 | lfork -5 (2048)
+P  146 | live 1
+P  145 | live 1
+P  144 | lfork -5 (0)
+P  143 | lfork -5 (2048)
+P  148 | live 1
+P  147 | live 1
+P  146 | lfork -5 (2048)
+P  145 | lfork -5 (0)
+P  150 | live 1
+P  149 | live 1
+P  148 | lfork -5 (2048)
+P  147 | lfork -5 (0)
+P  152 | live 1
+P  151 | live 1
+P  150 | lfork -5 (0)
+P  149 | lfork -5 (2048)
+P  154 | live 1
+P  153 | live 1
+P  152 | lfork -5 (0)
+P  151 | lfork -5 (2048)
+P  156 | live 1
+P  155 | live 1
+P  154 | lfork -5 (2048)
+P  153 | lfork -5 (0)
+P  158 | live 1
+P  157 | live 1
+P  156 | lfork -5 (2048)
+P  155 | lfork -5 (0)
+P  160 | live 1
+P  159 | live 1
+P  158 | lfork -5 (0)
+P  157 | lfork -5 (2048)
+P  162 | live 1
+P  161 | live 1
+P  160 | lfork -5 (0)
+P  159 | lfork -5 (2048)
+P  164 | live 1
+P  163 | live 1
+P  162 | lfork -5 (2048)
+P  161 | lfork -5 (0)
+P  166 | live 1
+P  165 | live 1
+P  164 | lfork -5 (2048)
+P  163 | lfork -5 (0)
+P  168 | live 1
+P  167 | live 1
+P  166 | lfork -5 (0)
+P  165 | lfork -5 (2048)
+P  170 | live 1
+P  169 | live 1
+P  168 | lfork -5 (0)
+P  167 | lfork -5 (2048)
+P  172 | live 1
+P  171 | live 1
+Cycle to die is now 1386
+P  170 | lfork -5 (2048)
+P  169 | lfork -5 (0)
+P  174 | live 1
+P  173 | live 1
+P  172 | lfork -5 (2048)
+P  171 | lfork -5 (0)
+P  176 | live 1
+P  175 | live 1
+P  174 | lfork -5 (0)
+P  173 | lfork -5 (2048)
+P  178 | live 1
+P  177 | live 1
+P  176 | lfork -5 (0)
+P  175 | lfork -5 (2048)
+P  180 | live 1
+P  179 | live 1
+P  178 | lfork -5 (2048)
+P  177 | lfork -5 (0)
+P  182 | live 1
+P  181 | live 1
+P  180 | lfork -5 (2048)
+P  179 | lfork -5 (0)
+P  184 | live 1
+P  183 | live 1
+P  182 | lfork -5 (0)
+P  181 | lfork -5 (2048)
+P  186 | live 1
+P  185 | live 1
+P  184 | lfork -5 (0)
+P  183 | lfork -5 (2048)
+P  188 | live 1
+P  187 | live 1
+P  186 | lfork -5 (2048)
+P  185 | lfork -5 (0)
+P  190 | live 1
+P  189 | live 1
+P  188 | lfork -5 (2048)
+P  187 | lfork -5 (0)
+P  192 | live 1
+P  191 | live 1
+P  190 | lfork -5 (0)
+P  189 | lfork -5 (2048)
+P  194 | live 1
+P  193 | live 1
+P  192 | lfork -5 (0)
+P  191 | lfork -5 (2048)
+P  196 | live 1
+P  195 | live 1
+P  194 | lfork -5 (2048)
+P  193 | lfork -5 (0)
+addr : 0
+P  196 | lfork -5 (2048)
+P  195 | lfork -5 (0)
+P  200 | live 1
+P  199 | live 1
+P  200 | lfork -5 (0)
+P  199 | lfork -5 (2048)
+P  202 | live 1
+P  201 | live 1
+P  202 | lfork -5 (2048)
+P  201 | lfork -5 (0)
+P  204 | live 1
+P  203 | live 1
+P  204 | lfork -5 (0)
+P  203 | lfork -5 (2048)
+P  206 | live 1
+P  205 | live 1
+P  206 | lfork -5 (2048)
+P  205 | lfork -5 (0)
+P  208 | live 1
+P  207 | live 1
+P  208 | lfork -5 (0)
+P  207 | lfork -5 (2048)
+P  210 | live 1
+P  209 | live 1
+P  210 | lfork -5 (2048)
+P  209 | lfork -5 (0)
+P  212 | live 1
+P  211 | live 1
+Cycle to die is now 1336
+P  212 | lfork -5 (0)
+P  211 | lfork -5 (2048)
+P  214 | live 1
+P  213 | live 1
+P  214 | lfork -5 (2048)
+P  213 | lfork -5 (0)
+P  216 | live 1
+P  215 | live 1
+P  216 | lfork -5 (0)
+P  215 | lfork -5 (2048)
+P  218 | live 1
+P  217 | live 1
+P  218 | lfork -5 (2048)
+P  217 | lfork -5 (0)
+P  220 | live 1
+P  219 | live 1
+P  220 | lfork -5 (0)
+P  219 | lfork -5 (2048)
+P  222 | live 1
+P  221 | live 1
+P  222 | lfork -5 (2048)
+P  221 | lfork -5 (0)
+P  224 | live 1
+P  223 | live 1
+P  224 | lfork -5 (0)
+P  223 | lfork -5 (2048)
+P  226 | live 1
+P  225 | live 1
+P  226 | lfork -5 (2048)
+P  225 | lfork -5 (0)
+P  228 | live 1
+P  227 | live 1
+P  228 | lfork -5 (0)
+P  227 | lfork -5 (2048)
+P  230 | live 1
+P  229 | live 1
+P  230 | lfork -5 (2048)
+P  229 | lfork -5 (0)
+P  232 | live 1
+P  231 | live 1
+P  232 | lfork -5 (0)
+P  231 | lfork -5 (2048)
+P  234 | live 1
+P  233 | live 1
+P  234 | lfork -5 (2048)
+P  233 | lfork -5 (0)
+P  236 | live 1
+P  235 | live 1
+P  236 | lfork -5 (0)
+P  235 | lfork -5 (2048)
+P  238 | live 1
+P  237 | live 1
+P  238 | lfork -5 (2048)
+P  237 | lfork -5 (0)
+P  240 | live 1
+P  239 | live 1
+Cycle to die is now 1286
+P  240 | lfork -5 (0)
+P  239 | lfork -5 (2048)
+P  242 | live 1
+P  241 | live 1
+P  242 | lfork -5 (2048)
+P  241 | lfork -5 (0)
+P  244 | live 1
+P  243 | live 1
+P  244 | lfork -5 (0)
+P  243 | lfork -5 (2048)
+P  246 | live 1
+P  245 | live 1
+P  246 | lfork -5 (2048)
+P  245 | lfork -5 (0)
+P  248 | live 1
+P  247 | live 1
+P  248 | lfork -5 (0)
+P  247 | lfork -5 (2048)
+P  250 | live 1
+P  249 | live 1
+P  250 | lfork -5 (2048)
+P  249 | lfork -5 (0)
+P  252 | live 1
+P  251 | live 1
+P  252 | lfork -5 (0)
+P  251 | lfork -5 (2048)
+P  254 | live 1
+P  253 | live 1
+P  254 | lfork -5 (2048)
+P  253 | lfork -5 (0)
+P  256 | live 1
+P  255 | live 1
+P  256 | lfork -5 (0)
+P  255 | lfork -5 (2048)
+P  258 | live 1
+P  257 | live 1
+P  258 | lfork -5 (2048)
+P  257 | lfork -5 (0)
+P  260 | live 1
+P  259 | live 1
+P  260 | lfork -5 (0)
+P  259 | lfork -5 (2048)
+P  262 | live 1
+P  261 | live 1
+P  262 | lfork -5 (2048)
+P  261 | lfork -5 (0)
+P  264 | live 1
+P  263 | live 1
+Cycle to die is now 1236
+P  264 | lfork -5 (0)
+P  263 | lfork -5 (2048)
+P  266 | live 1
+P  265 | live 1
+P  266 | lfork -5 (2048)
+P  265 | lfork -5 (0)
+P  268 | live 1
+P  267 | live 1
+P  268 | lfork -5 (0)
+P  267 | lfork -5 (2048)
+P  270 | live 1
+P  269 | live 1
+P  270 | lfork -5 (2048)
+P  269 | lfork -5 (0)
+P  272 | live 1
+P  271 | live 1
+P  272 | lfork -5 (0)
+P  271 | lfork -5 (2048)
+P  274 | live 1
+P  273 | live 1
+P  274 | lfork -5 (2048)
+P  273 | lfork -5 (0)
+P  276 | live 1
+P  275 | live 1
+P  276 | lfork -5 (0)
+P  275 | lfork -5 (2048)
+P  278 | live 1
+P  277 | live 1
+P  278 | lfork -5 (2048)
+P  277 | lfork -5 (0)
+P  280 | live 1
+P  279 | live 1
+P  280 | lfork -5 (0)
+P  279 | lfork -5 (2048)
+P  282 | live 1
+P  281 | live 1
+P  282 | lfork -5 (2048)
+P  281 | lfork -5 (0)
+P  284 | live 1
+P  283 | live 1
+P  284 | lfork -5 (0)
+P  283 | lfork -5 (2048)
+P  286 | live 1
+P  285 | live 1
+P  286 | lfork -5 (2048)
+P  285 | lfork -5 (0)
+P  288 | live 1
+P  287 | live 1
+P  288 | lfork -5 (0)
+P  287 | lfork -5 (2048)
+P  290 | live 1
+P  289 | live 1
+Cycle to die is now 1186
+P  290 | lfork -5 (2048)
+P  289 | lfork -5 (0)
+P  292 | live 1
+P  291 | live 1
+P  292 | lfork -5 (0)
+P  291 | lfork -5 (2048)
+P  294 | live 1
+P  293 | live 1
+P  294 | lfork -5 (2048)
+P  293 | lfork -5 (0)
+P  296 | live 1
+P  295 | live 1
+P  296 | lfork -5 (0)
+P  295 | lfork -5 (2048)
+P  298 | live 1
+P  297 | live 1
+P  298 | lfork -5 (2048)
+P  297 | lfork -5 (0)
+P  300 | live 1
+P  299 | live 1
+P  300 | lfork -5 (0)
+P  299 | lfork -5 (2048)
+P  302 | live 1
+P  301 | live 1
+P  302 | lfork -5 (2048)
+P  301 | lfork -5 (0)
+P  304 | live 1
+P  303 | live 1
+P  304 | lfork -5 (0)
+P  303 | lfork -5 (2048)
+P  306 | live 1
+P  305 | live 1
+P  306 | lfork -5 (2048)
+P  305 | lfork -5 (0)
+P  308 | live 1
+P  307 | live 1
+P  308 | lfork -5 (0)
+P  307 | lfork -5 (2048)
+P  310 | live 1
+P  309 | live 1
+P  310 | lfork -5 (2048)
+P  309 | lfork -5 (0)
+P  312 | live 1
+P  311 | live 1
+Cycle to die is now 1136
+P  312 | lfork -5 (0)
+P  311 | lfork -5 (2048)
+P  314 | live 1
+P  313 | live 1
+P  314 | lfork -5 (2048)
+P  313 | lfork -5 (0)
+P  316 | live 1
+P  315 | live 1
+P  316 | lfork -5 (0)
+P  315 | lfork -5 (2048)
+P  318 | live 1
+P  317 | live 1
+P  318 | lfork -5 (2048)
+P  317 | lfork -5 (0)
+P  320 | live 1
+P  319 | live 1
+P  320 | lfork -5 (0)
+P  319 | lfork -5 (2048)
+P  322 | live 1
+P  321 | live 1
+P  322 | lfork -5 (2048)
+P  321 | lfork -5 (0)
+P  324 | live 1
+P  323 | live 1
+P  324 | lfork -5 (0)
+P  323 | lfork -5 (2048)
+P  326 | live 1
+P  325 | live 1
+P  326 | lfork -5 (2048)
+P  325 | lfork -5 (0)
+P  328 | live 1
+P  327 | live 1
+P  328 | lfork -5 (0)
+P  327 | lfork -5 (2048)
+P  330 | live 1
+P  329 | live 1
+P  330 | lfork -5 (2048)
+P  329 | lfork -5 (0)
+P  332 | live 1
+P  331 | live 1
+P  332 | lfork -5 (0)
+P  331 | lfork -5 (2048)
+P  334 | live 1
+P  333 | live 1
+P  334 | lfork -5 (2048)
+P  333 | lfork -5 (0)
+P  336 | live 1
+P  335 | live 1
+Cycle to die is now 1086
+P  336 | lfork -5 (0)
+P  335 | lfork -5 (2048)
+P  338 | live 1
+P  337 | live 1
+P  338 | lfork -5 (2048)
+P  337 | lfork -5 (0)
+P  340 | live 1
+P  339 | live 1
+P  340 | lfork -5 (0)
+P  339 | lfork -5 (2048)
+P  342 | live 1
+P  341 | live 1
+P  342 | lfork -5 (2048)
+P  341 | lfork -5 (0)
+P  344 | live 1
+P  343 | live 1
+P  344 | lfork -5 (0)
+P  343 | lfork -5 (2048)
+P  346 | live 1
+P  345 | live 1
+P  346 | lfork -5 (2048)
+P  345 | lfork -5 (0)
+P  348 | live 1
+P  347 | live 1
+P  348 | lfork -5 (0)
+P  347 | lfork -5 (2048)
+P  350 | live 1
+P  349 | live 1
+P  350 | lfork -5 (2048)
+P  349 | lfork -5 (0)
+P  352 | live 1
+P  351 | live 1
+P  352 | lfork -5 (0)
+P  351 | lfork -5 (2048)
+P  354 | live 1
+P  353 | live 1
+P  354 | lfork -5 (2048)
+P  353 | lfork -5 (0)
+P  356 | live 1
+P  355 | live 1
+Cycle to die is now 1036
+P  356 | lfork -5 (0)
+P  355 | lfork -5 (2048)
+P  358 | live 1
+P  357 | live 1
+P  358 | lfork -5 (2048)
+P  357 | lfork -5 (0)
+P  360 | live 1
+P  359 | live 1
+P  360 | lfork -5 (0)
+P  359 | lfork -5 (2048)
+P  362 | live 1
+P  361 | live 1
+P  362 | lfork -5 (2048)
+P  361 | lfork -5 (0)
+P  364 | live 1
+P  363 | live 1
+P  364 | lfork -5 (0)
+P  363 | lfork -5 (2048)
+P  366 | live 1
+P  365 | live 1
+P  366 | lfork -5 (2048)
+P  365 | lfork -5 (0)
+P  368 | live 1
+P  367 | live 1
+P  368 | lfork -5 (0)
+P  367 | lfork -5 (2048)
+P  370 | live 1
+P  369 | live 1
+P  370 | lfork -5 (2048)
+P  369 | lfork -5 (0)
+P  372 | live 1
+P  371 | live 1
+P  372 | lfork -5 (0)
+P  371 | lfork -5 (2048)
+P  374 | live 1
+P  373 | live 1
+P  374 | lfork -5 (2048)
+P  373 | lfork -5 (0)
+P  376 | live 1
+P  375 | live 1
+P  376 | lfork -5 (0)
+P  375 | lfork -5 (2048)
+P  378 | live 1
+P  377 | live 1
+Cycle to die is now 986
+P  378 | lfork -5 (2048)
+P  377 | lfork -5 (0)
+P  380 | live 1
+P  379 | live 1

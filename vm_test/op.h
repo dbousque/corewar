@@ -95,6 +95,7 @@ typedef struct		s_process
 	int				remaining_cycles;
 	int				last_live;
 	int				nb_live;
+	int				creation_cycle;
 }					t_process;
 
 typedef struct		s_vm
@@ -104,6 +105,8 @@ typedef struct		s_vm
 	t_list			*processes;
 	unsigned char	*memory;
 	int				current_cycle;
+	int				last_verif;
+	int				last_player;
 }					t_vm;
 
 typedef struct		s_op
