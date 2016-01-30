@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 18:03:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/29 19:43:25 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/30 15:45:46 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		type_of_n_param(t_vm *vm, t_process *process, int n)
 {
 	unsigned char	type;
 
-	type = (*next_instr(vm, process->next_instr) >> (6 - (n * 2))) % 4;
+	type = (*next_instr(vm, process->next_instr) >> (6 - (n * 2))) & 3;
 	return (type);
 }
 
@@ -116,7 +116,8 @@ int		op_live(t_vm *vm, t_process *process, int *params, int len)
 	if ((play = valid_player(vm, dir_val)))
 	{
 		vm->last_player = dir_val;
-		ft_printf("Player %d (%s) is said to be alive\n", -dir_val, play->name);
+		if (PRINT_INSTR)
+			ft_printf("Player %d (%s) is said to be alive\n", -dir_val, play->name);
 	}
 	return (len);
 }
@@ -331,6 +332,7 @@ int		op_ldi(t_vm *vm, t_process *process, int *params, int len)
 		process->registres[params[2] - 1] = res;
 		if (PRINT_INSTR)
 		{
+			ft_printf("%08b\n", *next_instr(vm, process->next_instr));
 			ft_printf("P%5d | ldi %s %s %s\n", process->number, print_val(val1, type_of_n_param(vm, process, 0) == REG_CODE), print_val(val2, type_of_n_param(vm, process, 1) == REG_CODE), print_val(params[2], 1));
 		}
 	}
@@ -353,11 +355,13 @@ int		op_sti(t_vm *vm, t_process *process, int *params, int len)
 		val2 = get_val_of_n_param(vm, process, params, 2, &error);
 		if (error)
 			return (len);
-		addr = get_real_addr_of_ind(vm, process->next_instr, val1 + val2, 1);
+		//addr = get_real_addr_of_ind(vm, process->next_instr, val1 + val2, 1);
+		addr = vm->memory + (((val1 + val2) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
 		copy_val_at(vm, addr, (unsigned int)process->registres[params[0] - 1], 4);
 		if (PRINT_INSTR)
 		{
 			ft_printf("P%5d | sti %s %s %s\n", process->number, print_val(params[0], 1), print_val(val1, type_of_n_param(vm, process, 1) == REG_CODE), print_val(val2, type_of_n_param(vm, process, 2) == REG_CODE));
+			ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", val1, val2, val1 + val2, (((val1 + val2) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE);
 		}
 		//dumpmemory(vm->memory);
 	}
@@ -392,8 +396,9 @@ int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 	if (!(fork->registres = copy_regs(process->registres)))
 		exit(1);
 	fork->last_live = process->last_live;
-	fork->nb_live = 0;
+	fork->nb_live = process->nb_live;
 	fork->remaining_cycles = get_cycles_for_opcode(*fork->next_instr);
+	fork->current_opcode = *fork->next_instr;
 	if (fork->remaining_cycles > 0)
 		fork->remaining_cycles--;
 	if (PRINT_INSTR)
@@ -463,19 +468,26 @@ int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
 	t_process		*fork;
 	unsigned char	*addr;
 
-	addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 0);
+	//addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 0);
+	addr = vm->memory + ((((short)params[0]) + (process->next_instr - vm->memory)) % MEM_SIZE);
 	if (!(fork = new_process(addr, vm->current_cycle - get_cycles_for_opcode(*process->next_instr))))
 		return (len);
 	fork->carry = process->carry;
 	if (!(fork->registres = copy_regs(process->registres)))
 		exit(1);
 	fork->last_live = process->last_live;
-	fork->nb_live = 0;
+	fork->nb_live = process->nb_live;
 	fork->remaining_cycles = get_cycles_for_opcode(*fork->next_instr);
+	fork->current_opcode = *fork->next_instr;
 	if (fork->remaining_cycles > 0)
 		fork->remaining_cycles--;
 	if (PRINT_INSTR)
-		ft_printf("P%5d | lfork %d (%d)\n", process->number, (short)params[0], addr - vm->memory);
+	{
+		if ((short)params[0] + (addr - vm->memory) < MEM_SIZE)
+			ft_printf("P%5d | lfork %d (%d)\n", process->number, (short)params[0], addr - vm->memory);
+		else
+			ft_printf("P%5d | lfork %d (%d)\n", process->number, (short)params[0], (short)params[0] + addr - vm->memory - 2);
+	}
 	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
 }

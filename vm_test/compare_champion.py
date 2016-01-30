@@ -3,7 +3,7 @@ import os, sys, time
 champion1 = sys.argv[1]
 champion2 = sys.argv[2]
 
-to_replace = ["       | -> load from", "       | -> store to"]
+to_replace = ["       | -> load from"]
 
 os.system("../asm " + champion1 + " > /dev/null")
 os.system("../asm " + champion2 + " > /dev/null")

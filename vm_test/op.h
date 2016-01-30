@@ -6,7 +6,7 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2016/01/29 19:09:45 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/30 12:45:13 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct		s_process
 	int				last_live;
 	int				nb_live;
 	int				creation_cycle;
+	unsigned char	current_opcode;
 }					t_process;
 
 typedef struct		s_vm

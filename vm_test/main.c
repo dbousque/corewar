@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/29 19:38:02 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/30 15:38:29 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_process	*new_process(unsigned char *start, int cycle_creation)
 	res->last_live = 0;
 	res->creation_cycle = cycle_creation;
 	res->nb_live = 0;
+	res->current_opcode = *start;
 	return (res);
 }
 
@@ -124,12 +125,13 @@ void	dumpmemory(unsigned char *memory)
 	while (i < MEM_SIZE)
 	{
 		if (i % 64 == 0)
-			ft_putstr("         ");
+			ft_printf("0x%04x : ", i);
 		ft_printf("%02x ", memory[i]);
 		i++;
 		if (i % 64 == 0)
 			ft_putstr("\n");
 	}
+	exit(1);
 }
 
 void	load_players_in_memory(t_vm *vm)
@@ -240,7 +242,7 @@ void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *c
 		proc = ((t_process*)tmp->content);
 		//if (proc->number == 738)
 		//	ft_printf("creation : %d, last_verif : %d, *cycle_to_die : %d\n", proc->creation_cycle, vm->last_verif, *cycle_to_die);
-		if (proc->nb_live == 0 && vm->current_cycle - proc->creation_cycle >= *cycle_to_die)
+		if (proc->nb_live == 0)// && vm->current_cycle - proc->creation_cycle >= *cycle_to_die)
 		{
 			if (PRINT_INSTR)
 				ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n", proc->number, vm->current_cycle - (proc->last_live > 0 ? proc->last_live : proc->creation_cycle), *cycle_to_die);
@@ -302,6 +304,7 @@ void	go_to_next_byte(t_vm *vm, t_process *process)
 	else
 		process->next_instr = vm->memory;
 	process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+	process->current_opcode = *process->next_instr;
 	if (process->remaining_cycles > 0)
 		process->remaining_cycles--;
 }
@@ -470,7 +473,7 @@ int		execute_param_byte(t_vm *vm, t_process *process)
 	int				*params;
 	int				*params_length;
 
-	opcode = *process->next_instr;
+	opcode = process->current_opcode;
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
 	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
@@ -488,7 +491,7 @@ int		execute_no_param_byte(t_vm *vm, t_process *process)
 	int				*params;
 	int				*params_length;
 
-	opcode = *process->next_instr;
+	opcode = process->current_opcode;
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
 	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
@@ -521,10 +524,13 @@ void	execute_instruction(t_vm *vm, t_process *process)
 	int				*params_length;
 	t_op			*opcode_descr;
 
-	opcode = process->next_instr;
+	opcode = &process->current_opcode;
+	//ft_printf("PROCESS : %d, CURRENT OPCODE : %d, NEXT_INSTR : %d\n", process->number, process->current_opcode, *process->next_instr);
+	//if (process->number == 76 && vm->current_cycle == 8910)
+	//	dumpmemory(vm->memory);
 	opcode_descr = get_opcode_descr_with_opcode(*opcode);
-	is_not_zjmp = opcode_is_not_zjmp(*process->next_instr);
-	if (opcode_has_param_byte(*process->next_instr))
+	is_not_zjmp = opcode_is_not_zjmp(process->current_opcode);
+	if (opcode_has_param_byte(process->current_opcode))
 	{
 		if (!valid_param_byte(next_instr(vm, process->next_instr), *opcode))
 		{
@@ -534,6 +540,7 @@ void	execute_instruction(t_vm *vm, t_process *process)
 			increment_next_instr(vm, process, add_lengths(params_length, opcode_descr->nb_params) + 2);
 			process->remaining_cycles = 
 									get_cycles_for_opcode(*process->next_instr);
+			process->current_opcode = *process->next_instr;
 			if (process->remaining_cycles > 0)
 				process->remaining_cycles--;
 			return ;
@@ -542,6 +549,7 @@ void	execute_instruction(t_vm *vm, t_process *process)
 		if (is_not_zjmp || len != 0)
 			increment_next_instr(vm, process, len + 2);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+		process->current_opcode = *process->next_instr;
 		if (process->remaining_cycles > 0)
 			process->remaining_cycles--;
 	}
@@ -551,6 +559,7 @@ void	execute_instruction(t_vm *vm, t_process *process)
 		if (is_not_zjmp || len != 0)
 			increment_next_instr(vm, process, len + 1);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+		process->current_opcode = *process->next_instr;
 		if (process->remaining_cycles > 0)
 			process->remaining_cycles--;
 	}
@@ -558,17 +567,33 @@ void	execute_instruction(t_vm *vm, t_process *process)
 
 void	execute_processes(t_vm *vm)
 {
-	t_list	*tmp;
+	t_list		*tmp;
+	t_process	*process;
 
 	tmp = vm->processes;
 	while (tmp)
 	{
-		if (!valid_opcode(((t_process*)tmp->content)->next_instr))
+		if (!valid_opcode(&((t_process*)tmp->content)->current_opcode))
 			go_to_next_byte(vm, ((t_process*)tmp->content));
 		else if (((t_process*)tmp->content)->remaining_cycles == 0)
 			execute_instruction(vm, ((t_process*)tmp->content));
 		else
 			((t_process*)tmp->content)->remaining_cycles--;
+		tmp = tmp->next;
+	}
+	tmp = vm->processes;
+	while (tmp)
+	{
+		process = ((t_process*)tmp->content);
+		//if (vm->current_cycle == 8910 && process->number == 76)
+		//	dumpmemory(vm->memory);
+		if ((valid_opcode(&process->current_opcode) && get_cycles_for_opcode(process->current_opcode) == process->remaining_cycles + 1) || (process->remaining_cycles == 0 && !valid_opcode(&process->current_opcode)))
+		{
+			process->current_opcode = *process->next_instr;
+			process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+			if (process->remaining_cycles > 0)
+				process->remaining_cycles--;
+		}
 		tmp = tmp->next;
 	}
 }
@@ -608,6 +633,30 @@ int		run_vm(t_vm *vm)
 	return (1);
 }
 
+t_player	*get_player_with_number(t_vm *vm, int numb)
+{
+	int		i;
+
+	i = 0;
+	while (i < vm->nb_players)
+	{
+		if (vm->players[i]->number == numb)
+			return (vm->players[i]);
+		i++;
+	}
+	ft_putendl_fd("BIG ERROR !\n", 2);
+	return (NULL);
+}
+
+void	print_winner(t_vm *vm)
+{
+	t_player	*player;
+
+	player = get_player_with_number(vm, vm->last_player);
+	ft_printf("Contestant %d, \"%s\", has won !\n", player->number,
+																player->name);
+}
+
 int		main(int argc, char **argv)
 {
 	char	*champion1;
@@ -628,6 +677,7 @@ int		main(int argc, char **argv)
 		vm->last_player = -2;
 		load_players_in_memory(vm);
 		run_vm(vm);
+		print_winner(vm);
 	}
 	return (0);
 }
