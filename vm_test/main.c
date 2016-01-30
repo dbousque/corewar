@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/30 15:38:29 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/30 17:00:46 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -598,7 +598,7 @@ void	execute_processes(t_vm *vm)
 	}
 }
 
-int		run_vm(t_vm *vm)
+int		run_vm(t_vm *vm, int dump)
 {
 	int		cycle_to_die;
 	int		to_die_iter;
@@ -625,6 +625,8 @@ int		run_vm(t_vm *vm)
 				ft_printf("Cycle to die is now %d\n", cycle_to_die);
 			checks = MAX_CHECKS;
 		}
+		if (vm->current_cycle == dump)
+			dumpmemory(vm->memory);
 		vm->current_cycle++;
 		to_die_iter--;
 		if (PRINT_INSTR)
@@ -664,9 +666,13 @@ int		main(int argc, char **argv)
 	char	*champion2;
 	int		champ2_size;
 	t_vm	*vm;
+	int		dump;
 
 	if (argc > 1)
 	{
+		dump = -1;
+		if (argc > 3)
+			dump = ft_atoi(argv[3]);
 		champion1 = get_file_content(argv[1], &champ1_size);
 		champion2 = get_file_content(argv[2], &champ2_size);
 		if (!(vm = init_vm()))
@@ -676,7 +682,7 @@ int		main(int argc, char **argv)
 		vm->players[2] = NULL;
 		vm->last_player = -2;
 		load_players_in_memory(vm);
-		run_vm(vm);
+		run_vm(vm, dump);
 		print_winner(vm);
 	}
 	return (0);

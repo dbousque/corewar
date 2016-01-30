@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 18:03:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/30 15:45:46 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/30 17:38:46 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,20 @@ unsigned int	get_val_at(t_vm *vm, unsigned char *addr, int nb)
 void	copy_val_at(t_vm *vm, unsigned char *addr, unsigned int val, int nb)
 {
 	int		i;
+	char	bytes[4];
+	int		j;
 
+	*(int *)bytes = val;
 	i = 0;
+	j = 4;
 	while (i < nb)
 	{
-		*(get_real_addr_of_ind(vm, addr, i, 1)) = val / ft_pow(256, nb - i - 1);
-		val -= (val / ft_pow(256, nb - i - 1)) * ft_pow(256, nb - i - 1);
+		*addr = bytes[--j];
+	   	addr++;
+		if (addr - vm->memory >= MEM_SIZE)
+			addr = vm->memory + (addr - vm->memory) % MEM_SIZE;
+		//*(get_real_addr_of_ind(vm, addr, i, 1)) = val / ft_pow(256, nb - i - 1);
+		//val -= (val / ft_pow(256, nb - i - 1)) * ft_pow(256, nb - i - 1);
 		i++;
 	}
 }
@@ -297,13 +305,22 @@ int		op_xor(t_vm *vm, t_process *process, int *params, int len)
 
 int		op_zjmp(t_vm *vm, t_process *process, int *params, int len)
 {
+	unsigned char	*addr;
+
 	if (process->carry == 1)
 	{
 		if (PRINT_INSTR)
 			ft_printf("P%5d | zjmp %d OK\n", process->number, (short)params[0]);
-		process->next_instr = get_real_addr_of_ind(vm, process->next_instr,
-														(short)params[0], 1);
+		//process->next_instr = get_real_addr_of_ind(vm, process->next_instr,
+														//(short)params[0], 1);
+		addr = vm->memory + (((((short)params[0]) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE);
+		process->next_instr = addr;
+		//ft_printf("ADDR : 0x%04x\n", addr - vm->memory);
+		//if (vm->current_cycle == 4742)
+		//	dumpmemory(vm->memory);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
+		process->current_opcode = *process->next_instr;
+		//ft_printf("OPCODE : %d\n", process->current_opcode);
 		if (process->remaining_cycles > 0)
 			process->remaining_cycles--;
 		return (0);
@@ -332,8 +349,7 @@ int		op_ldi(t_vm *vm, t_process *process, int *params, int len)
 		process->registres[params[2] - 1] = res;
 		if (PRINT_INSTR)
 		{
-			ft_printf("%08b\n", *next_instr(vm, process->next_instr));
-			ft_printf("P%5d | ldi %s %s %s\n", process->number, print_val(val1, type_of_n_param(vm, process, 0) == REG_CODE), print_val(val2, type_of_n_param(vm, process, 1) == REG_CODE), print_val(params[2], 1));
+			ft_printf("P%5d | ldi %s %s %s\n", process->number, print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
 		}
 	}
 	return (len);
@@ -355,15 +371,13 @@ int		op_sti(t_vm *vm, t_process *process, int *params, int len)
 		val2 = get_val_of_n_param(vm, process, params, 2, &error);
 		if (error)
 			return (len);
-		//addr = get_real_addr_of_ind(vm, process->next_instr, val1 + val2, 1);
 		addr = vm->memory + (((val1 + val2) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
 		copy_val_at(vm, addr, (unsigned int)process->registres[params[0] - 1], 4);
 		if (PRINT_INSTR)
 		{
-			ft_printf("P%5d | sti %s %s %s\n", process->number, print_val(params[0], 1), print_val(val1, type_of_n_param(vm, process, 1) == REG_CODE), print_val(val2, type_of_n_param(vm, process, 2) == REG_CODE));
+			ft_printf("P%5d | sti %s %s %s\n", process->number, print_val(params[0], 1), print_val(val1, 0), print_val(val2, 0));
 			ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", val1, val2, val1 + val2, (((val1 + val2) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE);
 		}
-		//dumpmemory(vm->memory);
 	}
 	return (len);
 }
@@ -457,7 +471,7 @@ int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 			process->carry = 0;
 		if (PRINT_INSTR)
 		{
-			ft_printf("P%5d | lldi %s %s %s\n", process->number, print_val(val1, type_of_n_param(vm, process, 0) == REG_CODE), print_val(val2, type_of_n_param(vm, process, 1) == REG_CODE), print_val(params[2], 1));
+			ft_printf("P%5d | lldi %s %s %s\n", process->number, print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
 		}
 	}
 	return (len);
