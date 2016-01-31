@@ -6,41 +6,32 @@
 #    By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/01 20:43:29 by hbeaujou          #+#    #+#              #
-#    Updated: 2016/01/31 19:27:55 by hbeaujou         ###   ########.fr        #
+#    Updated: 2016/01/31 19:28:38 by hbeaujou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = asm
+NAME = corewar
 
-SOURCES =	srcs/add_fct.c	\
-			srcs/add_fct_2.c	\
-			srcs/add_header_to_bytes.c \
-			srcs/check_file.c \
-			srcs/check_params.c \
-			srcs/convert_file.c \
-			srcs/convert_to_bytecode.c \
-			srcs/convert_to_bytecode_utils.c \
-			srcs/convert_to_bytecode_utils2.c \
-			srcs/cut_add_5.c \
-			srcs/errors.c \
-			srcs/ft_rajout.c \
-			srcs/ft_rajout2.c \
-			srcs/ft_rajout3.c \
-			srcs/ft_rajout4.c \
-			srcs/ft_rajout5.c \
-			srcs/list_work.c \
-			srcs/main.c \
-			srcs/make_line.c \
-			srcs/make_line_2.c \
+SOURCES =	srcs/arithm.c \
+			srcs/cpy_regs.c \
+			srcs/eigth.c \
+			srcs/fifth.c \
+			srcs/first.c \
+			srcs/forks_aff.c \
+			srcs/fourth.c \
+			srcs/live_zjmp.c \
+			srcs/loads.c \
+			srcs/logic.c \
+			srcs/ninth.c \
 			srcs/op.c \
 			srcs/parsing.c \
-			srcs/parsing_2.c \
-			srcs/resolve_labels.c \
-			srcs/write_line_to_bytecode.c \
-			srcs/write_line_to_bytecode2.c \
-			srcs/write_line_to_bytecode3.c \
-			srcs/good_file_format.c \
-			srcs/good_file_format2.c
+			srcs/print_memory.c \
+			srcs/second.c \
+			srcs/seventh.c \
+			srcs/sixth.c \
+			srcs/stores.c \
+			srcs/third.c \
+			srcs/utils.c \
 
 HEADERS	= -I./includes/
 
