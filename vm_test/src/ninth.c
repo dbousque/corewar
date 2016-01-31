@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:44:35 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 17:26:26 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 17:34:30 by skirkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,26 @@ int		validate(int number, t_vm *vm, int *current_num)
 	int		ok;
 
 	ok = 0;
-	i = -1;
+	i = 0;
 	max = INT_MIN;
 	(void)current_num;
-	while (++i < vm->nb_players)
+	while (i < vm->nb_players)
 	{
 		if (vm->players[i]->number == number)
+		{
 			ok = 0;
+			number = *current_num;
+			*current_num -= 1;
+			i = 0;
+			continue ;
+		}
 		if (vm->players[i]->number > max)
 			max = vm->players[i]->number;
+		i++;
 	}
-	return (ok ? number : max);
+	if (ok)
+		*current_num -= 1;
+	return (number);
 }
 
 void	parse_args(int argc, char **argv, t_vm *vm, int *dump)
