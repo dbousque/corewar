@@ -6,11 +6,14 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/30 17:00:46 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 13:33:28 by skirkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+#include <limits.h>
+
+char	*get_file_content(char *filename, int *res_size);
 
 t_process	*new_process(unsigned char *start, int cycle_creation)
 {
@@ -77,14 +80,13 @@ unsigned int	get_value_big_endian(unsigned int val)
 	return (res);
 }
 
-t_player	*get_player_from_file(t_vm *vm, char *content, int content_len, int number)
+t_player	*get_player_from_file(t_vm *vm, char *content,
+		int content_len, int number)
 {
-	unsigned char	*file_content;
 	t_player		*res;
 	unsigned int	decal;
 
 	decal = 4;
-	file_content = (unsigned char*)content;
 	if (!(res = (t_player*)malloc(sizeof(t_player))))
 		return (NULL);
 	res->number = number;
@@ -94,16 +96,15 @@ t_player	*get_player_from_file(t_vm *vm, char *content, int content_len, int num
 	res->name[PROG_NAME_LENGTH] = '\0';
 	ft_memcpy(res->name, content + decal, PROG_NAME_LENGTH);
 	decal += PROG_NAME_LENGTH;
-	//res->code_len = get_value_big_endian(*(unsigned int*)file_content);
 	decal += sizeof(unsigned int);
 	if (!(res->comment = (char*)malloc(sizeof(char) * (COMMENT_LENGTH + 1))))
 		return (NULL);
 	res->comment[COMMENT_LENGTH] = '\0';
 	ft_memcpy(res->comment, content + decal, COMMENT_LENGTH);
 	decal += COMMENT_LENGTH;
-	if (!(res->code = (unsigned char*)malloc(sizeof(unsigned char) * (content_len - decal))))
+	if (!(res->code = malloc(sizeof(unsigned char) * (content_len - decal))))
 		return (NULL);
-	ft_memcpy(res->code, file_content + decal, content_len - decal);
+	ft_memcpy(res->code, content + decal, content_len - decal);
 	res->code_len = content_len - decal;
 	res->start = NULL;
 	return (res);
@@ -199,7 +200,7 @@ int		create_start_processes(t_vm *vm)
 	if (!tmp)
 		return (0);
 	ft_lstaddend(&vm->processes, tmp);
-	((t_process*)vm->processes->content)->remaining_cycles = 
+	((t_process*)vm->processes->content)->remaining_cycles =
 			get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
 	((t_process*)vm->processes->content)->registres[0] = vm->players[0]->number;
 	((t_process*)vm->processes->content)->carry = 0;
@@ -207,14 +208,15 @@ int		create_start_processes(t_vm *vm)
 	if (!tmp)
 		return (0);
 	ft_lstadd(&vm->processes, tmp);
-	((t_process*)vm->processes->content)->remaining_cycles = 
-			get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
+	((t_process*)vm->processes->content)->remaining_cycles =
+		get_cycles_for_opcode(*((t_process*)tmp->content)->next_instr);
 	((t_process*)vm->processes->content)->registres[0] = vm->players[1]->number;
 	((t_process*)vm->processes->content)->carry = 0;
 	return (1);
 }
 
-void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *checks)
+void	delete_dead_processes(t_vm *vm, int *to_die_iter,
+					int *cycle_to_die, int *checks)
 {
 	t_list		*tmp;
 	t_list		*parent;
@@ -661,6 +663,88 @@ void	print_winner(t_vm *vm)
 	player = get_player_with_number(vm, vm->last_player);
 	ft_printf("Contestant %d, \"%s\", has won !\n", -player->number,
 																player->name);
+}
+
+void	add_champion(char *filename, t_vm *vm, int n)
+{
+	char	*champion;
+	int		size;
+
+	champion = get_file_content(filename, &size);
+	add_player_to_vm(vm, get_player_from_file(vm, champion, size, n));
+	free(champion);
+}
+
+int		get_num(char *str, int can_be_neg)
+{
+	int				i;
+	int				sign;
+	const char		*error = "Illegal numeric argument\n";
+
+	sign = 1;
+	i = 0;
+	if (*str == '-' && can_be_neg)
+	{
+		sign = -1;
+		str++;
+	}
+	while (ft_isdigit(*str))
+	{
+		i = i * 10 + *str - '0';
+		str++;
+	}
+	if (*str)
+		exit(write(2, error, ft_strlen(error)));
+	return (i * sign);
+}
+
+int		validate(int number, t_vm *vm, int *current_num)
+{
+	int		i;
+	int		max;
+	int		ok;
+
+	ok = 0;
+	i = -1;
+	max = INT_MIN;
+	while (++i < vm->nb_players)
+	{
+		if (vm->players[i]->number == number)
+			ok = 0;
+		if (vm->players[i]->number > max)
+			max = vm->players[i]->number;
+	}
+	if (ok)
+		*current_num = max;
+	return (ok ? number : max);
+}
+
+void	parse_args(int argc, char **argv, t_vm *vm, int *dump)
+{
+	int		i;
+	int		current_num;
+	size_t	number;
+	int		players;
+
+	players = 0;
+	current_num = -1;
+	number = (size_t)INT_MAX + 1;
+	i = 0;
+	while (++i < argc)
+	{
+		if (ft_strcmp(argv[i], "-dump") == 0)
+			*dump = get_num(argv[i], 0);
+		else if (ft_strcmp(argv[i], "-n") == 0)
+		{
+			number = get_num(argv[i], 1);
+			number = validate(number, vm, &current_num);
+			if (++i == argc)
+				exit(write(2, "Bad params\n", ft_strlen("Bad params\n")));
+			add_champion(argv[i], vm, number);
+		}
+		else
+			add_champion(argv[i], vm, current_num--);
+	}
 }
 
 int		main(int argc, char **argv)

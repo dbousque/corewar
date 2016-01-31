@@ -6,13 +6,13 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 16:53:18 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/29 18:34:50 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 12:57:30 by skirkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-int		ft_pow(int nb, int pui)
+int				ft_pow(int nb, int pui)
 {
 	int		res;
 
@@ -25,40 +25,41 @@ int		ft_pow(int nb, int pui)
 	return (res);
 }
 
-void	parse_params2(unsigned char *str, int *to_read, unsigned int *final)
+static void		init_magic(t_magic *magic)
 {
-	int				j;
-	int				k;
-	int				m;
-	int				i;
-	unsigned int	res;
-	int				total;
+	magic->k = 0;
+	magic->m = 0;
+	magic->j = -1;
+	magic->i = 0;
+	magic->total = 0;
+}
 
-	i = 0;
-	total = 0;
-	while(to_read[i])
+void			parse_params2(unsigned char *str, int *to_read,
+											unsigned int *final)
+{
+	t_magic			magic;
+
+	init_magic(&magic);
+	while (to_read[magic.i])
 	{
-		total = to_read[i] + total;
-		i++;
+		magic.total += to_read[magic.i];
+		magic.i++;
 	}
-	k = 0;
-	m = 0;
-	j = 0;
-	total--;
-	while (to_read[j])
+	magic.total--;
+	while (to_read[++magic.j])
 	{
-		m = to_read[j];
-		res = 0;
-		k = 0;
-		while (m > 0)
+		magic.m = to_read[magic.j];
+		magic.res = 0;
+		magic.k = 0;
+		while (magic.m > 0)
 		{
-			res = res + (unsigned char)str[total] * ft_pow(256, k);
-			total--;
-			m--;
-			k++;
+			magic.res += (unsigned char)str[magic.total]
+				* ft_pow(256, magic.k);
+			magic.total--;
+			magic.m--;
+			magic.k++;
 		}
-		final[j] = res;
-		j++;
+		final[magic.j] = magic.res;
 	}
 }
 
@@ -75,7 +76,8 @@ unsigned char	*next_byte_nb(t_vm *vm, unsigned char *byte, int nb)
 	return (byte);
 }
 
-void	parse_params(t_vm *vm, unsigned char *str, int *to_read, int *final, int nb)
+void			parse_params(t_vm *vm, unsigned char *str,
+							int *to_read, int *final, int nb)
 {
 	int				i;
 	int				pow;

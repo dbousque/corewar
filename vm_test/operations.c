@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 18:03:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/30 17:38:46 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 12:17:25 by skirkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,9 @@ void	copy_val_at(t_vm *vm, unsigned char *addr, unsigned int val, int nb)
 	while (i < nb)
 	{
 		*addr = bytes[--j];
-	   	addr++;
+		addr++;
 		if (addr - vm->memory >= MEM_SIZE)
 			addr = vm->memory + (addr - vm->memory) % MEM_SIZE;
-		//*(get_real_addr_of_ind(vm, addr, i, 1)) = val / ft_pow(256, nb - i - 1);
-		//val -= (val / ft_pow(256, nb - i - 1)) * ft_pow(256, nb - i - 1);
 		i++;
 	}
 }
@@ -149,10 +147,8 @@ int		op_ld(t_vm *vm, t_process *process, int *params, int len)
 			val = params[0];
 		else
 		{
-			//addr = get_real_addr_of_ind(vm, process->next_instr,
-			//											(short)params[0], 1);
 			addr = vm->memory + ((((short)params[0]) % IDX_MOD) +
-								(process->next_instr - vm->memory)) % MEM_SIZE;
+					(process->next_instr - vm->memory)) % MEM_SIZE;
 			val = get_val_at(vm, addr, 4);
 		}
 		if (PRINT_INSTR)
@@ -178,17 +174,17 @@ int		op_st(t_vm *vm, t_process *proc, int *params, int len)
 				proc->registres[params[1] - 1] = proc->registres[params[0] - 1];
 			if (PRINT_INSTR)
 				ft_printf("P%5d | st r%d %d\n", proc->number, params[0],
-																	params[1]);
+																params[1]);
 		}
 		else
 		{
 			addr = get_real_addr_of_ind(vm, proc->next_instr,
-														(short)params[1], 1);
-			//addr = vm->memory + ((((short)params[1]) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
-			copy_val_at(vm, addr, (unsigned int)proc->registres[params[0] - 1], 4);
+								(short)params[1], 1);
+			copy_val_at(vm, addr,
+					(unsigned int)proc->registres[params[0] - 1], 4);
 			if (PRINT_INSTR)
 				ft_printf("P%5d | st r%d %d\n", proc->number, params[0],
-															(short)params[1]);
+														(short)params[1]);
 		}
 	}
 	return (len);
@@ -230,7 +226,9 @@ int		op_sub(t_vm *vm, t_process *process, int *params, int len)
 	return (len);
 }
 
-int		get_val_of_n_param(t_vm *vm, t_process *process, int *params, int n, int *error)
+int		g_error;
+
+int		get_val_of_n_param(t_vm *vm, t_process *process, int *params, int n)
 {
 	int				val;
 	unsigned char	*addr;
@@ -238,7 +236,6 @@ int		get_val_of_n_param(t_vm *vm, t_process *process, int *params, int n, int *e
 
 	if ((type = type_of_n_param(vm, process, n)) == IND_CODE)
 	{
-		//addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[n], 1);
 		addr = vm->memory + ((((short)params[n]) % IDX_MOD)
 							+ (process->next_instr - vm->memory)) % MEM_SIZE;
 		val = get_val_at(vm, addr, 4);
@@ -247,7 +244,7 @@ int		get_val_of_n_param(t_vm *vm, t_process *process, int *params, int n, int *e
 	{
 		if (!valid_reg(params[n]))
 		{
-			*error = 1;
+			g_error = 1;
 			return (0);
 		}
 		val = process->registres[params[n] - 1];
@@ -260,27 +257,24 @@ int		get_val_of_n_param(t_vm *vm, t_process *process, int *params, int n, int *e
 char	*print_val(int val, int is_reg)
 {
 	if (is_reg)
-		return ft_strjoin("r", ft_itoa(val));
-	return ft_itoa(val);
+		return (ft_strjoin("r", ft_itoa(val)));
+	return (ft_itoa(val));
 }
 
 int		op_and_or_xor(t_vm *vm, t_process *process, int *params, char sign)
 {
 	int				val1;
 	int				val2;
-	int				error;
 
-	error = 0;
-	process->carry = 0;
+	g_error = 0;
 	if (!valid_reg(params[2]))
 		return (0);
-	val1 = get_val_of_n_param(vm, process, params, 0, &error);
-	if (error)
+	val1 = get_val_of_n_param(vm, process, params, 0);
+	if (g_error)
 		return (0);
-	val2 = get_val_of_n_param(vm, process, params, 1, &error);
-	if (error)
+	val2 = get_val_of_n_param(vm, process, params, 1);
+	if (g_error)
 		return (0);
-	process->carry = 1;
 	if (sign == '&')
 		process->registres[params[2] - 1] = val1 & val2;
 	else if (sign == '|')
@@ -293,11 +287,7 @@ int		op_and_or_xor(t_vm *vm, t_process *process, int *params, char sign)
 		get_name_of_opcode(*process->next_instr), print_val(val1, 0),
 												print_val(val2, 0), params[2]);
 	}
-	if (process->registres[params[2] - 1] == 0)
-		process->carry = 1;
-	else
-		process->carry = 0;
-	return (1);
+	return (!(process->carry = process->registres[params[2] - 1] == 0) + 1);
 }
 
 int		op_and(t_vm *vm, t_process *process, int *params, int len)
@@ -335,24 +325,23 @@ int		op_zjmp(t_vm *vm, t_process *process, int *params, int len)
 	if (PRINT_INSTR)
 		ft_printf("P%5d | zjmp %d FAILED\n", process->number, (short)params[0]);
 	return (len);
-}	
+}
 
 int		op_ldi(t_vm *vm, t_process *process, int *params, int len)
 {
 	int				val1;
 	int				val2;
 	int				res;
-	int				error;
 	unsigned char	*addr;
 
 	if (valid_reg(params[2]))
 	{
-		error = 0;
-		val1 = get_val_of_n_param(vm, process, params, 0, &error);
-		if (error)
+		g_error = 0;
+		val1 = get_val_of_n_param(vm, process, params, 0);
+		if (g_error)
 			return (len);
-		val2 = get_val_of_n_param(vm, process, params, 1, &error);
-		if (error)
+		val2 = get_val_of_n_param(vm, process, params, 1);
+		if (g_error)
 			return (len);
 		addr = vm->memory + (((val1 + val2) % IDX_MOD) +
 								(process->next_instr - vm->memory)) % MEM_SIZE;
@@ -370,27 +359,27 @@ int		op_ldi(t_vm *vm, t_process *process, int *params, int len)
 int		op_sti(t_vm *vm, t_process *proc, int *params, int len)
 {
 	unsigned char	*addr;
-	int				val1;
-	int				val2;
-	int				error;
+	int				v1;
+	int				v2;
 
 	if (valid_reg(params[0]))
 	{
-		error = 0;
-		val1 = get_val_of_n_param(vm, proc, params, 1, &error);
-		if (error)
+		g_error = 0;
+		v1 = get_val_of_n_param(vm, proc, params, 1);
+		if (g_error)
 			return (len);
-		val2 = get_val_of_n_param(vm, proc, params, 2, &error);
-		if (error)
+		v2 = get_val_of_n_param(vm, proc, params, 2);
+		if (g_error)
 			return (len);
-		addr = vm->memory + (((val1 + val2) % IDX_MOD) +
+		addr = vm->memory + (((v1 + v2) % IDX_MOD) +
 								(proc->next_instr - vm->memory)) % MEM_SIZE;
 		copy_val_at(vm, addr, (unsigned int)proc->registres[params[0] - 1], 4);
 		if (PRINT_INSTR)
 		{
 			ft_printf("P%5d | sti %s %s %s\n", proc->number,
-			print_val(params[0], 1), print_val(val1, 0), print_val(val2, 0));
-			ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", val1, val2, val1 + val2, (((val1 + val2) % IDX_MOD) + (proc->next_instr - vm->memory)));
+			print_val(params[0], 1), print_val(v1, 0), print_val(v2, 0));
+			ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n"
+, v1, v2, v1 + v2, (((v1 + v2) % IDX_MOD) + (proc->next_instr - vm->memory)));
 		}
 	}
 	return (len);
@@ -468,24 +457,20 @@ int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 	int		val1;
 	int		val2;
 	int		res;
-	int		error;
 
 	if (valid_reg(params[2]))
 	{
-		error = 0;
-		val1 = get_val_of_n_param(vm, process, params, 0, &error);
-		if (error)
+		g_error = 0;
+		val1 = get_val_of_n_param(vm, process, params, 0);
+		if (g_error)
 			return (len);
-		val2 = get_val_of_n_param(vm, process, params, 1, &error);
-		if (error)
+		val2 = get_val_of_n_param(vm, process, params, 1);
+		if (g_error)
 			return (len);
 		res = get_val_at(vm, get_real_addr_of_ind(vm, process->next_instr,
 													val1 + val2, 1), REG_SIZE);
 		process->registres[params[2] - 1] = res;
-		if (val1 + val2 == 0)
-			process->carry = 1;
-		else
-			process->carry = 0;
+		process->carry = ((val1 + val2) == 0);
 		if (PRINT_INSTR)
 		{
 			ft_printf("P%5d | lldi %s %s %s\n", process->number,
@@ -495,29 +480,33 @@ int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 	return (len);
 }
 
-int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
+void	copy_state(t_process *fork, t_process *process)
 {
-	t_process		*fork;
-	unsigned char	*addr;
-
-	//addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 0);
-	addr = vm->memory + ((((short)params[0]) +
-								(process->next_instr - vm->memory)) % MEM_SIZE);
-	if (!(fork = new_process(addr, vm->current_cycle -
-								get_cycles_for_opcode(*process->next_instr))))
-		return (len);
 	fork->carry = process->carry;
-	if (!(fork->registres = copy_regs(process->registres)))
-		exit(1);
 	fork->last_live = process->last_live;
 	fork->nb_live = process->nb_live;
 	fork->remaining_cycles = get_cycles_for_opcode(*fork->next_instr);
 	fork->current_opcode = *fork->next_instr;
 	if (fork->remaining_cycles > 0)
 		fork->remaining_cycles--;
+}
+
+int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
+{
+	t_process		*fork;
+	unsigned char	*addr;
+
+	addr = vm->memory + ((((short)params[0]) +
+								(process->next_instr - vm->memory)) % MEM_SIZE);
+	if (!(fork = new_process(addr, vm->current_cycle -
+								get_cycles_for_opcode(*process->next_instr))))
+		return (len);
+	if (!(fork->registres = copy_regs(process->registres)))
+		exit(1);
+	copy_state(fork, process);
 	if (PRINT_INSTR)
 	{
-		if ((short)params[0] < 0)//+ (addr - vm->memory) < MEM_SIZE)
+		if ((short)params[0] < 0)
 			ft_printf("P%5d | lfork %d (%d)\n", process->number,
 										(short)params[0], addr - vm->memory);
 		else
@@ -526,13 +515,6 @@ int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
 	}
 	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
-}
-
-int		absolute(int val)
-{
-	if (val < 0)
-		return (-val);
-	return (val);
 }
 
 int		op_aff(t_vm *vm, t_process *process, int *params, int len)
