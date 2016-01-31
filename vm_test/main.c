@@ -140,6 +140,7 @@ void	load_players_in_memory(t_vm *vm)
 	int		offset;
 	int		i;
 
+	ft_putendl("Introducing contestants...");
 	decal = MEM_SIZE / vm->nb_players;
 	offset = 0;
 	i = 0;
@@ -147,6 +148,8 @@ void	load_players_in_memory(t_vm *vm)
 	{
 		ft_memcpy(vm->memory + offset, vm->players[i]->code, vm->players[i]->code_len);
 		vm->players[i]->start = vm->memory + offset;
+		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\") !\n", i + 1,
+	vm->players[i]->code_len, vm->players[i]->name, vm->players[i]->comment);
 		i++;
 		offset += decal;
 	}
@@ -158,11 +161,13 @@ t_vm	*init_vm(void)
 
 	if (!(vm = (t_vm*)malloc(sizeof(t_vm))))
 		return (NULL);
-	if (!(vm->players = (t_player**)malloc(sizeof(t_player*) * (MAX_PLAYERS + 1))))
+	if (!(vm->players = (t_player**)malloc(sizeof(t_player*)
+														* (MAX_PLAYERS + 1))))
 		return (NULL);
 	vm->players[MAX_PLAYERS] = NULL;
 	vm->processes = NULL;
-	if (!(vm->memory = (unsigned char*)malloc(sizeof(unsigned char) * MEM_SIZE)))
+	if (!(vm->memory = (unsigned char*)malloc(sizeof(unsigned char)
+																* MEM_SIZE)))
 		return (NULL);
 	vm->nb_players = 0;
 	vm->current_cycle = 0;
@@ -240,12 +245,12 @@ void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *c
 	while (tmp)
 	{
 		proc = ((t_process*)tmp->content);
-		//if (proc->number == 738)
-		//	ft_printf("creation : %d, last_verif : %d, *cycle_to_die : %d\n", proc->creation_cycle, vm->last_verif, *cycle_to_die);
-		if (proc->nb_live == 0)// && vm->current_cycle - proc->creation_cycle >= *cycle_to_die)
+		if (proc->nb_live == 0)
 		{
 			if (PRINT_INSTR)
-				ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n", proc->number, vm->current_cycle - (proc->last_live > 0 ? proc->last_live : proc->creation_cycle), *cycle_to_die);
+				ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
+									proc->number, vm->current_cycle -
+(proc->last_live > 0 ? proc->last_live : proc->creation_cycle), *cycle_to_die);
 			if (parent)
 				parent->next = tmp->next;
 			else
@@ -274,15 +279,18 @@ void	delete_dead_processes(t_vm *vm, int *to_die_iter, int *cycle_to_die, int *c
 
 void	increment_next_instr(t_vm *vm, t_process *process, int nb)
 {
-	int		i;
+	int				i;
+	unsigned char	*addr;
 
 	if (PRINT_INSTR)
 	{
 		ft_printf("ADV %d (0x%04x -> 0x%04x) ", nb, process->next_instr - vm->memory, process->next_instr - vm->memory + nb);
 		i = 0;
+		addr = process->next_instr;
 		while (i < nb)
 		{
-			ft_printf("%02x ", *(process->next_instr + i));
+			ft_printf("%02x ", *addr);
+			addr = next_instr(vm, addr);
 			i++;
 		}
 		ft_putchar('\n');
@@ -587,8 +595,16 @@ void	execute_processes(t_vm *vm)
 		process = ((t_process*)tmp->content);
 		//if (vm->current_cycle == 8910 && process->number == 76)
 		//	dumpmemory(vm->memory);
-		if ((valid_opcode(&process->current_opcode) && get_cycles_for_opcode(process->current_opcode) == process->remaining_cycles + 1) || (process->remaining_cycles == 0 && !valid_opcode(&process->current_opcode)))
+		if ((valid_opcode(&process->current_opcode) && get_cycles_for_opcode(process->current_opcode) == process->remaining_cycles + 1 && valid_opcode(process->next_instr)) || (process->remaining_cycles == 0 && !valid_opcode(&process->current_opcode)))
 		{
+			/*if (process->number == 6)
+			{
+				ft_printf("			LAAAAAA");
+				print_memory(process->next_instr, 7);
+				ft_printf("opcode : %d\n", process->current_opcode);
+			}*/
+			//ft_putendl("LOL");
+			//ft_printf("process->number : %d, current : %d, new : %d\n", process->number, process->current_opcode, *process->next_instr);
 			process->current_opcode = *process->next_instr;
 			process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
 			if (process->remaining_cycles > 0)
@@ -629,7 +645,7 @@ int		run_vm(t_vm *vm, int dump)
 			dumpmemory(vm->memory);
 		vm->current_cycle++;
 		to_die_iter--;
-		if (PRINT_INSTR)
+		//if (PRINT_INSTR)
 			ft_printf("It is now cycle %d\n", vm->current_cycle);
 	}
 	return (1);
@@ -655,7 +671,7 @@ void	print_winner(t_vm *vm)
 	t_player	*player;
 
 	player = get_player_with_number(vm, vm->last_player);
-	ft_printf("Contestant %d, \"%s\", has won !\n", player->number,
+	ft_printf("Contestant %d, \"%s\", has won !\n", -player->number,
 																player->name);
 }
 

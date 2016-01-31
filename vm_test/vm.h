@@ -17,9 +17,10 @@
 # include "op.h"
 # include <fcntl.h>
 
-# define PRINT_INSTR 1
+# define PRINT_INSTR 0
 
 t_vm	*init_vm(void);
+void	go_to_next_byte(t_vm *vm, t_process *process);
 unsigned char	*next_byte_nb(t_vm *vm, unsigned char *byte, int nb);
 int		ft_pow(int nb, int pui);
 void	dumpmemory(unsigned char *memory);
