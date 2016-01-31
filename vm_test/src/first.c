@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:30:32 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 16:19:03 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 17:28:45 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ t_player	*get_player_from_file(t_vm *vm, char *content,
 		return (NULL);
 	res->name[PROG_NAME_LENGTH] = '\0';
 	ft_memcpy(res->name, content + decal, PROG_NAME_LENGTH);
-	decal += PROG_NAME_LENGTH;
+	decal += PROG_NAME_LENGTH + sizeof(int);
 	if (!(res->comment = (char*)malloc(sizeof(char) * (COMMENT_LENGTH + 1))))
 		exit(write(2, "No memory\n", 10));
 	res->comment[COMMENT_LENGTH] = '\0';
