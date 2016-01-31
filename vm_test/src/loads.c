@@ -6,7 +6,7 @@
 /*   By: skirkovs <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 12:23:37 by skirkovs          #+#    #+#             */
-/*   Updated: 2016/01/31 12:23:38 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 16:40:00 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ int		op_ld(t_vm *vm, t_process *process, int *params, int len)
 					(process->next_instr - vm->memory)) % MEM_SIZE;
 			val = get_val_at(vm, addr, 4);
 		}
-		if (PRINT_INSTR)
-			ft_printf("P%5d | ld %d r%d\n", process->number, val, params[1]);
 		process->registres[params[1] - 1] = val;
 		if (val == 0)
 			process->carry = 1;
@@ -58,11 +56,6 @@ int		op_ldi(t_vm *vm, t_process *process, int *params, int len)
 								(process->next_instr - vm->memory)) % MEM_SIZE;
 		res = get_val_at(vm, addr, sizeof(int));
 		process->registres[params[2] - 1] = res;
-		if (PRINT_INSTR)
-		{
-			ft_printf("P%5d | ldi %s %s %s\n", process->number,
-			print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
-		}
 	}
 	return (len);
 }
@@ -82,8 +75,6 @@ int		op_lld(t_vm *vm, t_process *process, int *params, int len)
 														(short)params[0], 0);
 			val = get_val_at(vm, addr, 4);
 		}
-		if (PRINT_INSTR)
-			ft_printf("P%5d | lld %d r%d\n", process->number, val, params[1]);
 		process->registres[params[1] - 1] = val;
 		if (val == 0)
 			process->carry = 1;
@@ -112,11 +103,6 @@ int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 													val1 + val2, 1), REG_SIZE);
 		process->registres[params[2] - 1] = res;
 		process->carry = ((val1 + val2) == 0);
-		if (PRINT_INSTR)
-		{
-			ft_printf("P%5d | lldi %s %s %s\n", process->number,
-			print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
-		}
 	}
 	return (len);
 }

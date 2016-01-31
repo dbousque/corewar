@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 18:03:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 12:18:41 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 16:42:55 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,6 @@ int		op_and_or_xor(t_vm *vm, t_process *process, int *params, char sign)
 		process->registres[params[2] - 1] = val1 | val2;
 	else if (sign == '^')
 		process->registres[params[2] - 1] = val1 ^ val2;
-	if (PRINT_INSTR)
-	{
-		ft_printf("P%5d | %s %s %s r%d\n", process->number,
-		get_name_of_opcode(*process->next_instr), print_val(val1, 0),
-												print_val(val2, 0), params[2]);
-	}
 	return (!(process->carry = process->registres[params[2] - 1] == 0) + 1);
 }
 

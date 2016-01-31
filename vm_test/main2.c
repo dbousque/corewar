@@ -6,13 +6,23 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 15:48:21 by dbousque         ###   ########.fr       */
+<<<<<<< HEAD:vm_test/main2.c
+/*   Updated: 2016/01/31 14:56:49 by dbousque         ###   ########.fr       */
+=======
+/*   Updated: 2016/01/31 14:59:13 by skirkovs         ###   ########.fr       */
+>>>>>>> da39b4fd00173e330829123a12a5736eb2f032a4:vm_test/main.c
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 #include <limits.h>
 
+<<<<<<< HEAD:vm_test/main2.c
+=======
+char	*get_file_content(char *filename, int *res_size);
+unsigned int	get_value_big_endian(unsigned int val);
+
+>>>>>>> da39b4fd00173e330829123a12a5736eb2f032a4:vm_test/main.c
 t_process	*new_process(unsigned char *start, int cycle_creation)
 {
 	static int	nb = 1;
@@ -46,7 +56,7 @@ int		to_little(int n)
 	return (n);
 }
 
-int		verify_file(char *contents, int size)
+void	verify_file(char *contents, int size)
 {
 	const char		*no_magic = "No magic byte error!\n";
 	const char		*no_name = "Champion has no name\n";
@@ -63,15 +73,13 @@ int		verify_file(char *contents, int size)
 	print_memory(contents, 10);
 	ch_size = to_little(*(int *)contents);
 	contents += 4;
-	ft_printf("%x - %x\n", ch_size, size - PROG_NAME_LENGTH - 8 -
-																COMMENT_LENGTH);
+	ft_printf("%x - %x\n", ch_size, size - PROG_NAME_LENGTH - 8 - COMMENT_LENGTH);
 	if (size < PROG_NAME_LENGTH + 4 + COMMENT_LENGTH || !*contents)
 		exit(write(2, no_comment, ft_strlen(no_comment)));
 	if (size - PROG_NAME_LENGTH - 8 - COMMENT_LENGTH > CHAMP_MAX_SIZE)
 		exit(write(2, champ_too_big, ft_strlen(champ_too_big)));
 	if (size - PROG_NAME_LENGTH - 8 - COMMENT_LENGTH != ch_size)
-		exit(write(2, "Incosistent .cor\n", ft_strlen("inconsistent .cor\n")));
-	return (0);
+	   exit(write(2, "Incosistent .cor\n", ft_strlen("inconsistent .cor\n")));	
 }
 
 char	*get_file_content(char *filename, int *res_size)
@@ -100,7 +108,20 @@ char	*get_file_content(char *filename, int *res_size)
 		*res_size += ret;
 	}
 	close(fd);
-	return (res + verify_file(res, *res_size));
+	verify_file(res, *res_size);
+	return (res);
+}
+
+unsigned int	get_value_big_endian(unsigned int val)
+{
+	unsigned int	res;
+
+	res = 0;
+	res = (*(unsigned char*)&val) * 256 * 256 * 256;
+	res += (*(unsigned char*)&val + 1) * 256 * 256;
+	res += (*(unsigned char*)&val + 2) * 256;
+	res += (*(unsigned char*)&val + 3);
+	return (res);
 }
 
 t_player	*get_player_from_file(t_vm *vm, char *content,
@@ -147,11 +168,11 @@ void	dumpmemory(unsigned char *memory)
 	i = 0;
 	while (i < MEM_SIZE)
 	{
-		if (i % 64 == 0)
+		if (i % 32 == 0)
 			ft_printf("0x%04x : ", i);
 		ft_printf("%02x ", memory[i]);
 		i++;
-		if (i % 64 == 0)
+		if (i % 32 == 0)
 			ft_putstr("\n");
 	}
 	exit(1);
@@ -243,6 +264,8 @@ void	update_cycle_to_die(int total_nb_live, int *cycle_to_die,
 	if (total_nb_live >= NBR_LIVE)
 	{
 		*cycle_to_die -= CYCLE_DELTA;
+		if (PRINT_INSTR)
+			ft_printf("Cycle to die is now %d\n", *cycle_to_die);
 		*checks = MAX_CHECKS;
 	}
 	else
@@ -480,23 +503,20 @@ int		execute_param_byte(t_vm *vm, t_process *process)
 {
 	int				opcode;
 	t_op			*opcode_descr;
-	int				*parametres;
+	int				*params;
 	int				*params_length;
-	t_params		params;
 
 	opcode = process->current_opcode;
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
-	if (!(parametres = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
+	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
 	if (!(params_length = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
-	params.params = parametres;
-	params.params_length = params_length;
 	get_params_length(params_length, opcode_descr, next_instr(vm,
 														process->next_instr));
 	parse_params(vm, next_instr(vm, next_instr(vm, process->next_instr)),
-											&params, opcode_descr->nb_params);
-	return (opcode_descr->function(vm, process, parametres,
+								params_length, params, opcode_descr->nb_params);
+	return (opcode_descr->function(vm, process, params,
 						add_lengths(params_length, opcode_descr->nb_params)));
 }
 
@@ -504,22 +524,19 @@ int		execute_no_param_byte(t_vm *vm, t_process *process)
 {
 	int				opcode;
 	t_op			*opcode_descr;
-	int				*parametres;
+	int				*params;
 	int				*params_length;
-	t_params		params;
 
 	opcode = process->current_opcode;
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
-	if (!(parametres = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
+	if (!(params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
 	if (!(params_length = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
-	params.params = parametres;
-	params.params_length = params_length;
 	get_params_length(params_length, opcode_descr, NULL);
-	parse_params(vm, next_instr(vm, process->next_instr), &params,
+	parse_params(vm, next_instr(vm, process->next_instr), params_length, params,
 													opcode_descr->nb_params);
-	return (opcode_descr->function(vm, process, parametres,
+	return (opcode_descr->function(vm, process, params,
 						add_lengths(params_length, opcode_descr->nb_params)));
 }
 
@@ -632,8 +649,6 @@ void	decrement_cycle_to_die(int *cycle_to_die, int *to_die_iter, int *checks)
 {
 	*cycle_to_die -= CYCLE_DELTA;
 	*to_die_iter -= CYCLE_DELTA;
-	if (PRINT_INSTR)
-		ft_printf("Cycle to die is now %d\n", *cycle_to_die);
 	*checks = MAX_CHECKS;
 }
 
@@ -692,7 +707,7 @@ void	print_winner(t_vm *vm)
 	t_player	*player;
 
 	player = get_player_with_number(vm, vm->last_player);
-	ft_printf("Contestant %d, \"%s\", has won !\n", -player->number,
+	ft_printf("le joueur %d(%s) a gagne\n", -player->number,
 																player->name);
 }
 
@@ -809,7 +824,7 @@ int		main(int argc, char **argv)
 		parse_args(argc, argv, vm, &dump);
 		if (vm->nb_players < 1)
 			exit(write(2, "No players\n", 11));
-		vm->last_player = vm->players[vm->nb_players - 1]->number;
+			vm->last_player= vm->players[vm->nb_players - 1]->number;
 		load_players_in_memory(vm);
 		run_vm(vm, dump);
 		print_winner(vm);

@@ -6,7 +6,7 @@
 /*   By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 16:53:18 by hbeaujou          #+#    #+#             */
-/*   Updated: 2016/01/31 16:08:19 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 16:37:29 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,18 @@ void			parse_params(t_vm *vm, unsigned char *str,
 	int				res;
 
 	i = 0;
-	ft_putendl("CALLED PARSE");
 	while (i < nb)
 	{
-		ft_putnbr(i);
-		pow = params->params[i] - 1;
+		pow = params->params_length[i] - 1;
 		res = 0;
 		while (pow >= 0)
 		{
 			res += *(unsigned char*)next_byte_nb(vm, str,
-								params->params[i] - 1 - pow) * ft_pow(256, pow);
+						params->params_length[i] - 1 - pow) * ft_pow(256, pow);
 			pow--;
 		}
-		str = next_byte_nb(vm, str, params->params[i]);
-		params->params_length[i] = res;
+		str = next_byte_nb(vm, str, params->params_length[i]);
+		params->params[i] = res;
 		i++;
 	}
 }

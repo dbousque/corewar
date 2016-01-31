@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 18:03:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 12:19:46 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 16:40:20 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,6 @@ int		op_add(t_vm *vm, t_process *process, int *params, int len)
 	(void)vm;
 	if (valid_reg(params[0]) && valid_reg(params[1]) && valid_reg(params[2]))
 	{
-		if (PRINT_INSTR)
-			ft_printf("P%5d | add r%d r%d r%d\n", process->number,
-											params[0], params[1], params[2]);
 		process->registres[params[2] - 1] = process->registres[params[0] - 1]
 											+ process->registres[params[1] - 1];
 		if (process->registres[params[2] - 1] == 0)
@@ -35,9 +32,6 @@ int		op_sub(t_vm *vm, t_process *process, int *params, int len)
 	(void)vm;
 	if (valid_reg(params[0]) && valid_reg(params[1]) && valid_reg(params[2]))
 	{
-		if (PRINT_INSTR)
-			ft_printf("P%5d | sub r%d r%d r%d\n", process->number,
-											params[0], params[1], params[2]);
 		process->registres[params[2] - 1] = process->registres[params[0] - 1]
 											- process->registres[params[1] - 1];
 		if (process->registres[params[2] - 1] == 0)

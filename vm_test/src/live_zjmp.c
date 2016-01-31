@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/28 18:03:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 12:32:26 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 16:42:16 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,13 @@ int			op_live(t_vm *vm, t_process *process, int *params, int len)
 	t_player	*play;
 
 	dir_val = params[0];
-	if (PRINT_INSTR)
-		ft_printf("P%5d | live %d\n", process->number, dir_val);
 	process->last_live = vm->current_cycle;
 	process->nb_live++;
 	if ((play = valid_player(vm, dir_val)))
 	{
 		vm->last_player = dir_val;
-		if (PRINT_INSTR)
-			ft_printf("Player %d (%s) is said to be alive\n", dir_val,
-																	play->name);
+		ft_printf("un processus dit que le joueur %d(%s) est en vie\n",
+														dir_val, play->name);
 	}
 	return (len);
 }
@@ -65,8 +62,6 @@ int			op_zjmp(t_vm *vm, t_process *process, int *params, int len)
 {
 	if (process->carry == 1)
 	{
-		if (PRINT_INSTR)
-			ft_printf("P%5d | zjmp %d OK\n", process->number, (short)params[0]);
 		process->next_instr = get_real_addr_of_ind(vm, process->next_instr,
 														(short)params[0], 1);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
@@ -75,7 +70,5 @@ int			op_zjmp(t_vm *vm, t_process *process, int *params, int len)
 			process->remaining_cycles--;
 		return (0);
 	}
-	if (PRINT_INSTR)
-		ft_printf("P%5d | zjmp %d FAILED\n", process->number, (short)params[0]);
 	return (len);
 }

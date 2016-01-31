@@ -6,27 +6,11 @@
 /*   By: skirkovs <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 12:24:39 by skirkovs          #+#    #+#             */
-/*   Updated: 2016/01/31 12:31:55 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 16:40:44 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <vm.h>
-
-int		*copy_regs(int *registres)
-{
-	int		*res;
-	int		i;
-
-	if (!(res = (int*)malloc(sizeof(int) * REG_NUMBER)))
-		return (NULL);
-	i = 0;
-	while (i < REG_NUMBER)
-	{
-		res[i] = registres[i];
-		i++;
-	}
-	return (res);
-}
+#include "vm.h"
 
 int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 {
@@ -46,9 +30,6 @@ int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 	fork->current_opcode = *fork->next_instr;
 	if (fork->remaining_cycles > 0)
 		fork->remaining_cycles--;
-	if (PRINT_INSTR)
-		ft_printf("P%5d | fork %d (%d)\n", process->number,
-										(short)params[0], addr - vm->memory);
 	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
 }
@@ -77,15 +58,6 @@ int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
 	if (!(fork->registres = copy_regs(process->registres)))
 		exit(1);
 	copy_state(fork, process);
-	if (PRINT_INSTR)
-	{
-		if ((short)params[0] < 0)
-			ft_printf("P%5d | lfork %d (%d)\n", process->number,
-										(short)params[0], addr - vm->memory);
-		else
-			ft_printf("P%5d | lfork %d (%d)\n", process->number,
-				(short)params[0], (short)params[0] + addr - vm->memory - 2);
-	}
 	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
 }
