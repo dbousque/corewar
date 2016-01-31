@@ -6,14 +6,15 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:38:17 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 15:38:18 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 19:04:17 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 #include <limits.h>
 
-char	valid_param_byte(unsigned char *param_byte, unsigned char opcode)
+char			valid_param_byte(unsigned char *param_byte,
+														unsigned char opcode)
 {
 	t_op			*opcode_descr;
 	int				decal;
@@ -47,7 +48,7 @@ unsigned char	*next_instr(t_vm *vm, unsigned char *current_instr)
 	return (vm->memory);
 }
 
-int		get_length_of_type(t_op *opcode_descr, unsigned char type)
+int				get_length_of_type(t_op *opcode_descr, unsigned char type)
 {
 	if (type == DIR_CODE)
 	{
@@ -71,7 +72,7 @@ unsigned char	t_to_code(unsigned char t)
 	return (DIR_CODE);
 }
 
-void	get_params_length(int *params_length, t_op *opcode_descr,
+void			get_params_length(int *params_length, t_op *opcode_descr,
 													unsigned char *param_byte)
 {
 	int		decal;

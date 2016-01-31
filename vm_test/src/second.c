@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:32:03 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 17:39:44 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 19:04:50 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	add_player_to_vm(t_vm *vm, t_player *player)
 
 	if (index >= MAX_PLAYERS)
 		exit(write(2, "More players\n", 13));
-  	vm->players[index] = player;
+	vm->players[index] = player;
+	vm->nb_players++;
 	index++;
 }
 

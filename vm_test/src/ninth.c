@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:44:35 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 17:34:30 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 19:02:36 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		validate(int number, t_vm *vm, int *current_num)
 	int		max;
 	int		ok;
 
-	ok = 0;
+	ok = 1;
 	i = 0;
 	max = INT_MIN;
 	(void)current_num;
@@ -42,6 +42,13 @@ int		validate(int number, t_vm *vm, int *current_num)
 	return (number);
 }
 
+void	parse_args_bis(int *i, int argc, int *dump, char **argv)
+{
+	if (++(*i) == argc)
+		exit(write(2, "Bad params\n", ft_strlen("Bad params\n")));
+	*dump = get_num(argv[*i], 0);
+}
+
 void	parse_args(int argc, char **argv, t_vm *vm, int *dump)
 {
 	int		i;
@@ -56,23 +63,18 @@ void	parse_args(int argc, char **argv, t_vm *vm, int *dump)
 	while (++i < argc)
 	{
 		if (ft_strcmp(argv[i], "-dump") == 0)
-		{
-			if (++i == argc)
-				exit(write(2, "Bad params\n", ft_strlen("Bad params\n")));
-			*dump = get_num(argv[i], 0);
-		}
+			parse_args_bis(&i, argc, dump, argv);
 		else if (ft_strcmp(argv[i], "-n") == 0)
 		{
 			if (++i == argc)
 				exit(write(2, "Bad params\n", ft_strlen("Bad params\n")));
-			number = get_num(argv[i], 1);
-			number = validate(number, vm, &current_num);
+			number = validate(get_num(argv[i], 1), vm, &current_num);
 			if (++i == argc)
 				exit(write(2, "Bad params\n", ft_strlen("Bad params\n")));
 			add_champion(argv[i], vm, number);
 		}
 		else
-			add_champion(argv[i], vm, current_num--);
+			add_champion(argv[i], vm, validate(current_num, vm, &current_num));
 	}
 }
 

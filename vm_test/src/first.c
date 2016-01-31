@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:30:32 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 18:26:33 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 19:04:33 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_process	*new_process(unsigned char *start, int cycle_creation)
 	return (res);
 }
 
-int		to_little(int n)
+int			to_little(int n)
 {
 	char bytes[4];
 
@@ -46,7 +46,7 @@ int		to_little(int n)
 	return (n);
 }
 
-int		verify_file(char *contents, int size)
+int			verify_file(char *contents, int size)
 {
 	const char		*no_magic = "No magic byte error!\n";
 	const char		*no_name = "Champion has no name\n";
@@ -71,7 +71,7 @@ int		verify_file(char *contents, int size)
 	return (0);
 }
 
-char	*get_file_content(char *filename, int *res_size)
+char		*get_file_content(char *filename, int *res_size)
 {
 	char	buf[1024];
 	char	*res;
@@ -104,11 +104,11 @@ t_player	*get_player_from_file(t_vm *vm, char *content,
 	t_player		*res;
 	unsigned int	decal;
 
+	(void)vm;
 	decal = 4;
 	if (!(res = (t_player*)malloc(sizeof(t_player))))
 		exit(write(2, "No memory\n", 10));
 	res->number = number;
-	vm->nb_players++;
 	if (!(res->name = (char*)malloc(sizeof(char) * (PROG_NAME_LENGTH + 1))))
 		return (NULL);
 	res->name[PROG_NAME_LENGTH] = '\0';

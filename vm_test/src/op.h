@@ -6,14 +6,14 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2016/01/31 18:25:45 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 19:05:09 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OP_H
 # define OP_H
 
-#include "libdodo.h"
+# include "libdodo.h"
 
 /*
 ** Toutes les tailles sont en octets.

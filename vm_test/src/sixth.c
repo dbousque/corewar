@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:40:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 16:53:50 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 18:56:24 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,15 @@ int		execute_param_byte(t_vm *vm, t_process *process)
 	opcode_descr = get_opcode_descr_with_opcode(opcode);
 	if (!(params.params = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
 		return (1);
-	if (!(params.params_length = (int*)malloc(sizeof(int) * opcode_descr->nb_params)))
+	if (!(params.params_length = (int*)malloc(sizeof(int) *
+													opcode_descr->nb_params)))
 		return (1);
 	get_params_length(params.params_length, opcode_descr, next_instr(vm,
 														process->next_instr));
 	parse_params(vm, next_instr(vm, next_instr(vm, process->next_instr)),
 											&params, opcode_descr->nb_params);
 	return (opcode_descr->function(vm, process, params.params,
-						add_lengths(params.params_length, opcode_descr->nb_params)));
+				add_lengths(params.params_length, opcode_descr->nb_params)));
 }
 
 int		execute_no_param_byte(t_vm *vm, t_process *process)

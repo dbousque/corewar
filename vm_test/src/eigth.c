@@ -6,14 +6,14 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:43:11 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 17:37:33 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 18:56:43 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 #include <limits.h>
 
-int		run_vm(t_vm *vm, int dump)
+int			run_vm(t_vm *vm, int dump)
 {
 	int		cycle_to_die;
 	int		to_die_iter;
@@ -56,7 +56,7 @@ t_player	*get_player_with_number(t_vm *vm, int numb)
 	return (NULL);
 }
 
-void	print_winner(t_vm *vm)
+void		print_winner(t_vm *vm)
 {
 	t_player	*player;
 
@@ -64,7 +64,7 @@ void	print_winner(t_vm *vm)
 	ft_printf("le joueur %d(%s) a gagne\n", player->number, player->name);
 }
 
-void	add_champion(char *filename, t_vm *vm, int n)
+void		add_champion(char *filename, t_vm *vm, int n)
 {
 	char	*champion;
 	int		size;
@@ -74,7 +74,7 @@ void	add_champion(char *filename, t_vm *vm, int n)
 	free(champion);
 }
 
-int		get_num(char *str, int can_be_neg)
+int			get_num(char *str, int can_be_neg)
 {
 	int				i;
 	int				sign;
