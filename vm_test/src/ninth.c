@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:44:35 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 16:47:51 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 17:26:26 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int		validate(int number, t_vm *vm, int *current_num)
 	ok = 0;
 	i = -1;
 	max = INT_MIN;
+	(void)current_num;
 	while (++i < vm->nb_players)
 	{
 		if (vm->players[i]->number == number)
@@ -29,8 +30,6 @@ int		validate(int number, t_vm *vm, int *current_num)
 		if (vm->players[i]->number > max)
 			max = vm->players[i]->number;
 	}
-	if (ok)
-		*current_num = max;
 	return (ok ? number : max);
 }
 
@@ -55,10 +54,10 @@ void	parse_args(int argc, char **argv, t_vm *vm, int *dump)
 		}
 		else if (ft_strcmp(argv[i], "-n") == 0)
 		{
-			number = validate(number, vm, &current_num);
 			if (++i == argc)
 				exit(write(2, "Bad params\n", ft_strlen("Bad params\n")));
 			number = get_num(argv[i], 1);
+			number = validate(number, vm, &current_num);
 			if (++i == argc)
 				exit(write(2, "Bad params\n", ft_strlen("Bad params\n")));
 			add_champion(argv[i], vm, number);
