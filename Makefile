@@ -6,24 +6,31 @@
 #    By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/01 20:43:29 by hbeaujou          #+#    #+#              #
-#    Updated: 2016/01/31 19:07:58 by hbeaujou         ###   ########.fr        #
+#    Updated: 2016/01/31 19:12:40 by hbeaujou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-.SILENT:
+ASM	=	./asm/
+COREWAR	=	./corewar/
+LIB	=	./lib/
+
+MAKE	=	make -C
 
 all:
-	make -C ./assembleur
-	make -C ./vm
+		$(MAKE)	$(LIB)
+		$(MAKE) $(ASM)
+		$(MAKE) $(COREWAR)
 
 clean:
-	make clean -C ./assembleur
-	make clean -C ./vm
+		$(MAKE)	$(LIB) clean
+		$(MAKE) $(ASM) clean
+		$(MAKE) $(COREWAR) clean
 
-fclean: clean
-	make fclean -C ./assembleur
-	make fclean -C ./vm
+fclean:
+		$(MAKE)	$(LIB) fclean
+		$(MAKE) $(ASM) fclean
+		$(MAKE) $(COREWAR) fclean
 
-re: fclean all
+re:		fclean all
 
-.PHONY: re fclean clean all
+.PHONY:		re all fclean clean
