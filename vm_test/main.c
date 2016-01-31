@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/27 14:58:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 13:33:28 by skirkovs         ###   ########.fr       */
+/*   Updated: 2016/01/31 14:59:13 by skirkovs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <limits.h>
 
 char	*get_file_content(char *filename, int *res_size);
+unsigned int	get_value_big_endian(unsigned int val);
 
 t_process	*new_process(unsigned char *start, int cycle_creation)
 {
@@ -36,35 +37,71 @@ t_process	*new_process(unsigned char *start, int cycle_creation)
 	return (res);
 }
 
+int		to_little(int n)
+{
+	char bytes[4];
+
+	bytes[3] = *(char *)&n;
+	bytes[2] = *((char *)&n + 1);
+	bytes[1] = *((char *)&n + 2);
+	bytes[0] = *((char *)&n + 3);
+	n = *(int *)bytes;
+	return (n);
+}
+
+void	verify_file(char *contents, int size)
+{
+	const char		*no_magic = "No magic byte error!\n";
+	const char		*no_name = "Champion has no name\n";
+	const char		*no_comment = "Champion has no comment\n";
+	const char		*champ_too_big = "Champion is too big\n";
+	int				ch_size;
+
+	if (*(int *)contents != 0xf383ea00)
+		exit(write(2, no_magic, ft_strlen(no_magic)));
+	contents += 4;
+	if (size < PROG_NAME_LENGTH + 4 || !*contents)
+		exit(write(2, no_name, ft_strlen(no_name)));
+	contents += PROG_NAME_LENGTH;
+	print_memory(contents, 10);
+	ch_size = to_little(*(int *)contents);
+	contents += 4;
+	ft_printf("%x - %x\n", ch_size, size - PROG_NAME_LENGTH - 8 - COMMENT_LENGTH);
+	if (size < PROG_NAME_LENGTH + 4 + COMMENT_LENGTH || !*contents)
+		exit(write(2, no_comment, ft_strlen(no_comment)));
+	if (size - PROG_NAME_LENGTH - 8 - COMMENT_LENGTH > CHAMP_MAX_SIZE)
+		exit(write(2, champ_too_big, ft_strlen(champ_too_big)));
+	if (size - PROG_NAME_LENGTH - 8 - COMMENT_LENGTH != ch_size)
+	   exit(write(2, "Incosistent .cor\n", ft_strlen("inconsistent .cor\n")));	
+}
+
 char	*get_file_content(char *filename, int *res_size)
 {
-	char	*res;
 	char	buf[1024];
-	int		fd;
-	int		size;
+	char	*res;
+	char	*tmp;
 	int		ret;
-	int		decal;
-	int		i;
+	int		fd;
 
-	fd = open(filename, O_RDONLY);
-	size = 0;
-	while ((ret = read(fd, buf, 1024)) > 0)
+	if (!(res = malloc(sizeof(char) * 1)))
+		exit(write(2, "No memory\n", 10));
+	*res = 0;
+	if ((fd = open(filename, O_RDONLY)) < 0)
+		exit(write(2, "Bad param\n", 10));
+	*res_size = 0;
+	ft_putendl("problem");
+	while ((ret = read(fd, buf, 1023)) > 0)
 	{
-		i = 0;
-		while (buf[i])
-		{
-			ft_putnbr(buf[i]);
-			i++;
-		}
-		size += ret;
+		ft_putendl("inside");
+		tmp = res;
+		res = malloc(*res_size + ret + 1);
+		ft_memcpy(res, tmp, *res_size);
+		ft_memcpy(res + *res_size, buf, ret);
+		free(tmp);
+		*res_size += ret;
 	}
-	res = (char*)malloc(sizeof(char) * size);
 	close(fd);
-	decal = 0;
-	fd = open(filename, O_RDONLY);
-	while ((ret = read(fd, res + decal, 1024)) > 0)
-		decal += ret;
-	*res_size = size;
+	verify_file(res, *res_size);
 	return (res);
 }
 
@@ -88,7 +125,7 @@ t_player	*get_player_from_file(t_vm *vm, char *content,
 
 	decal = 4;
 	if (!(res = (t_player*)malloc(sizeof(t_player))))
-		return (NULL);
+		exit(write(2, "No memory\n", 10));
 	res->number = number;
 	vm->nb_players++;
 	if (!(res->name = (char*)malloc(sizeof(char) * (PROG_NAME_LENGTH + 1))))
@@ -96,9 +133,8 @@ t_player	*get_player_from_file(t_vm *vm, char *content,
 	res->name[PROG_NAME_LENGTH] = '\0';
 	ft_memcpy(res->name, content + decal, PROG_NAME_LENGTH);
 	decal += PROG_NAME_LENGTH;
-	decal += sizeof(unsigned int);
 	if (!(res->comment = (char*)malloc(sizeof(char) * (COMMENT_LENGTH + 1))))
-		return (NULL);
+		exit(write(2, "No memory\n", 10));
 	res->comment[COMMENT_LENGTH] = '\0';
 	ft_memcpy(res->comment, content + decal, COMMENT_LENGTH);
 	decal += COMMENT_LENGTH;
@@ -732,6 +768,7 @@ void	parse_args(int argc, char **argv, t_vm *vm, int *dump)
 	i = 0;
 	while (++i < argc)
 	{
+		ft_putendl("Once");
 		if (ft_strcmp(argv[i], "-dump") == 0)
 			*dump = get_num(argv[i], 0);
 		else if (ft_strcmp(argv[i], "-n") == 0)
@@ -749,26 +786,18 @@ void	parse_args(int argc, char **argv, t_vm *vm, int *dump)
 
 int		main(int argc, char **argv)
 {
-	char	*champion1;
-	int		champ1_size;
-	char	*champion2;
-	int		champ2_size;
 	t_vm	*vm;
 	int		dump;
 
 	if (argc > 1)
 	{
-		dump = -1;
-		if (argc > 3)
-			dump = ft_atoi(argv[3]);
-		champion1 = get_file_content(argv[1], &champ1_size);
-		champion2 = get_file_content(argv[2], &champ2_size);
 		if (!(vm = init_vm()))
-			return (0);
-		add_player_to_vm(vm, get_player_from_file(vm, champion1, champ1_size, -1));
-		add_player_to_vm(vm, get_player_from_file(vm, champion2, champ2_size, -2));
-		vm->players[2] = NULL;
-		vm->last_player = -2;
+			exit(write(2, "No memory\n", 10));
+		dump = -1;
+		parse_args(argc, argv, vm, &dump);
+		if (vm->nb_players < 1)
+			exit(write(2, "No players\n", 11));
+			vm->last_player= vm->players[vm->nb_players - 1]->number;
 		load_players_in_memory(vm);
 		run_vm(vm, dump);
 		print_winner(vm);
