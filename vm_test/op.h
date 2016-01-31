@@ -72,20 +72,6 @@ typedef struct		s_player
 	unsigned char	*start;
 }					t_player;
 
-typedef struct		s_param
-{
-	char			type;
-	long long		value;
-}					t_param;
-
-typedef struct		s_instruct
-{
-	unsigned char	*start;
-	int				len;
-	int				opcode;
-	t_param			*params;
-}					t_instruct;
-
 typedef struct		s_process
 {
 	int				number;

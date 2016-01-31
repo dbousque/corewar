@@ -17,7 +17,7 @@
 # include "op.h"
 # include <fcntl.h>
 
-# define PRINT_INSTR 0
+# define PRINT_INSTR 1
 
 t_vm	*init_vm(void);
 void	go_to_next_byte(t_vm *vm, t_process *process);

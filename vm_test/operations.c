@@ -132,7 +132,8 @@ int		op_live(t_vm *vm, t_process *process, int *params, int len)
 	{
 		vm->last_player = dir_val;
 		if (PRINT_INSTR)
-			ft_printf("Player %d (%s) is said to be alive\n", dir_val, play->name);
+			ft_printf("Player %d (%s) is said to be alive\n", dir_val,
+																	play->name);
 	}
 	return (len);
 }
@@ -149,8 +150,9 @@ int		op_ld(t_vm *vm, t_process *process, int *params, int len)
 		else
 		{
 			//addr = get_real_addr_of_ind(vm, process->next_instr,
-			//												(short)params[0], 1);
-			addr = vm->memory + ((((short)params[0]) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
+			//											(short)params[0], 1);
+			addr = vm->memory + ((((short)params[0]) % IDX_MOD) +
+								(process->next_instr - vm->memory)) % MEM_SIZE;
 			val = get_val_at(vm, addr, 4);
 		}
 		if (PRINT_INSTR)
@@ -164,28 +166,29 @@ int		op_ld(t_vm *vm, t_process *process, int *params, int len)
 	return (len);
 }
 
-int		op_st(t_vm *vm, t_process *process, int *params, int len)
+int		op_st(t_vm *vm, t_process *proc, int *params, int len)
 {
 	unsigned char	*addr;
 
 	if (valid_reg(params[0]))
 	{
-		if (type_of_n_param(vm, process, 1) == REG_CODE)
+		if (type_of_n_param(vm, proc, 1) == REG_CODE)
 		{
 			if (valid_reg(params[1]))
-				process->registres[params[1] - 1] = process->registres[params[0] - 1];
+				proc->registres[params[1] - 1] = proc->registres[params[0] - 1];
 			if (PRINT_INSTR)
-				ft_printf("P%5d | st r%d %d\n", process->number, params[0], params[1]);
+				ft_printf("P%5d | st r%d %d\n", proc->number, params[0],
+																	params[1]);
 		}
 		else
 		{
-			addr = get_real_addr_of_ind(vm, process->next_instr,
-															(short)params[1], 1);
+			addr = get_real_addr_of_ind(vm, proc->next_instr,
+														(short)params[1], 1);
 			//addr = vm->memory + ((((short)params[1]) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
-			copy_val_at(vm, addr, (unsigned int)process->registres[params[0] - 1], 4);
+			copy_val_at(vm, addr, (unsigned int)proc->registres[params[0] - 1], 4);
 			if (PRINT_INSTR)
-				ft_printf("P%5d | st r%d %d\n", process->number, params[0], (short)params[1]);
-			//dumpmemory(vm->memory);
+				ft_printf("P%5d | st r%d %d\n", proc->number, params[0],
+															(short)params[1]);
 		}
 	}
 	return (len);
@@ -236,7 +239,8 @@ int		get_val_of_n_param(t_vm *vm, t_process *process, int *params, int n, int *e
 	if ((type = type_of_n_param(vm, process, n)) == IND_CODE)
 	{
 		//addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[n], 1);
-		addr = vm->memory + ((((short)params[n]) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
+		addr = vm->memory + ((((short)params[n]) % IDX_MOD)
+							+ (process->next_instr - vm->memory)) % MEM_SIZE;
 		val = get_val_at(vm, addr, 4);
 	}
 	else if (type == REG_CODE)
@@ -285,7 +289,9 @@ int		op_and_or_xor(t_vm *vm, t_process *process, int *params, char sign)
 		process->registres[params[2] - 1] = val1 ^ val2;
 	if (PRINT_INSTR)
 	{
-		ft_printf("P%5d | %s %s %s r%d\n", process->number, get_name_of_opcode(*process->next_instr), print_val(val1, 0), print_val(val2, 0), params[2]);
+		ft_printf("P%5d | %s %s %s r%d\n", process->number,
+		get_name_of_opcode(*process->next_instr), print_val(val1, 0),
+												print_val(val2, 0), params[2]);
 	}
 	if (process->registres[params[2] - 1] == 0)
 		process->carry = 1;
@@ -314,32 +320,14 @@ int		op_xor(t_vm *vm, t_process *process, int *params, int len)
 
 int		op_zjmp(t_vm *vm, t_process *process, int *params, int len)
 {
-	//unsigned char	*addr;
-
-	/*if (*process->next_instr != process->current_opcode)
-	{
-		go_to_next_byte(vm, process);
-		//ft_putendl("LOOOOOOOL");
-		return (0);
-	}*/
 	if (process->carry == 1)
 	{
-		//ft_printf("ADDR : 0x%04x\n", process->next_instr - vm->memory);
 		if (PRINT_INSTR)
 			ft_printf("P%5d | zjmp %d OK\n", process->number, (short)params[0]);
 		process->next_instr = get_real_addr_of_ind(vm, process->next_instr,
 														(short)params[0], 1);
-		//print_memory(process->next_instr, 7);
-		//ft_printf("NEW ADDR : 0x%04x\n", process->next_instr - vm->memory);
-		//addr = vm->memory + (((get_modulo_even_neg((short)params[0])) + (process->next_instr - vm->memory)) % MEM_SIZE);
-		//process->next_instr = addr;
-		//ft_printf("ADDR : 0x%04x\n", addr - vm->memory);
-		//if (vm->current_cycle == 4742)
-		//	dumpmemory(vm->memory);
 		process->remaining_cycles = get_cycles_for_opcode(*process->next_instr);
 		process->current_opcode = *process->next_instr;
-		//ft_printf("OPCODE : %d\n", *(process->next_instr - 2));
-		//ft_printf("OPCODE : %d\n", process->current_opcode);
 		if (process->remaining_cycles > 0)
 			process->remaining_cycles--;
 		return (0);
@@ -351,10 +339,10 @@ int		op_zjmp(t_vm *vm, t_process *process, int *params, int len)
 
 int		op_ldi(t_vm *vm, t_process *process, int *params, int len)
 {
-	int		val1;
-	int		val2;
-	int		res;
-	int		error;
+	int				val1;
+	int				val2;
+	int				res;
+	int				error;
 	unsigned char	*addr;
 
 	if (valid_reg(params[2]))
@@ -366,18 +354,20 @@ int		op_ldi(t_vm *vm, t_process *process, int *params, int len)
 		val2 = get_val_of_n_param(vm, process, params, 1, &error);
 		if (error)
 			return (len);
-		addr = vm->memory + (((val1 + val2) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
-		res = get_val_at(vm, addr, sizeof(int));//get_real_addr_of_ind(vm, process->next_instr, val1 + val2, 1), REG_SIZE);
+		addr = vm->memory + (((val1 + val2) % IDX_MOD) +
+								(process->next_instr - vm->memory)) % MEM_SIZE;
+		res = get_val_at(vm, addr, sizeof(int));
 		process->registres[params[2] - 1] = res;
 		if (PRINT_INSTR)
 		{
-			ft_printf("P%5d | ldi %s %s %s\n", process->number, print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
+			ft_printf("P%5d | ldi %s %s %s\n", process->number,
+			print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
 		}
 	}
 	return (len);
 }
 
-int		op_sti(t_vm *vm, t_process *process, int *params, int len)
+int		op_sti(t_vm *vm, t_process *proc, int *params, int len)
 {
 	unsigned char	*addr;
 	int				val1;
@@ -387,18 +377,20 @@ int		op_sti(t_vm *vm, t_process *process, int *params, int len)
 	if (valid_reg(params[0]))
 	{
 		error = 0;
-		val1 = get_val_of_n_param(vm, process, params, 1, &error);
+		val1 = get_val_of_n_param(vm, proc, params, 1, &error);
 		if (error)
 			return (len);
-		val2 = get_val_of_n_param(vm, process, params, 2, &error);
+		val2 = get_val_of_n_param(vm, proc, params, 2, &error);
 		if (error)
 			return (len);
-		addr = vm->memory + (((val1 + val2) % IDX_MOD) + (process->next_instr - vm->memory)) % MEM_SIZE;
-		copy_val_at(vm, addr, (unsigned int)process->registres[params[0] - 1], 4);
+		addr = vm->memory + (((val1 + val2) % IDX_MOD) +
+								(proc->next_instr - vm->memory)) % MEM_SIZE;
+		copy_val_at(vm, addr, (unsigned int)proc->registres[params[0] - 1], 4);
 		if (PRINT_INSTR)
 		{
-			ft_printf("P%5d | sti %s %s %s\n", process->number, print_val(params[0], 1), print_val(val1, 0), print_val(val2, 0));
-			ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", val1, val2, val1 + val2, (((val1 + val2) % IDX_MOD) + (process->next_instr - vm->memory)));
+			ft_printf("P%5d | sti %s %s %s\n", proc->number,
+			print_val(params[0], 1), print_val(val1, 0), print_val(val2, 0));
+			ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n", val1, val2, val1 + val2, (((val1 + val2) % IDX_MOD) + (proc->next_instr - vm->memory)));
 		}
 	}
 	return (len);
@@ -426,7 +418,8 @@ int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 	unsigned char	*addr;
 
 	addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 1);
-	if (!(fork = new_process(addr, vm->current_cycle - get_cycles_for_opcode(*process->next_instr))))
+	if (!(fork = new_process(addr, vm->current_cycle -
+								get_cycles_for_opcode(*process->next_instr))))
 		return (len);
 	fork->carry = process->carry;
 	if (!(fork->registres = copy_regs(process->registres)))
@@ -438,7 +431,8 @@ int		op_fork(t_vm *vm, t_process *process, int *params, int len)
 	if (fork->remaining_cycles > 0)
 		fork->remaining_cycles--;
 	if (PRINT_INSTR)
-		ft_printf("P%5d | fork %d (%d)\n", process->number, (short)params[0], addr - vm->memory);
+		ft_printf("P%5d | fork %d (%d)\n", process->number,
+										(short)params[0], addr - vm->memory);
 	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
 }
@@ -485,7 +479,8 @@ int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 		val2 = get_val_of_n_param(vm, process, params, 1, &error);
 		if (error)
 			return (len);
-		res = get_val_at(vm, get_real_addr_of_ind(vm, process->next_instr, val1 + val2, 1), REG_SIZE);
+		res = get_val_at(vm, get_real_addr_of_ind(vm, process->next_instr,
+													val1 + val2, 1), REG_SIZE);
 		process->registres[params[2] - 1] = res;
 		if (val1 + val2 == 0)
 			process->carry = 1;
@@ -493,7 +488,8 @@ int		op_lldi(t_vm *vm, t_process *process, int *params, int len)
 			process->carry = 0;
 		if (PRINT_INSTR)
 		{
-			ft_printf("P%5d | lldi %s %s %s\n", process->number, print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
+			ft_printf("P%5d | lldi %s %s %s\n", process->number,
+			print_val(val1, 0), print_val(val2, 0), print_val(params[2], 1));
 		}
 	}
 	return (len);
@@ -505,8 +501,10 @@ int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
 	unsigned char	*addr;
 
 	//addr = get_real_addr_of_ind(vm, process->next_instr, (short)params[0], 0);
-	addr = vm->memory + ((((short)params[0]) + (process->next_instr - vm->memory)) % MEM_SIZE);
-	if (!(fork = new_process(addr, vm->current_cycle - get_cycles_for_opcode(*process->next_instr))))
+	addr = vm->memory + ((((short)params[0]) +
+								(process->next_instr - vm->memory)) % MEM_SIZE);
+	if (!(fork = new_process(addr, vm->current_cycle -
+								get_cycles_for_opcode(*process->next_instr))))
 		return (len);
 	fork->carry = process->carry;
 	if (!(fork->registres = copy_regs(process->registres)))
@@ -520,9 +518,11 @@ int		op_lfork(t_vm *vm, t_process *process, int *params, int len)
 	if (PRINT_INSTR)
 	{
 		if ((short)params[0] < 0)//+ (addr - vm->memory) < MEM_SIZE)
-			ft_printf("P%5d | lfork %d (%d)\n", process->number, (short)params[0], addr - vm->memory);
+			ft_printf("P%5d | lfork %d (%d)\n", process->number,
+										(short)params[0], addr - vm->memory);
 		else
-			ft_printf("P%5d | lfork %d (%d)\n", process->number, (short)params[0], (short)params[0] + addr - vm->memory - 2);
+			ft_printf("P%5d | lfork %d (%d)\n", process->number,
+				(short)params[0], (short)params[0] + addr - vm->memory - 2);
 	}
 	ft_lstadd(&vm->processes, ft_lstnew(fork, sizeof(t_process)));
 	return (len);
