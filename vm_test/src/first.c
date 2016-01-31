@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/31 15:30:32 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/31 17:28:45 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/31 18:26:33 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,8 @@ t_player	*get_player_from_file(t_vm *vm, char *content,
 	decal += COMMENT_LENGTH + 4;
 	if (!(res->code = malloc(sizeof(unsigned char) * (content_len - decal))))
 		return (NULL);
-	ft_memcpy(res->code, content + decal, content_len - decal);
-	res->code_len = content_len - decal;
+	ft_memcpy(res->code, content + decal - 4, content_len - decal + 4);
+	res->code_len = content_len - decal + 4;
 	res->start = NULL;
 	return (res);
 }
