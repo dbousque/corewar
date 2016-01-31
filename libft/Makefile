@@ -6,11 +6,11 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/11/26 10:27:09 by dbousque          #+#    #+#              #
-#    Updated: 2016/01/02 12:12:13 by dbousque         ###   ########.fr        #
+#    Updated: 2016/01/31 19:20:10 by hbeaujou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME=libdodo.a
+NAME=libft.a
 
 CC=gcc
 
