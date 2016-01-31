@@ -6,13 +6,13 @@
 #    By: hbeaujou <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/01 20:43:29 by hbeaujou          #+#    #+#              #
-#    Updated: 2016/01/31 19:12:40 by hbeaujou         ###   ########.fr        #
+#    Updated: 2016/01/31 19:13:01 by hbeaujou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 ASM	=	./asm/
 COREWAR	=	./corewar/
-LIB	=	./lib/
+LIB	=	./libdodo/
 
 MAKE	=	make -C
 
